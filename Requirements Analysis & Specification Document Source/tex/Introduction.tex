@@ -1,0 +1,94 @@
+\section{Introduction}
+\label{sec:intro}
+
+
+\subsection{Purpose}
+The purpose of this Requirement Analysis and Specification Document (RASD) is to document and reason about fundamental choices relating to the CodeKataBattles software. CKB is a platform designed to enhance and hone skills within software development through gamified coding challenges and team work. This document serves three distinct purposes: First and foremost as an approximate guide to the developers responsible for building the software, as the document will present a proposed class structure including the logical cardinalites of each through as class diagram. The logic of the class structure is tested through static analysis using Alloy, with both facts and environments presented along with an example instance. Detailed sequence diagrams are also provided in order for developers to completely understand the interaction between core system components. 
+
+Second, the document is also a support for management who needs to understand the implications of the software, through the stated goals, atomic functional requirements and domain assumptions. We also supply management with use-cases and use-case diagrams to understand the intended interaction between the system and the potential user-base. 
+
+Lastly, the document also serves as a type of contract, as the stated outcomes and constraints are specifically stated, both aiding potential users and management. 
+
+
+
+
+
+\subsubsection{Goal}
+The objectives we aim to fulfill through the implementation of the software are as follows.
+\begin{enumerate}
+    \item Enable students to improve their software development skills through practice and competition.
+    \item Enable Educators to set up test-driven coding challenges including automated feedback online. 
+    \item Simulate a Real-world software development scenario through use of GitHub and GitHub Actions. 
+    \item Allow students to compare performances on specific challenges and coding tournaments. 
+\end{enumerate}
+
+\subsection{Scope}
+In recent years, online availability of scalable educational offers have increased within languages (DuoLingo) and math and science (Brilliant) . The aim of this project is to build a platform that supports educators around the world in hosting small to large scale coding challenges, honing the skills of inquisitive students. 
+
+CodeKataBattles presents an environment where students form teams to engage in code kata battles, challenging them to develop solutions that meet specific coding requirements and pass predefined tests. The platform's intuitive user interface enables students to participate in these battles, receive immediate feedback, and learn from both successes and mistakes.
+
+CKB supports coding challenges that promote hand-on learning, as well as collaboration through team development and knowledge sharing. Users are also able to track their progress in both tournaments and battles, being awarded with badges when achieving predefined goals. 
+
+CKB provides two primary interfaces: a student interface for participating in battles, reviewing codes, collaborating, and tracking progress, and an educator interface for setting up battles, monitoring student progress, and accessing analytics to improve educational content.
+
+Following the World and Machine paradigm by M. Jackson and P. Zave, we identify the Machine as the CKB system to be developed and the educational environment as the World. This distinction allows categorization of phenomena into those within the World (educational needs, team interactions), those controlled by the Machine (coding challenges, feedback mechanisms), and shared phenomena (student engagement, learning outcomes).
+\subsubsection{World Phenomena}
+\begin{enumerate}
+    \item Student/Team forks CoteKataBattle Github Repository
+    \item Student/Team Sets Up Relevant Automated WorkFlow through Github Actions 
+    
+\end{enumerate}
+
+
+\subsubsection{Shared Phenomena}
+\begin{enumerate}
+    \item Educator creates a CodeKataBattle
+    \item Educator creates a tournament
+    \item Student registers as part of a team
+    \item Student/Team registers for a CodeKataBattle
+    \item Student/Team registers for a tournament
+    \item User Submits Solution to GitHub
+    \item User Subscribes to CodeKataBattle-Platform
+    \item Publishing of tournament rankings
+    \item Educator Creates New Badge
+    \item Student Receives New Badge
+\end{enumerate}
+
+\subsection{Definitions, Acronyms}
+\subsubsection{Definitions}
+\begin{enumerate}
+    \item \textbf{Educator}: A type of user that is unable to participate in battles, but can create battles and tournaments.  
+    \item \textbf{Student}: A type of user that  can participate in battles and subscribe to tournaments
+    \item \textbf{GitHub}: One of the most widely used version control platforms for code. 
+\end{enumerate}
+
+\subsubsection{Acronyms}
+\begin{enumerate}
+    \item \textbf{Educator}: A type of user that is unable to participate in battles, but can create battles and tournaments.  
+    \item \textbf{Student}: A type of user that  can participate in battles and subscribe to tournaments
+    \item \textbf{GitHub}: One of the most widely used version control platforms for code. 
+\end{enumerate}
+
+\subsection{Revision History}
+\begin{enumerate}
+    \item Version 1.0 (16th December 2023)
+\end{enumerate}
+
+
+
+\subsection{Reference Documents}
+This Document is strictly based on 
+\begin{enumerate}
+    \item Specification of RASD project of the Software Engineering II course, held by professor Matteo Rossi, Elisabetta Di Nitto and Matteo Camilli at the Politecnio di Milano, A.Y 2023/2024
+    \item Slides of Software Engineering 2 course on WeBeep
+\end{enumerate}
+
+\subsection{Document Structure}
+The document is divided into three overall parts:
+\begin{enumerate}
+    \item \textbf{Overall Description} which describes the intended use-cases and user descriptions. We also describe a proposed class structure with brief explanations for each class along with notes on certain cardinalities, where we deem relevant.
+    \item \textbf{Specific Requirements} aims to supply concrete, atomic functional requirements, to aid developers in building the software, as well as outlining the proposed hardware and software interfaces. 
+    \item The final part \textbf{Formal Analysis} uses Alloy to test the coherence of the proposed class structure and assumptions about the system.
+\end{enumerate}
+
+\newpage

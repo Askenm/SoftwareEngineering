@@ -1,0 +1,58 @@
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry} 
+\usepackage{hyperref}
+\usepackage[authoryear]{natbib}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{wrapfig}
+\bibliographystyle{rusnat}
+\usepackage{comment}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{array} % for defining a new column type
+\usepackage{longtable} % for long tables
+\usepackage{graphicx}
+\usepackage{tabularx}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Karl Monrad Kieler, Leonie Dragun \& Aske Schytt Meineche}
+\rhead{Software Engineering 2}
+\rfoot{Page \thepage}
+
+\title{Requirements Analysis \& Specification Document}
+\newcommand{\subtitle}[1]{%
+  \posttitle{\par\end{center}\begin{center}\large#1\end{center}\vskip 0.5em}}
+
+\author{
+  Karl Monrad Kieler \{karlmonrad.kieler@mail.polimi.it\} \and
+  Aske Schytt Meineche \{askeschytt.meineche@mail.polimi.it\} \and
+  Leonie Dragun \{leonie.dragun@mail.polimi.it\}
+}
+
+
+\date{15 November 2023}
+
+\begin{document}
+%%\subtitle{\textit{To Save the World}}
+\maketitle
+
+
+
+\tableofcontents
+\newpage
+\input{tex/Introduction.tex}
+\input{tex/Description.tex}
+\input{tex/Requirements.tex}
+\input{tex/Alloy.tex}
+\input{tex/Effort.tex}
+\input{tex/References.tex}
+
+
+
+
+%\bibliography{refs}
+
+\end{document}
