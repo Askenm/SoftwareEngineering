@@ -1,5 +1,5 @@
 # SoftwareEngineering
 ## AUTHORS
-Leonie Dragun
-Karl Kieler
+Leonie Dragun \\
+Karl Kieler \\
 Aske Schytt Meineche
