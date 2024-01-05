@@ -1,0 +1,61 @@
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry} 
+\usepackage{hyperref}
+\usepackage[authoryear]{natbib}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{wrapfig}
+\bibliographystyle{rusnat}
+\usepackage{comment}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{array} % for defining a new column type
+\usepackage{longtable} % for long tables
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{float}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Karl Monrad Kieler, Leonie Dragun \& Aske Schytt Meineche}
+\rhead{Software Engineering 2}
+\rfoot{Page \thepage}
+
+\title{Design Document \\ \bigskip
+\large CodeKataBattles}
+
+\newcommand{\subtitle}[1]{%
+  \posttitle{\par\end{center}\begin{center}\large#1\end{center}\vskip 0.5em}}
+
+\author{
+  Karl Monrad Kieler \{karlmonrad.kieler@mail.polimi.it\} \and
+  Aske Schytt Meineche \{askeschytt.meineche@mail.polimi.it\} \and
+  Leonie Dragun \{leonie.dragun@mail.polimi.it\}
+}
+
+
+\date{07 Januar 2024}
+
+\begin{document}
+\maketitle
+
+
+
+\tableofcontents
+\newpage
+\input{tex/Introduction.tex}
+\input{tex/Architecture.tex}
+\input{tex/UI.tex}
+\input{tex/Requirements.tex}
+\input{tex/Implementation.tex}
+\input{tex/Effort.tex}
+\input{tex/References}
+
+
+
+
+%\bibliography{refs}
+
+\end{document}

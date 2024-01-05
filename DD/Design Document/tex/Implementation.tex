@@ -1,0 +1,179 @@
+\section{Implementation, Integration \& Test Plan}
+This section will specify a plan for implementing the CodeKata Battle system. This includes the specification of system features, the order of their implementation, a strategy to integrate these components into a system, and finally a strategy to test the system as a whole. These tests aim to increase the robustness of the system before, getting into the user's hands. 
+
+\subsection{Implementation Plan}
+To ensure implementation is going in the right direction we will be using an iterative development strategy. Here components will be tested as a unit and how they fit into the current iteration of the systems as it is developed. As the CodeKata Battle system consists of few components relative to most systems, we thought a hierarchical approach would be the best fit. Here the components are implemented based on a hierarchical view of the components relations. 
+
+Specifically, we have chosen to employ a top-down approach, as it enables us to tackle integrating some of the more complex components like Github actions. Tackling this problem early in implementation is meant to decrease the likelihood of problems later in the integration process. Going top-down also means tackling the issues of user interfaces and high-level functionalities early on in the development process. Enabling early visualization of progress and feedback from stakeholders. A hierarchal approach in general allows for teams to work in parallel, which is key for avoiding potential bottlenecks.
+
+
+%\subsubsection{Overview}
+%\subsubsection{Iterative Development}
+\subsubsection{Technology Stack}
+
+\subsection{Feature Identification}
+
+In this section, we have listed all features comprising the CKB system. This is extracted from the system requirements, and the requirements in the RASD. 
+
+\begin{itemize}
+\renewcommand{\labelitemi}{}
+    \item \textbf{[F1] User Authentication and Profile Management}
+    \begin{itemize}
+        \item Basic functionalities for account creation and login.
+        %\item Profile overview displaying achievements and participation.
+    \end{itemize}
+
+    \item \textbf{[F2] Battle Creation and Management}
+    \begin{itemize}
+        \item Educators can upload code katas, including descriptions and test cases.
+        \item Setting parameters for challenges: group size limits, deadlines, and scoring configurations.
+    \end{itemize}
+
+    \item \textbf{[F3] Tournament Creation and Management}
+    \begin{itemize}
+        \item Creation and configuration of tournaments by educators.
+        \item Notification system for new tournaments and student subscriptions.
+    \end{itemize}
+
+    \item \textbf{[F4] Student Battle Participation }
+    \begin{itemize}
+        \item Enrollment and team creation for battles within size limits.
+        \item Forking and setting up GitHub repositories for code submissions.
+    \end{itemize}
+
+    \item \textbf{[F5] Real-Time Feedback and Scoring}
+    \begin{itemize}
+        \item Automated evaluation of code based on test cases, timeliness, and code quality.
+        \item Optional additional manual scoring parameter by educators.
+    \end{itemize}
+
+    \item \textbf{[F6] Tournament and Battle Score Aggregation}
+    \begin{itemize}
+        \item Automated calculation of individual battle scores.
+        \item Compilation of tournament scores from individual battle performances.
+    \end{itemize}
+
+    \item \textbf{[F7] Gamification and Badges}
+    \begin{itemize}
+        \item System for educators to create badges.
+        \item Automatic assignment of badges based on rule fulfillment.
+    \end{itemize}
+
+    \item \textbf{[F8] Integration with External Services}
+    \begin{itemize}
+        \item GitHub integration for code repository management and automated testing.
+    \end{itemize}
+
+    \item \textbf{[F9] User Notification System}
+    \begin{itemize}
+        \item Automated notifications for updates, deadlines, and results.
+        %\item Customizable notification preferences for users.
+    \end{itemize}
+
+    \item \textbf{[F10] Profile Visualization of Achievements}
+    \begin{itemize}
+        \item Feature to display collected badges on student profiles.
+        \item Visibility of ongoing tournament details and individual rankings.
+    \end{itemize}
+\end{itemize}
+
+
+
+
+\subsection{Integration Plan}
+\subsubsection{Component Integration}
+
+Here is a prioritized list of orders in which we intend to implement components following the top-down approach stated in the implementation strategy. Unit testing will require the creation of test stubs to accurately simulate components functionality. Unit testing is intended to be done after each component is finished, whereafter an integration test is performed to ensure components interaction perform as expected. 
+
+\begin{itemize}
+
+    \renewcommand{\labelitemi}{}
+
+    \item \textbf{[C1] Front-end Service}
+    \begin{itemize}
+        \item The Front-end Service is the primary user interface, and for this reason, it is important for initial user feedback and specifying the requirements for backend services.
+    \end{itemize}
+
+
+    \item \textbf{[C2] Data Persistence Service (DBMS)}
+    \begin{itemize}
+        \item As the backbone of the system, storing all persistent data, the database is integrated last to support all other services, once there is a clear understanding of the data requirements.
+    \end{itemize}
+
+    \item \textbf{[C3] GitHub Management Service}
+    \begin{itemize}
+        \item Manages the creation and updates of GitHub repositories, integral to the platform's code submission and review process. Its integration follows the Notification Management Service to ensure that repositories are managed alongside user notifications.
+    \end{itemize}
+
+    \item \textbf{[C4] Authentication Service}
+    \begin{itemize}
+        \item Authentication Service is a core functionality to the very first user interface users interact with, and vital to security and user management. This service must be integrated early to facilitate secure access and testing of subsequent components.
+    \end{itemize}
+
+    \item \textbf{[C5] Scoring Service}
+    \begin{itemize}
+        \item Integral to the competitive aspect of the platform, the Scoring Service is developed after core functionalities to allow for contextualized scoring within tournaments.
+    \end{itemize}
+
+    \item \textbf{[C6] GitHub Actions}
+    \begin{itemize}
+        \item GitHub Actions underpin the automated testing functionality and are critical to operations. They are integrated after the essential user and battle management services are established.
+    \end{itemize}
+    
+    \item \textbf{[C7] User Profile Service}
+    \begin{itemize}
+        \item Closely tied to user interaction, this service is integral for personalization and displaying user-specific data, and therefore prioritized early in the process.
+    \end{itemize}
+    
+    \item \textbf{[C8] Educator Tools Service}
+    \begin{itemize}
+        \item This service enables educators to create content, a core functionality of the platform. Its integration is prioritized to test the creation and management of challenges.
+    \end{itemize}
+
+    %\item \textbf{[C5] Tournament Management Service}
+    %\begin{itemize}
+       % \item This service manages the logical grouping of battles into tournaments and is integrated after the Educator Tools Service to facilitate the management of these entities.
+    %\end{itemize}
+    
+    \item \textbf{[C9] Notification Service}
+    \begin{itemize}
+        \item Notifications keep users engaged and informed. This service is prioritized following user authentication to ensure effective communication within the platform.
+    \end{itemize}
+
+    \item \textbf{[C10] Badge Management Service}
+    \begin{itemize}
+        \item As part of the gamification strategy, this service is integrated after the Notification Service to utilize the infrastructure for user communication.
+    \end{itemize}
+\end{itemize}
+
+%\subsubsection{API Integration}
+%
+%\subsection{Test Plan}
+%\subsubsection{Unit Testing}
+%\subsubsection{Integration Testing}
+\subsection{System Testing}
+After having integrated all components together, we will have a system that can be tested as a whole. System testing intends to ensure the system as a whole meets all functional and non-functional requirements. To do this the system must undergo several different types of testing phases as laid out in the following section.
+
+\begin{itemize}
+    \item[] \textbf{Functional Testing}: This phase checks if the system complies with all the requirements specified in the Requirement Analysis and Specification Document (RASD). This will be done by trying to execute the use case scenarios and see if the system complies with the intended outcomes.
+
+    \item[] \textbf{Performance Testing}: The system will be evaluated to identify any potential performance bottlenecks, such as inefficient elements that may impact response times or resource utilization. To check this testing the system under the expected workload will be done. 
+    
+    \item[] \textbf{Usability Testing}: To ensure the system is both intuitive and easy-to-use, we'll have a person outside the development team evaluate the system. 
+    
+    \item[] \textbf{Load Testing}: The system will be tested under increasing loads to discover bugs that may not surface under normal operation, such as memory leaks or buffer overflows. It will also help determine the system's maximum operating capacity over extended periods.
+    
+    \item[] \textbf{Stress Testing}: This testing ensures the system can handle and recover from adverse conditions. It involves overwhelming the system's resources or depriving it of them to see how it behaves under extreme stress.
+
+\end{itemize}
+
+
+
+%\begin{itemize}
+%    \item Functional Testing
+%    \item Performance Testing
+%    \item Usability Testing
+%    \item Interoperability Testing
+%    \item Load Testing?
+%    \item Recovery Testing
+%\end{itemize}

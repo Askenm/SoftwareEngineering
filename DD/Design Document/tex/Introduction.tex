@@ -1,0 +1,60 @@
+\section{Introduction}
+\label{sec:intro}
+
+
+\subsection{Purpose}
+The purpose of this document is to assist developers in the construction of software that complies with the requirements established in the corresponding RASD document. This is done by describing the components the system will consist of, as well as their interactions during critical processes. The document will also present a variety of perspectives on the chosen architecture, both with regards to physical infrastructure, logical separation and application event flow. The components described in this document will be presented in conjunction with the requirements presented in the RASD, in order to display why each component is present to management. Lastly, the document will present the plans for implementing, integrating and testing the systems components. 
+All section contain reflections on how these architecture choices affect the systems functionality with regards to scalability, availability etc. 
+
+\subsection{Scope}
+The scope of this project is described below, as it is in the corresponding RASD. 
+In recent years, online availability of scalable educational offers have increased within languages (DuoLingo) and math and science (Brilliant) . The aim of this project is to build a platform that supports educators around the world in hosting small to large scale coding challenges, honing the skills of inquisitive students. 
+
+CodeKataBattles presents an environment where students form teams to engage in code kata battles, challenging them to develop solutions that meet specific coding requirements and pass predefined tests. The platform's intuitive user interface enables students to participate in these battles, receive immediate feedback, and learn from both successes and mistakes.
+
+CKB supports coding challenges that promote hand-on learning, as well as collaboration through team development and knowledge sharing. Users are also able to track their progress in both tournaments and battles, being awarded with badges when achieving predefined goals. 
+
+CKB provides two primary interfaces: a student interface for participating in battles, reviewing codes, collaborating, and tracking progress, and an educator interface for setting up battles, monitoring student progress, and accessing analytics to improve educational content.
+
+Following the World and Machine paradigm by M. Jackson and P. Zave, we identify the Machine as the CKB system to be developed and the educational environment as the World. This distinction allows categorization of phenomena into those within the World (educational needs, team interactions), those controlled by the Machine (coding challenges, feedback mechanisms), and shared phenomena (student engagement, learning outcomes).
+
+
+\subsection{Definitions, Acronyms}
+\subsubsection{Definitions}
+\begin{enumerate}
+    \item \textbf{Educator}: A type of user that is unable to participate in battles, but can create battles and tournaments.  
+    \item \textbf{Student}: A type of user that  can participate in battles and subscribe to tournaments
+    \item \textbf{GitHub}: One of the most widely used version control platforms for code. 
+    \item \textbf{UI}: User Interface
+\end{enumerate}
+
+\subsubsection{Acronyms}
+\begin{enumerate}
+    \item \textbf{Educator}: A type of user that is unable to participate in battles, but can create battles and tournaments.  
+    \item \textbf{Student}: A type of user that  can participate in battles and subscribe to tournaments
+    \item \textbf{GitHub}: One of the most widely used version control platforms for code. 
+\end{enumerate}
+
+\subsection{Revision History}
+\begin{enumerate}
+    \item Version 1.0 (5th January 2024)
+\end{enumerate}
+
+
+
+\subsection{Reference Documents}
+This Document is strictly based on 
+\begin{enumerate}
+    \item Specification of DD project of the Software Engineering II course, held by professor Matteo Rossi, Elisabetta Di Nitto and Matteo Camilli at the Politecnio di Milano, A.Y 2023/2024
+    \item Slides of Software Engineering 2 course on WeBeep
+\end{enumerate}
+
+\subsection{Document Structure}
+The document is divided into three overall parts:
+\begin{enumerate}
+    \item \textbf{Architectural Design} which is concerned with various architectural choices and their effects on the system requirements and goals. We examine the high level architecture division of the "business logic" of the system, as well as the architecture of the flow of functionality within the system and the physical infrastructure partitions. We also explain the chosen components, and the interactions occurring between them during relevant processes.  
+    \item \textbf{Requirements Traceability} aims to describe how each service and component actively maps to the Requirements stated in the RASD document. 
+    \item Lastly, \textbf{Implementation, Integration and Testing} outlines the intended strategy for development of the software. 
+\end{enumerate}
+
+\newpage

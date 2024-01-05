@@ -1,0 +1,281 @@
+\section{Requirements Traceability}
+This section establishes the traceability matrix between the  functional requirements of CodeKataBattles, identified in the Requirements Analysis and Specification Document (RASD) and the corresponding components, modules, and features in the Design Document (DD). This matrix ensures that each requirement is addressed and implemented in the architectural and design decisions.
+
+
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabular}{|l|l|}
+    \hline
+       \textbf{Requirements:} & [R1] The system shall allow users to log in using their GitHub credentials \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+            \item GitHub Management Service
+        \end{itemize}
+      \item Application Server
+        \begin{itemize}
+            \item Authentication Service
+        \end{itemize}
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabular}} \quad
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R3] The Educators shall be able to create tournaments with a specified title. \newline
+       [R4] Educators shall be able to set registration deadlines for tournaments. \newline 
+       [R5] Educators shall be able to define tournament badge criteria.\newline
+       [R24] Educators shall be able to define gamification badges with specific rules. \newline
+       [R6] The system shall notify users of new tournaments. \newline
+       [R7] Users shall be able to subscribe to tournaments by a given deadline. \newline
+       [R26] Educators shall be able to close tournaments and trigger final rank notifications. \newline
+       [R27] The system shall enable boolean expressions to define rules of badges and achievements.
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+            \item Educator Tools Service
+        \end{itemize}
+      \item Application Server
+        \begin{itemize}
+            \item Badge Management Service 
+            \item Notification Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R8] Educators shall be able to create battles within tournaments. \newline
+       [R9] Educators shall be able to upload technical documents for battles. \newline 
+       [R10] Educators shall be able to set the minimum and maximum number of students per group for battle. \newline
+       [R11] Educators shall be able to set a registration deadline for battles.\newline
+       [R12] Educators shall be able to set a final submission deadline for battles. \newline
+       [R13] Educators shall be able to configure scoring methodologies for battles. \newline
+       [R14] Students shall be able to form teams to join battles.
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+            \item Educator Tools Service
+        \end{itemize}
+      \item Application Server
+        \begin{itemize}
+            \item Notification Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R15] The system shall provide a GitHub repository link for the code kata to registered teams after the registration deadline.
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+            \item Github Management Service
+        \end{itemize}
+      \item Application Server
+        \begin{itemize}
+            \item Notification Management Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R16] The system shall automatically score submissions based on the results of test cases.  \newline
+       [R17] The system shall evaluate the timeliness of submissions. \newline
+       [R18] The system shall assess the quality level of source code through static analysis.
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item Application Server
+        \begin{itemize}
+            \item Scoring Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R19] Educators shall have the option to manually score submissions.
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+            \item Educator Tools Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R20] The system shall update battle scores in real-time upon new commits on GitHub.
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+            \item Github Management Service
+        \end{itemize}
+      \item Application Server
+        \begin{itemize}
+            \item Scoring Service
+            \item Notification Management Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R21] The system shall notify participants of final battle ranks after the consolidation phase.
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+            \item Educator Tool Service
+        \end{itemize}
+      \item Application Server
+        \begin{itemize}
+            \item Notification Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
+ \clearpage
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R22] The system shall update personal tournament scores with the sum of battle scores. \newline
+       [R23] The system shall maintain a visible tournament rank for each student.
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{2} %for vertical padding
+    \setlength{\tabcolsep}{0.5em} % for horizontal padding
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+       \textbf{Requirements:} & [R25] The system shall display badges on student profiles. \newline
+        [R28] Students shall be able to visualize their performance. \newline
+        [R29] Students shall be able to visualize their tournament information. \newline
+        [R30] Students shall be able to track their battle involvement. \newline
+        [R31] Students shall be able to see detailed logs of their attempt outcomes
+       \\ \hline
+        \textbf{Components:} & 
+        \begin{minipage} [t] {0.4\textwidth} 
+      \begin{itemize}
+      \item WebApp
+      \item WebServer
+        \begin{itemize}
+            \item Frontend Service
+        \end{itemize}
+      \item Application Server
+        \begin{itemize}
+            \item User Profile Service
+        \end{itemize}
+      \item DBMS
+     \end{itemize} 
+    \end{minipage} \\ [2pt]  \hline
+    \end{tabularx}} \quad
+\end{table}
+
