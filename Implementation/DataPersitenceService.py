@@ -3,27 +3,9 @@ The purpose of this is to write all the functionality required to edit the main 
 """
 from sqlalchemy import create_engine, text
 import pandas as pd
+from query_catalog import query_catalog
 
 
-query_catalog = {'init':{"create_tournament_table":"""CREATE TABLE ckb.tournaments (
-                                                        tid SERIAL PRIMARY KEY,
-                                                        tournament_name VARCHAR(255) NOT NULL,
-                                                        creator VARCHAR(255),
-                                                        create_date DATE DEFAULT CURRENT_DATE,
-                                                        end_date DATE DEFAULT NULL
-                                                        );""",
-                         "create_battle_table":"""CREATE TABLE ckb.battles (
-                                                        bid SERIAL PRIMARY KEY,
-                                                        battle_name VARCHAR(255) NOT NULL,
-                                                        tournament_id INT,
-                                                        github_repo VARCHAR(255) NOT NULL,
-                                                        creator VARCHAR(255),
-                                                        create_date DATE DEFAULT CURRENT_DATE,
-                                                        end_date DATE
-                                                        );"""
-                        },
-                 'write':{},
-                 'read':{}}
 
 
 class DBMS():
@@ -46,10 +28,22 @@ class DBMS():
                 connection.execute(query)
         
 
-    def write(self,data,table):
-        pass
+    def write(self,query_name,query_processing_info):
 
-    def read(self,query):
+        query = query_catalog['write'][query_name]
+        for placeholder,value in query_processing_info.items():
+            query = query.replace(placeholder,str(value)) 
+
+        
+        with self.engine.connect() as connection:
+            query = text(query)
+            return connection.execute(query)
+
+    def read(self,query_name,query_processing_info):
+
+        query = query_catalog['read'][query_name]
+        for placeholder,value in query_processing_info.items():
+            query = query.replace(placeholder,str(value))
         
         dataDF = pd.read_sql(query, self.engine)
 
