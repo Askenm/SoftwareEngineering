@@ -1,5 +1,6 @@
 from DataPersitenceService import DBMS
 import GithubManagementService as GMS
+from notification_catalog import notification_catalog
 
 
 class Battle:
@@ -20,6 +21,7 @@ class Battle:
         :return: 0 if the battle was created successfully, or an error message if the battle name is taken.
 
         The expected format of battle_data is as follows:
+        # TODO: INCORPORATE THE FILES THAT ARE REQUIRED
         {
             '_BATTLE_NAME_': 'Example Battle Name',
             '_BATTLE_DESC_': 'Description of the Battle',
@@ -221,6 +223,16 @@ class Badge:
         Initialize a Badge instance.
 
         :param tid: The tournament ID associated with the badge.
+
+
+        The expected format of badge_data is as follows:
+        {
+            '_BADGE_NAME_': 'Example Badge Name' (VARCHAR)
+            '_BADGE_DESC_': 'Description of the Badge' (VARCHAR)
+            '_TOURNAMENT_ID_': The tournamentID where the badge is being created (INT)
+            '_RANK_': The badge is awarded if a user places within the top _RANK_ (INT)
+            '_NUM_BATTLES_': in _NUM_BATTLES_ of a tournament (INT)
+        }
         """
         self.DBMS = DBMS()
         self.tid = tid
@@ -233,6 +245,7 @@ class Badge:
         :return: None. Writes the badge logic to the database.
 
         The badge_logic should contain the necessary criteria for earning the badge.
+
         """
         # Write badge logic to the database
         self.DBMS.write("CREATE_BADGE", badge_logic)
@@ -315,7 +328,45 @@ class Student:
 
 # Notification and Submission classes have been marked as placeholders and need further implementation.
 class Notification:
-    def __init__(self):
+    def __init__(self, notification_type):
+        self.notification_type = notification_type
+        self.DBMS = DBMS()
+
+    def create_notification_message(self, notification_info):
+        notification = notification_catalog[self.notification_type]
+        for key, value in notification_info.items():
+            notification = notification.replace(key, value)
+
+        return notification
+
+    def register_notfications_to_messageboard(self, notification_info):
+        """
+        notification_info = {1:{"_BADGE_NAME_":"BADGE1",
+                             '_USERNAME_':"user1",
+                             '_TOURNAMENTNAME_':"tournament 1",
+                             '_TOURNAMENT_ID_': 1,
+                             '_BADGEACHIEVED_DATE_':"1996-08-12"}
+                             }
+        """
+
+        for uid in notification_info.keys():
+            message_string = self.create_notification_message(notification_info[uid])
+            self.DBMS.write(
+                "REGISTER_NOTIFICATION",
+                {
+                    "_USER_ID_": uid,
+                    "_NOTIFICATION_TYPE_": self.notification_type,
+                    "_NOTIFICATION_TEXT_": message_string,
+                    "_TOURNAMENT_ID_": notification_info[uid]["_TOURNAMENT_ID_"],
+                    "_BATTLE_ID_": "NULL",
+                },
+            )
+
+    def send_notification(self):
+        # TODO
+        # REQUIRES EMAIL CLIENT SERVICE
+        # GET EMAILS OF ALL USERS WITH PENDING NOTIFICATIONS FROM MESSAGEBOARD
+        # SEND THEM ONCE EVERY TIME PERIOD™ USING main_backend.py
         pass
 
 

@@ -27,6 +27,11 @@ query_catalog = {
                             VALUES 
                             (_BADGE_ID_, _USER_ID_)
                             """,
+        "REGISTER_NOTIFICATION": """
+                                   INSERT INTO ckb.message_board (uid, notification_type, tournament_id, notification_text, battle_id)
+                                   VALUES
+                                   (_USER_ID_, '_NOTIFICATION_TYPE_', _TOURNAMENT_ID_, '_NOTIFICATION_TEXT_', _BATTLE_ID_)
+                                   """,
     },
     "read": {
         "GET_BATTLE_RANKINGS": """SELECT 

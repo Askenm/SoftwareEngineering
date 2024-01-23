@@ -29,10 +29,14 @@ CREATE TABLE ckb.notifications (
 
 -- Message Board table
 CREATE TABLE ckb.message_board (
-    nid INT,
+    nid SERIAL PRIMARY KEY,
     uid INT,
+    notification_type VARCHAR(50),
+    tournament_id INT,
+    notification_text VARCHAR(500),
     battle_id INT,
-    sent_date DATE DEFAULT CURRENT_DATE
+    is_sent BOOLEAN DEFAULT FALSE,
+    sent_date DATE DEFAULT NULL
 );
 
 -- Badge table
@@ -41,7 +45,8 @@ CREATE TABLE ckb.badge (
     badge_name VARCHAR(255),
     badge_description VARCHAR(3000),
     tournament_id INT,
-    badge_logic TEXT,
+    rank INT,
+    num_battles INT,
 	create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
