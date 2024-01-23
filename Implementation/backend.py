@@ -168,27 +168,59 @@ class Submission:
 
 
 class Badge:
-    def __init__(self):
-        pass
+    def __init__(self,tid):
+        self.DBMS = DBMS()
+        self.tid = tid
 
     def create_badge_logic(self, badge_logic):
-        pass
+        # Take top 
+        # Take Battle Count
+
+        self.DBMS.write('CREATE_BADGE',badge_logic)
+
+        
+        
+        # Write badge logic to DB
 
     def assign_badge(self, uid, bid):
-        pass
+        
+        self.DBMS.write("AWARD_BADGE", {"_USER_ID_": uid,
+                                           "_BADGE_ID_":bid})
+        
 
     def check_badge_achievers(self, bid):
-        pass
+        # Get Badge Logic
+        badge_logic_df = self.DBMS.read('GET_BADGE_LOGIC',{'_BADGE_ID_':bid})
+
+        badge_logic = {'_TOURNAMENT_ID_':badge_logic_df['tournament_id'].values[0],
+                        '_RANK_':['rank'].values[0],
+                        '_NUM_BATTLES_':['num_battles'].values[0]}
+        # Get all achievers 
+        badge_achievers = self.DBMS.read("GET_BADGE_ACHIEVERS",badge_logic)['uid'].values
+        
+        # Get current awardees
+        existing_badge_achievers = self.DBMS.read("GET_CURRENT_BADGE_HOLDERS",{'_BADGE_ID_':bid})['uid'].values
+
+        # Assign to new awardees
+        new_awardees = set(badge_achievers)-set(existing_badge_achievers)
+        for _uid in new_awardees:
+            self.assign_badge(_uid, bid)
+            # TODO
+            # SEND NOTIFICATION
+
+
 
 
 class Student:
-    def __init__(self):
-        pass
+    def __init__(self,uid):
+        self.uid = uid
 
     def get_student_page(self):
-        pass
+        # GET TOURNAMENTS
 
-    def get_student_badges(self):
+        # GET BATTLES
+
+        # GET BADGES
         pass
 
 

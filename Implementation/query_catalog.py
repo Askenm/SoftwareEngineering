@@ -17,6 +17,16 @@ query_catalog = {
                                                  VALUES ('_TOURNAMENT_NAME_', '_CREATOR_')
                                                  RETURNING tid;
                                                  """,
+       "CREATE_BADGE":      """
+                            INSERT INTO ckb.badge (badge_name, badge_description, tournament_id, rank, num_battles)
+                            VALUES 
+                            ('_BADGE_NAME_', '_BADGE_DESC_', _TOURNAMENT_ID_, _RANK_, _NUM_BATTLES_)
+                            """,
+       "AWARD_BADGE":       """
+                            INSERT INTO ckb.badgeholders (bid, uid)
+                            VALUES 
+                            (_BADGE_ID_, _USER_ID_)
+                            """
     },
     "read": {
         "GET_BATTLE_RANKINGS": """SELECT 
@@ -131,5 +141,39 @@ query_catalog = {
                                    FROM ckb.badge b
                                    WHERE tournament_id = _TOURNAMENT_ID_
                                    """,
+        "GET_BADGE_ACHIEVERS":     """
+                                   WITH RankedSubmissions AS (
+                                   SELECT 
+                                          s.submission_score, 
+                                          g.uid, 
+                                          s.battle_id,
+                                          b.tournament_id,
+                                          RANK() OVER (PARTITION BY s.battle_id ORDER BY s.submission_score DESC) as rank
+                                   FROM ckb.submissions s
+                                   JOIN ckb.groups g ON s.gid = g.gid
+                                   JOIN ckb.battles b ON s.battle_id = b.bid
+                                   WHERE b.tournament_id = _TOURNAMENT_ID_
+                                   ),
+                                   TopUsers AS (
+                                   SELECT 
+                                          uid, 
+                                          COUNT(*) AS top_finishes
+                                   FROM RankedSubmissions
+                                   WHERE rank <= _RANK_
+                                   GROUP BY uid
+                                   )
+                                   SELECT 
+                                   u.uid, 
+                                   u.user_name, 
+                                   top_finishes
+                                   FROM TopUsers tu
+                                   JOIN ckb.users u ON tu.uid = u.uid
+                                   WHERE top_finishes > _NUM_BATTLES_;
+                                   """,
+       "GET_BADGE_LOGIC":      """
+                                   SELECT tournament_id, rank, num_battles 
+                                   FROM ckb.badge
+                                   WHERE bid = _BADGE_ID_
+                                   """
     },
 }
