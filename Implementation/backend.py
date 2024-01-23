@@ -1,6 +1,7 @@
 from DataPersitenceService import DBMS
 import GithubManagementService as GMS
 
+
 class Battle:
     def __init__(self, bid=None):
         """
@@ -30,7 +31,9 @@ class Battle:
         self.battle_data = battle_data
 
         # Check if the battle name is already taken
-        battle_name_vacant = self.DBMS.read("BATTLE_NAME_VACANT", battle_data)["count"].values[0]
+        battle_name_vacant = self.DBMS.read("BATTLE_NAME_VACANT", battle_data)[
+            "count"
+        ].values[0]
         if battle_name_vacant > 0:
             return "Battle Name Taken"
 
@@ -73,10 +76,14 @@ class Battle:
         :return: A dictionary containing the user's affiliations.
         """
         # Check if the user is an educator
-        is_educator = self.DBMS.read("IS_EDUCATOR", {"_USER_ID_": uid})["is_educator"].values[0]
+        is_educator = self.DBMS.read("IS_EDUCATOR", {"_USER_ID_": uid})[
+            "is_educator"
+        ].values[0]
 
         # Retrieve the user's group affiliations
-        group = self.DBMS.read("GET_USER_GROUP", {"_BATTLE_ID_": self.bid, "_USER_ID_": uid})
+        group = self.DBMS.read(
+            "GET_USER_GROUP", {"_BATTLE_ID_": self.bid, "_USER_ID_": uid}
+        )
 
         user_affiliations = {"is_educator": is_educator, "group_affiliation": group}
 
@@ -94,7 +101,9 @@ class Battle:
             return
 
         # Retrieve battle information
-        self.battle_data_df = self.DBMS.read("GET_BATTLE_PAGE_INFO", {"_BATTLE_ID_": self.bid})
+        self.battle_data_df = self.DBMS.read(
+            "GET_BATTLE_PAGE_INFO", {"_BATTLE_ID_": self.bid}
+        )
 
         user_aff = self.get_user_affiliations(uid)
 
@@ -102,7 +111,9 @@ class Battle:
         self.group_submissions = self.get_group_submissions(user_aff)
 
         # Retrieve battle rankings
-        self.battle_rankings = self.DBMS.read("GET_BATTLE_RANKINGS", {"_BATTLE_ID_": self.bid})
+        self.battle_rankings = self.DBMS.read(
+            "GET_BATTLE_RANKINGS", {"_BATTLE_ID_": self.bid}
+        )
 
         # Compile final battle information
         self.battle_data = {
@@ -113,14 +124,11 @@ class Battle:
             "submissions": self.group_submissions,
         }
 
+
 # The following classes (Tournament, Notification, Submission, Badge, Student) follow a similar structure.
 # They are initialized with relevant IDs or settings, and contain methods to interact with the database (DBMS)
 # and perform specific actions like creating tournaments, handling badges, etc.
 # Each method should be documented similarly, explaining its purpose, parameters, return values, and any side effects.
-
-if __name__ == "__main__":
-    pass
-
 
 
 class Tournament:
@@ -145,7 +153,9 @@ class Tournament:
         self.tournament_data = tournament_data
 
         # Check if the tournament name is already taken
-        tournament_name_vacant = self.DBMS.read("TOURNAMENT_NAME_VACANT", tournament_data)["count"].values[0]
+        tournament_name_vacant = self.DBMS.read(
+            "TOURNAMENT_NAME_VACANT", tournament_data
+        )["count"].values[0]
         if tournament_name_vacant > 0:
             return "Tournament Name Taken"
 
@@ -164,16 +174,24 @@ class Tournament:
             return
 
         # Retrieve tournament information
-        self.tournament_data_df = self.DBMS.read("GET_TOURNAMENT_PAGE_INFO", {"_TOURNAMENT_ID_": self.tid})
+        self.tournament_data_df = self.DBMS.read(
+            "GET_TOURNAMENT_PAGE_INFO", {"_TOURNAMENT_ID_": self.tid}
+        )
 
         # Retrieve related battles
-        self.related_battles = self.DBMS.read("GET_RELATED_BATTLES", {"_TOURNAMENT_ID_": self.tid})
+        self.related_battles = self.DBMS.read(
+            "GET_RELATED_BATTLES", {"_TOURNAMENT_ID_": self.tid}
+        )
 
         # Retrieve tournament rankings
-        self.tournament_rankings = self.DBMS.read("GET_TOURNAMENT_RANKINGS", {"_TOURNAMENT_ID_": self.tid})
+        self.tournament_rankings = self.DBMS.read(
+            "GET_TOURNAMENT_RANKINGS", {"_TOURNAMENT_ID_": self.tid}
+        )
 
         # Retrieve tournament badges
-        self.badges = self.DBMS.read("GET_TOURNAMENT_BADGES", {"_TOURNAMENT_ID_": self.tid})
+        self.badges = self.DBMS.read(
+            "GET_TOURNAMENT_BADGES", {"_TOURNAMENT_ID_": self.tid}
+        )
 
         # Compile final tournament information
         self.tournament_data = {
@@ -217,7 +235,7 @@ class Badge:
         The badge_logic should contain the necessary criteria for earning the badge.
         """
         # Write badge logic to the database
-        self.DBMS.write('CREATE_BADGE', badge_logic)
+        self.DBMS.write("CREATE_BADGE", badge_logic)
 
     def assign_badge(self, uid, bid):
         """
@@ -238,23 +256,30 @@ class Badge:
         :return: None. Assigns badges to users who meet the criteria.
         """
         # Get badge logic
-        badge_logic_df = self.DBMS.read('GET_BADGE_LOGIC', {'_BADGE_ID_': bid})
+        badge_logic_df = self.DBMS.read("GET_BADGE_LOGIC", {"_BADGE_ID_": bid})
 
-        badge_logic = {'_TOURNAMENT_ID_': badge_logic_df['tournament_id'].values[0],
-                       '_RANK_': badge_logic_df['rank'].values[0],
-                       '_NUM_BATTLES_': badge_logic_df['num_battles'].values[0]}
-        
+        badge_logic = {
+            "_TOURNAMENT_ID_": badge_logic_df["tournament_id"].values[0],
+            "_RANK_": badge_logic_df["rank"].values[0],
+            "_NUM_BATTLES_": badge_logic_df["num_battles"].values[0],
+        }
+
         # Get all potential badge achievers
-        badge_achievers = self.DBMS.read("GET_BADGE_ACHIEVERS", badge_logic)['uid'].values
-        
+        badge_achievers = self.DBMS.read("GET_BADGE_ACHIEVERS", badge_logic)[
+            "uid"
+        ].values
+
         # Get current badge holders
-        existing_badge_achievers = self.DBMS.read("GET_CURRENT_BADGE_HOLDERS", {'_BADGE_ID_': bid})['uid'].values
+        existing_badge_achievers = self.DBMS.read(
+            "GET_CURRENT_BADGE_HOLDERS", {"_BADGE_ID_": bid}
+        )["uid"].values
 
         # Determine new badge awardees
         new_awardees = set(badge_achievers) - set(existing_badge_achievers)
         for _uid in new_awardees:
             self.assign_badge(_uid, bid)
             # TODO: Implement notification system
+
 
 class Student:
     def __init__(self, uid):
@@ -264,6 +289,7 @@ class Student:
         :param uid: User ID of the student.
         """
         self.uid = uid
+        self.DBMS = DBMS()
 
     def get_student_page(self):
         """
@@ -271,16 +297,37 @@ class Student:
 
         :return: None. Retrieves and sets various attributes related to the student.
         """
-        # TODO: Implement functionality to retrieve tournaments, battles, and badges for the student
+        # Get tournaments
+        user_tournaments = self.DBMS.read(
+            "GET_USER_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+
+        user_battles = self.DBMS.read("GET_USER_BATTLES", {"_USER_ID_": self.uid})
+
+        user_badges = self.DBMS.read("GET_USER_BADGES", {"_USER_ID_": self.uid})
+
+        self.user_information = {
+            "user_tournaments": user_tournaments,
+            "user_battles": user_battles,
+            "user_badges": user_badges,
+        }
+
 
 # Notification and Submission classes have been marked as placeholders and need further implementation.
 class Notification:
     def __init__(self):
         pass
 
+
 class Submission:
     def __init__(self):
         pass
+
+
+class Educator:
+    def __init__(self):
+        pass
+
 
 if __name__ == "__main__":
     pass

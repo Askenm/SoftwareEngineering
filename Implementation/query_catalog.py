@@ -17,16 +17,16 @@ query_catalog = {
                                                  VALUES ('_TOURNAMENT_NAME_', '_CREATOR_')
                                                  RETURNING tid;
                                                  """,
-       "CREATE_BADGE":      """
+        "CREATE_BADGE": """
                             INSERT INTO ckb.badge (badge_name, badge_description, tournament_id, rank, num_battles)
                             VALUES 
                             ('_BADGE_NAME_', '_BADGE_DESC_', _TOURNAMENT_ID_, _RANK_, _NUM_BATTLES_)
                             """,
-       "AWARD_BADGE":       """
+        "AWARD_BADGE": """
                             INSERT INTO ckb.badgeholders (bid, uid)
                             VALUES 
                             (_BADGE_ID_, _USER_ID_)
-                            """
+                            """,
     },
     "read": {
         "GET_BATTLE_RANKINGS": """SELECT 
@@ -141,7 +141,7 @@ query_catalog = {
                                    FROM ckb.badge b
                                    WHERE tournament_id = _TOURNAMENT_ID_
                                    """,
-        "GET_BADGE_ACHIEVERS":     """
+        "GET_BADGE_ACHIEVERS": """
                                    WITH RankedSubmissions AS (
                                    SELECT 
                                           s.submission_score, 
@@ -170,10 +170,33 @@ query_catalog = {
                                    JOIN ckb.users u ON tu.uid = u.uid
                                    WHERE top_finishes > _NUM_BATTLES_;
                                    """,
-       "GET_BADGE_LOGIC":      """
+        "GET_BADGE_LOGIC": """
                                    SELECT tournament_id, rank, num_battles 
                                    FROM ckb.badge
                                    WHERE bid = _BADGE_ID_
-                                   """
+                                   """,
+        "GET_USER_TOURNAMENTS": """
+                                   SELECT tournament_name from 
+                                   ckb.tournaments t
+                                   INNER JOIN ckb.subscriptions s
+                                   ON t.tid = s.tid
+                                   WHERE s.uid = _USER_ID_
+                                   """,
+        "GET_USER_BATTLES": """
+                                   select battle_name,group_name,b.end_date 
+                                   FROM ckb.groups g
+                                   INNER JOIN ckb.battles b 
+                                   ON b.bid = g.bid 
+                                   WHERE g.uid = _USER_ID_
+                                   """,
+        "GET_USER_BADGES": """
+                                   select badge_name,tournament_name,badge_achieved 
+                                   FROM ckb.badge b
+                                   INNER JOIN ckb.badgeholders bh 
+                                   ON b.bid = bh.bid 
+                                   INNER JOIN ckb.tournaments t
+                                   ON t.tid = b.tournament_id
+                                   WHERE bh.uid = _USER_ID_
+                                   """,
     },
 }
