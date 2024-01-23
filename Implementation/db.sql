@@ -1,3 +1,24 @@
+-- Battle table
+CREATE TABLE ckb.battles (
+    bid SERIAL PRIMARY KEY,
+    battle_name VARCHAR(255) NOT NULL,
+    battle_description VARCHAR(3000) NOT NULL,
+    tournament_id INT,
+    github_repo VARCHAR(255) NOT NULL,
+    creator VARCHAR(255),
+    create_date DATE DEFAULT CURRENT_DATE,
+    end_date DATE
+    );
+
+-- Tournament table
+CREATE TABLE ckb.tournaments (
+    tid SERIAL PRIMARY KEY,
+    tournament_name VARCHAR(255) NOT NULL,
+    creator VARCHAR(255),
+    create_date DATE DEFAULT CURRENT_DATE,
+    end_date DATE DEFAULT NULL
+    );
+
 -- Notifications table
 CREATE TABLE ckb.notifications (
     nid SERIAL PRIMARY KEY,
@@ -8,7 +29,7 @@ CREATE TABLE ckb.notifications (
 
 -- Message Board table
 CREATE TABLE ckb.message_board (
-    nid SERIAL PRIMARY KEY,
+    nid INT,
     uid INT,
     battle_id INT,
     sent_date DATE DEFAULT CURRENT_DATE
@@ -18,10 +39,19 @@ CREATE TABLE ckb.message_board (
 CREATE TABLE ckb.badge (
     bid SERIAL PRIMARY KEY,
     badge_name VARCHAR(255),
+    badge_description VARCHAR(3000),
     tournament_id INT,
     badge_logic TEXT,
 	create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Badge Holders table
+CREATE TABLE ckb.badgeholders (
+    bid INT,
+    uid INT,
+	badge_achieved TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 -- User table
 CREATE TABLE ckb.users (
@@ -29,7 +59,8 @@ CREATE TABLE ckb.users (
     user_name VARCHAR(255),
     create_date DATE DEFAULT CURRENT_DATE,
     user_email VARCHAR(255),
-    github_user_name VARCHAR(255)
+    github_user_name VARCHAR(255),
+    is_educator BOOLEAN 
 );
 
 -- Submissions table
@@ -49,17 +80,12 @@ CREATE TABLE ckb.subscriptions (
     PRIMARY KEY (uid, tid)
 );
 
--- Participations table
-CREATE TABLE ckb.participations (
-    tournament_id INT,
-    group_id INT,
-    participate_id SERIAL PRIMARY KEY
-);
-
 -- Groups table
 CREATE TABLE ckb.groups (
     gid SERIAL PRIMARY KEY,
-    participant_id INT,
-    tournament_id INT,
+    group_name VARCHAR(255),
+    pid INT,
+    bid INT,
+    uid INT,
     group_create_date DATE DEFAULT CURRENT_DATE
 );
