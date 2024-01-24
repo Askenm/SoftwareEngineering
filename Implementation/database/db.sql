@@ -89,7 +89,6 @@ CREATE TABLE ckb.subscriptions (
 CREATE TABLE ckb.groups (
     gid SERIAL PRIMARY KEY,
     group_name VARCHAR(255),
-    pid INT,
     bid INT,
     uid INT,
     group_create_date DATE DEFAULT CURRENT_DATE

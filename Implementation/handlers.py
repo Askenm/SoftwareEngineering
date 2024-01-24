@@ -126,7 +126,7 @@ class BadgeHandler:
         # get tournament info
         tournament = self.DBMS.read('GET_TOURNAMENT_NAME_FROM_BADGE_ID',{'_BADGE_ID_':bid})
         tournament_name = tournament['tournament_name'].values[0]
-        tournament_id = tournament['tid'].values[0]
+        tournament_id = tournament['tournament_id'].values[0]
 
         # get user info
         user_name = self.DBMS.read('GET_USER_NAME_FROM_UID',{'_USER_ID_':uid})['user_name'].values[0]
