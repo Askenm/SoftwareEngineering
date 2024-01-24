@@ -1,6 +1,7 @@
 from DataPersitenceService import DBMS
 import GithubManagementService as GMS
 from notification_catalog import notification_catalog
+from datetime import datetime
 
 
 class Battle:
@@ -12,6 +13,7 @@ class Battle:
         """
         self.bid = bid
         self.DBMS = DBMS()
+        self.battle_data = {}
 
     def create_battle(self, battle_data):
         """
@@ -25,6 +27,7 @@ class Battle:
         {
             '_BATTLE_NAME_': 'Example Battle Name',
             '_BATTLE_DESC_': 'Description of the Battle',
+            '_TOURNAMENT_ID_':tid,
             '_BATTLE_REPO_': 'URL of the associated GitHub repository',
             '_BATTLE_CREATOR_': Creator's ID,
             '_END_DATE_': 'End date of the battle'
@@ -90,6 +93,7 @@ class Battle:
         user_affiliations = {"is_educator": is_educator, "group_affiliation": group}
 
         return user_affiliations
+    
 
     def get_battle_page_info(self, uid):
         """
@@ -127,6 +131,40 @@ class Battle:
         }
 
 
+
+    
+    def join(self,user_ids,group_name):
+
+        if not self.battle_data:
+            self.get_battle_page_info(user_ids[0])
+        
+
+        for uid in user_ids:
+
+            # Upload to DB
+            group_info = {'_GROUP_NAME_':group_name,
+                        '_BATTLE_ID_':self.bid,
+                            '_USER_ID_':uid}
+            
+            self.DBMS.write('JOIN_GROUP',group_info)
+
+            # Register to message board
+
+            user_name = self.DBMS.read('GET_USER_NAME_FROM_UID',{'_USER_ID_':uid})['user_name'].values[0]
+
+            notification_info = {uid:   {"_BATTLE_NAME_":self.battle_data['battle_name'],
+                                        '_USER_NAME_':user_name,
+                                        '_GROUP_NAME_':group_name,
+                                        '_TOURNAMENT_ID_': self.battle_data_df['tournament_id'].values[0]
+                                        }
+                                }
+
+            BattleNotification = Notification("BATTLE_JOINED")
+
+            BattleNotification.register_notfications_to_messageboard(notification_info)
+
+
+
 # The following classes (Tournament, Notification, Submission, Badge, Student) follow a similar structure.
 # They are initialized with relevant IDs or settings, and contain methods to interact with the database (DBMS)
 # and perform specific actions like creating tournaments, handling badges, etc.
@@ -151,6 +189,11 @@ class Tournament:
         :return: 'Tournament Name Taken' if the name is already in use, None otherwise.
 
         The tournament_data should contain the necessary information for creating a tournament.
+
+        EXPECTED FORMAT OF THE TORUNAMENT DATA
+        tournament_data = {'_TOURNAMENT_NAME_':'Tournament Name',
+                            '_CREATOR_':user_id}
+
         """
         self.tournament_data = tournament_data
 
@@ -198,6 +241,7 @@ class Tournament:
         # Compile final tournament information
         self.tournament_data = {
             "tournament_name": self.tournament_data_df["tournament_name"].values[0],
+            "educator_id":self.tournament_data_df["creator"].values[0],
             "related_battles": self.related_battles,
             "tournament_rankings": self.tournament_rankings,
             "badges": self.badges,
@@ -217,6 +261,20 @@ class Tournament:
         self.DBMS.write("END_TOURNAMENT", {"_TOURNAMENT_ID_": self.tid})
 
 
+    def create_badge(self,badge_logic):
+        badge = Badge(self.tid)
+
+        badge.create_badge_logic(badge_logic)
+
+    def create_battle(self,battle_data):
+        battle_data['_TOURNAMENT_ID_'] = self.tid
+        battle_data['_BATTLE_CREATOR_'] = self.tournament_data['educator_id']
+
+        battle = Battle()
+        bid = battle.create_battle(battle_data)
+
+
+
 class Badge:
     def __init__(self, tid):
         """
@@ -227,10 +285,9 @@ class Badge:
 
         The expected format of badge_data is as follows:
         {
-            '_BADGE_NAME_': 'Example Badge Name' (VARCHAR)
-            '_BADGE_DESC_': 'Description of the Badge' (VARCHAR)
-            '_TOURNAMENT_ID_': The tournamentID where the badge is being created (INT)
-            '_RANK_': The badge is awarded if a user places within the top _RANK_ (INT)
+            '_BADGE_NAME_': 'Example Badge Name' (VARCHAR),
+            '_BADGE_DESC_': 'Description of the Badge' (VARCHAR),
+            '_RANK_': The badge is awarded if a user places within the top _RANK_ (INT),
             '_NUM_BATTLES_': in _NUM_BATTLES_ of a tournament (INT)
         }
         """
@@ -247,6 +304,7 @@ class Badge:
         The badge_logic should contain the necessary criteria for earning the badge.
 
         """
+        badge_logic['_TOURNAMENT_ID_'] = self.tid
         # Write badge logic to the database
         self.DBMS.write("CREATE_BADGE", badge_logic)
 
@@ -260,6 +318,47 @@ class Badge:
         """
         # Award the badge to the user
         self.DBMS.write("AWARD_BADGE", {"_USER_ID_": uid, "_BADGE_ID_": bid})
+
+    def get_current_date(self):
+        # Get the current date
+        current_date = datetime.now()
+
+        # Format the date as yyyy-mm-dd
+        formatted_date = current_date.strftime('%Y-%m-%d')
+
+        return formatted_date
+    
+    def query_badge_notification_info(self,bid,uid):
+        # Get badge name
+        badge_name = self.DBMS.read('GET_BADGE_NAME',{'_BADGE_ID_':bid})['badge_name'].values[0]
+
+        # get tournament info
+        tournament = self.DBMS.read('GET_TOURNAMENT_NAME_FROM_BADGE_ID',{'_BADGE_ID_':bid})
+        tournament_name = tournament['tournament_name'].values[0]
+        tournament_id = tournament['tid'].values[0]
+
+        # get user info
+        user_name = self.DBMS.read('GET_USER_NAME_FROM_UID',{'_USER_ID_':uid})['user_name'].values[0]
+
+        notification_info = {uid:{"_BADGE_NAME_":badge_name,
+                             '_USER_NAME_':user_name,
+                             '_TOURNAMENT_NAME_':tournament_name,
+                             '_TOURNAMENT_ID_': tournament_id,
+                             '_BADGE_ACHIEVED_DATE_':self.get_current_date()}
+                             }
+
+        # return to notification
+        return notification_info
+
+
+    def badge_awarded_notification(self,uid,bid):
+
+        notification_info = self.query_badge_notification_info(uid,bid)
+
+        BadgeNotification = Notification('BADGE_ACHIEVED')
+
+        BadgeNotification.register_notfications_to_messageboard(notification_info)
+
 
     def check_badge_achievers(self, bid):
         """
@@ -290,8 +389,12 @@ class Badge:
         # Determine new badge awardees
         new_awardees = set(badge_achievers) - set(existing_badge_achievers)
         for _uid in new_awardees:
+            
+            # Register badge assignment in DB
             self.assign_badge(_uid, bid)
-            # TODO: Implement notification system
+
+            # upload notification of badge assignment to messageboard
+            self.badge_awarded_notification(_uid, bid)
 
 
 class Student:
@@ -335,17 +438,13 @@ class Notification:
     def create_notification_message(self, notification_info):
         notification = notification_catalog[self.notification_type]
         for key, value in notification_info.items():
-            notification = notification.replace(key, value)
+            notification = notification.replace(key, str(value))
 
         return notification
 
     def register_notfications_to_messageboard(self, notification_info):
         """
-        notification_info = {1:{"_BADGE_NAME_":"BADGE1",
-                             '_USERNAME_':"user1",
-                             '_TOURNAMENTNAME_':"tournament 1",
-                             '_TOURNAMENT_ID_': 1,
-                             '_BADGEACHIEVED_DATE_':"1996-08-12"}
+        notification_info = {1:{NOTIFICATION INFO}
                              }
         """
 
@@ -362,12 +461,7 @@ class Notification:
                 },
             )
 
-    def send_notification(self):
-        # TODO
-        # REQUIRES EMAIL CLIENT SERVICE
-        # GET EMAILS OF ALL USERS WITH PENDING NOTIFICATIONS FROM MESSAGEBOARD
-        # SEND THEM ONCE EVERY TIME PERIOD™ USING main_backend.py
-        pass
+
 
 
 class Submission:

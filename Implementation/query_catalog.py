@@ -3,7 +3,7 @@ query_catalog = {
     "write": {
         "CREATE_BATTLE": """
                                           INSERT INTO ckb.battles (battle_name, battle_description, tournament_id, github_repo, creator,end_date)
-                                          VALUES ('_BATTLE_NAME_', '_BATTLE_DESC_', 1, '_BATTLE_REPO_', '_BATTLE_CREATOR_','_END_DATE_')
+                                          VALUES ('_BATTLE_NAME_', '_BATTLE_DESC_', _TOURNAMENT_ID_, '_BATTLE_REPO_', '_BATTLE_CREATOR_','_END_DATE_')
                                           RETURNING bid;
                                           """,
         "END_TOURNAMENT": """
@@ -32,6 +32,18 @@ query_catalog = {
                                    VALUES
                                    (_USER_ID_, '_NOTIFICATION_TYPE_', _TOURNAMENT_ID_, '_NOTIFICATION_TEXT_', _BATTLE_ID_)
                                    """,
+       "MARK_NOTIFICATION_AS_SENT":       """
+                                          UPDATE ckb.message_board
+                                          SET is_sent = TRUE, 
+                                          sent_date = CURRENT_DATE
+                                          WHERE nid = _NOTIFICATION_ID_;
+
+                                          """,
+       "JOIN_GROUP": """
+                     INSERT INTO ckb.groups (group_name, bid, uid)
+                     VALUES ('_GROUP_NAME_', _BATTLE_ID_, _USER_ID_);
+
+                     """
     },
     "read": {
         "GET_BATTLE_RANKINGS": """SELECT 
@@ -90,7 +102,7 @@ query_catalog = {
                                                  ORDER BY BattleQuery.score desc
                                                  """,
         "GET_TOURNAMENT_PAGE_INFO": """
-                                                 SELECT tournament_name FROM ckb.tournaments t
+                                                 SELECT tournament_name,creator FROM ckb.tournaments t
                                                  WHERE t.tid = _TOURNAMENT_ID_
                                                  """,
         "GET_RELATED_BATTLES": """
@@ -203,5 +215,37 @@ query_catalog = {
                                    ON t.tid = b.tournament_id
                                    WHERE bh.uid = _USER_ID_
                                    """,
+       "GET_BADGE_NAME":    """
+                            SELECT badge_name FROM ckb.badge WHERE bid = _BADGE_ID_
+                            """,
+       "GET_TOURNAMENT_NAME_FROM_BADGE_ID":      """
+                                                 SELECT tournament_id,tournament_name FROM ckb.badge b
+                                                 INNER JOIN ckb.tournaments t
+                                                 ON b.tournament_id = t.tid
+                                                 WHERE bid = _BADGE_ID_ 
+                                                 """,
+       "GET_USER_NAME_FROM_UID":                 """
+                                                 SELECT user_name FROM ckb.users u
+                                                 WHERE uid = _USER_ID_
+                                                 """,
+       "CHECK_MESSAGEBOARD":       """
+                                   SELECT u.user_email , m.*FROM ckb.message_board m
+                                   inner join ckb.users u
+                                   ON u.uid = m.uid
+                                   WHERE is_sent = false
+                                   """,
+       "GET_ALL_BADGES":    """
+                            SELECT * FROM ckb.badge b
+                            INNER JOIN ckb.tournaments t
+                            ON b.tournament_id = t.tid
+                            WHERE t.end_date is NULL
+                            """,
+       "GET_BATTLE_TOURNAMENT":    """
+                                   SELECT tournament_id 
+                                   """,
+       "GET_CURRENT_BADGE_HOLDERS":       """
+                                          SELECT * FROM ckb.badgeholders
+                                          WHERE bid = _BADGE_ID_
+                                          """
     },
 }
