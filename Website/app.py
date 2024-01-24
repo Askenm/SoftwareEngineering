@@ -29,9 +29,14 @@ elif st.session_state['login_status']:
                 Page("My_Tournaments_page.py", "My Tournaments", "🏆"),
                 Page("My_Battles_page.py", "My Battles", "⚔️"),
                 Page("Create_battle.py", "Create Battle", "⚔️"),
-                Page("My_Profile_page.py", "My Profile", "👤")
+                Page("My_Profile_page.py", "My Profile", "𖠌"),
+                Page("Tournament_page.py", ""),
+                Page("Battle_page.py", ""),
             ]
         )
+    #    hide_pages(
+    #        "My Battles"
+    #    )
         
         
         
