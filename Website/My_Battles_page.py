@@ -2,9 +2,8 @@ import streamlit as st
 
 
 
-st.markdown("# ⚔️ Create Battles")
+st.markdown("# ⚔️ My Battles")
 
 st.write(
         """testtset"""
     ) 
-
