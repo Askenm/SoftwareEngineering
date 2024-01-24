@@ -1,4 +1,10 @@
 import streamlit as st
 
-def show():
-    st.title("Tournament Page")
+
+
+st.markdown("# ⚔️ Create Battles")
+
+st.write(
+        """testtset"""
+    ) 
+
