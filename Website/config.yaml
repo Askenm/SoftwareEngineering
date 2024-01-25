@@ -1,0 +1,25 @@
+credentials:
+  usernames:
+    karl:
+      email: karl@gmail.com
+      id: 9183afa0644c9a71f42b9db3d3a9841b
+      logged_in: false
+      name: karl
+      password: $2b$12$jssOUgabvqllVwrsnXv4i.y8krrRAXtlv6PMv5Faf1j41Fd.nTTa6
+      role: Educator
+    pparker:
+      id: caf95e2836f069076aee1c6c62e41088
+      logged_in: false
+      name: Peter Parker
+      password: $2b$12$TeMhjOeoXC1eLxesWVgM1uw5Vpkne3/qiCTDje7wXjQ.dPK2nq6am
+      role: Student
+    rmiller:
+      id: e96d5cb47719be30b8d64cb9da79ec31
+      logged_in: false
+      name: Rebecca Miller
+      password: $2b$12$BbMd/mh1x78m32.WpSQ0heipwkBGlk9XyEgF6xkBCgeff9IvzSUOC
+      role: Educator
+cookie:
+  expiry_days: 30
+  key: some_signature_key # Must be string
+  name: some_cookie_name
