@@ -1,20 +1,6 @@
 import streamlit as st
-import yaml
-from pathlib import Path
-from Authenticator_role.streamlit_authenticator.authenticate import Authenticate
 
-config_path = Path(__file__).parent / "config.yaml"
-with open(config_path) as file:
-    config = yaml.safe_load(file)
 
-# Initialize authenticator with the configuration
-authenticator = Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days']
-)
-authenticator.logout("Logout","sidebar")
 st.markdown("# ⛩️ Welcome back, user_name!")
 st.write('#')
 
