@@ -11,6 +11,9 @@ st.set_page_config(page_title="CodeKata Battles", page_icon="CBK")
 if 'login_status' not in st.session_state:
     st.session_state['login_status'] = False
 
+if 'switch_pages_button' not in st.session_state:
+    st.session_state['switch_pages_button'] = False
+
 # Define the page navigation
 pages = {
     #"Login/Sign up": Login_signup,
@@ -41,85 +44,60 @@ authenticator = Authenticate(
 # Function to show appropriate pages based on role
 def show_pages_based_on_role():
     if st.session_state['role'] == "Educator":
-        #combined_pages = {**pages, **educator_pages}
-        page = st.sidebar.radio("Select your page", list(pages))
-        pages[page].show()
+        combined_pages = {**pages, **educator_pages}
+        st.session_state['sidebar_page'] = st.sidebar.radio("Select your page", list(pages))
     elif st.session_state['role'] == "Student":
         combined_pages = {**pages, **student_pages}
-        page = st.sidebar.radio("Select your page", list(combined_pages))
-        combined_pages[page].show()
-
-# Display the front page by default or when not logged in
+        st.session_state['sidebar_page'] = st.sidebar.radio("Select your page", list(combined_pages))
+# Main app logic
 if not st.session_state['login_status'] or st.session_state['logout']:
     st.session_state['logout'] = False
     authenticator, username, name = Login_signup.show(authenticator)
     # Fetch and store the user's role upon successful login
     user_info = config['credentials']['usernames'].get(username, {})
-
     st.session_state['role'] = user_info.get('role', None)  # Default to None if role is not defined
     st.session_state['name'] = name
-# Show other pages if logged in
+    st.session_state['current_page'] = 'default_page'  # Reset to default page after login
 elif st.session_state['login_status']:
-
     st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
+    s_pages = {**pages, **student_pages}
     show_pages_based_on_role()
-
-    authenticator.logout("Logout","sidebar")
-
+    if not st.session_state['switch_pages_button']:
+        pages[st.session_state['sidebar_page']].show()
+    else:
+        st.session_state['switch_pages_button'] = False
+        pages[st.session_state['current_page']].show()
+        
+    authenticator.logout("Logout", "sidebar")
 else:
     st.error("Please log in to access this page")
 
-
-# import streamlit as st
-# import Login_signup
-# import Front_page
-# from st_pages import Page, show_pages, add_page_title, hide_pages
-
-
-# # Set up the main configuration of the app
-# st.set_page_config(page_title="CodeKata Battles", page_icon="⛩️")
-
-# if 'login_status' not in st.session_state:
-#     st.session_state['login_status'] = False
-    
-# pages = {
-#     "Login/Sign up": Front_page,
-# }
-
-
+# # Function to show appropriate pages based on role
+# def show_pages_based_on_role():
+#     if st.session_state['role'] == "Educator":
+#         #combined_pages = {**pages, **educator_pages}
+#         page = st.sidebar.radio("Select your page", list(pages))
+#         pages[page].show()
+#     elif st.session_state['role'] == "Student":
+#         combined_pages = {**pages, **student_pages}
+#         page = st.sidebar.radio("Select your page", list(combined_pages))
+#         combined_pages[page].show()
 
 # # Display the front page by default or when not logged in
-# if not st.session_state['login_status']:
-#     pages["Login/Sign up"].show()
+# if not st.session_state['login_status'] or st.session_state['logout']:
+#     st.session_state['logout'] = False
+#     authenticator, username, name = Login_signup.show(authenticator)
+#     # Fetch and store the user's role upon successful login
+#     user_info = config['credentials']['usernames'].get(username, {})
 
- 
+#     st.session_state['role'] = user_info.get('role', None)  # Default to None if role is not defined
+#     st.session_state['name'] = name
+# # Show other pages if logged in
 # elif st.session_state['login_status']:
-#     if st.session_state['role'] == "Educator":
-        
-#         show_pages(
-#             [
-#                 Page("Home_page.py", "Home", "⛩️"),
-#                 Page("My_Tournaments_page.py", "My Tournaments", "🏆"),
-#                 Page("My_Battles_page.py", "My Battles", "⚔️"),
-#                 Page("Create_battle.py", "Create Battle", "⚔️"),
-#                 Page("My_Profile_page.py", "My Profile", "𖠌"),
-#                 Page("Tournament_page.py", ""),
-#                 Page("Battle_page.py", ""),
-#             ]
-#         )
-#     #    hide_pages(
-#     #        "My Battles"
-#     #    )
-        
-        
-        
-#     elif st.session_state['role'] == "Student":
-#         hide_pages(
-#             [
-#                 "Create Battle"
-#             ]
-#         )
-        
-#         # Show other pages if logged in
+#     st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
+#     show_pages_based_on_role()
+#     print(st.session_state.to_dict())
+#     authenticator.logout("Logout","sidebar")
+
 # else:
 #     st.error("Please log in to access this page")

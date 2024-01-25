@@ -1,3 +1,8 @@
+import os
+import random
+
+import pandas as pd
+from util import button_call
 import streamlit as st
 
 def show():
@@ -7,17 +12,17 @@ def show():
     col1, col2 = st.columns(2)
 
     with col1:
+
         st.subheader ("My ongoing Tournmanents")
         #can st.button label be replaced with id dependant DB content of specific tournaments?
         #can switch page be provided with DB id of the corresponding tournament, for Tournament_page to be populated with the corresponding tournament data?
         if st.button("Python Iteration tournament"):
-            st.switch_page("My_Tournament_page.py")
+            button_call("My battles")
         
         # check this for page link open in same tab while keeping session state: https://github.com/streamlit/streamlit/issues/7464
-        button = st.link_button(
-            "Python Iterations tournament",
-            "/My%20Profile"
-            )
+        if st.button("Python Iteration tournament", key="bla"):
+            button_call("My profile")
+
             
 
     with col2:
