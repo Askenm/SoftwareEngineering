@@ -1,3 +1,5 @@
+import pandas as pd
+from util import button_call, dataframe_with_selections
 import streamlit as st
 
 def show():
@@ -10,7 +12,7 @@ def show():
 
     c1, c2, = st.columns(2)
     c3, c4, = st.columns(2)
-    #c5, c6, = st.columns(2)
+    c5 = st.columns(1)
 
     with c1:
         st.caption("Final Submission Deadline")
@@ -45,28 +47,18 @@ def show():
         if st.button("💥 REGISTER"):
             st.toast('💥 THE BATTLE IS ON!! 💥')
         
-    st.write('##')
-    st.subheader ("𖠌 Subscribers")
-    col3, col4, col5 = st.columns(3)
-    with col3:
-            if st.button("user_name1", key=7):
-                st.switch_page("My_Profile_page.py")
-            if st.button("user_name2", key=8):
-                st.switch_page("My_Profile_page.py")
-            if st.button("user_name3", key=9):
-                st.switch_page("My_Profile_page.py")
-    with col4: 
-            if st.button("user_name4", key=10):
-                st.switch_page("My_Profile_page.py")
-            if st.button("user_name5", key=11):
-                st.switch_page("My_Profile_page.py")
-            if st.button("user_name6", key=12):
-                st.switch_page("My_Profile_page.py")    
-    with col5: 
-            if st.button("user_name7", key=13):
-                st.switch_page("My_Profile_page.py")
-            if st.button("user_name8", key=14):
-                st.switch_page("My_Profile_page.py")
-            if st.button("user_name9", key=15):
-                st.switch_page("My_Profile_page.py")  
-        
+    with c5[0]:
+        st.write('##')
+        st.subheader ("𖠌 Subscribers")
+        df = pd.DataFrame(
+            {
+                "Team names": ["Basic", "Medium", "Advanced"],
+                "Number of submissions": [120, 50, 75],
+                "Group participants": ["John & Tokia", "Aske", "Lise"],})
+
+        selection = dataframe_with_selections(df)
+
+        if selection['selected_rows_indices'] != []:
+            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
+            button_call("Tournament details")
+            
