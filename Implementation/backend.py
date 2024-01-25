@@ -137,9 +137,18 @@ class Battle:
 
         if not self.battle_data:
             self.get_battle_page_info(user_ids[0])
+
+
+        
+        non_subscribed_users = self.users_subscribed_to_tournament(user_ids)
+        if len(non_subscribed_users)>0:
+            tournament_name = self.DBMS.read("GET_TOURNAMENT_NAME",{'_TOURNAMENT_ID_':self.battle_data_df['tournament_id'].values[0]})
+            return f"Users {', '.join(non_subscribed_users)} are not subscribed to tournament {tournament_name}"
+
         
 
         for uid in user_ids:
+
 
             # Upload to DB
             group_info = {'_GROUP_NAME_':group_name,
@@ -163,12 +172,9 @@ class Battle:
 
             BattleNotification.register_notfications_to_messageboard(notification_info)
 
-
-
-# The following classes (Tournament, Notification, Submission, Badge, Student) follow a similar structure.
-# They are initialized with relevant IDs or settings, and contain methods to interact with the database (DBMS)
-# and perform specific actions like creating tournaments, handling badges, etc.
-# Each method should be documented similarly, explaining its purpose, parameters, return values, and any side effects.
+    def get_unassigned_subscribers(self):
+        self.unassigned_subs = self.DBMS.read('GET_UNASSIGNED_SUBSCRIBERS',{'_BATTLE_ID_':self.bid})
+        return self.unassigned_subs
 
 
 class Tournament:
@@ -272,6 +278,12 @@ class Tournament:
 
         battle = Battle()
         bid = battle.create_battle(battle_data)
+
+
+    def subscribe(self,uid):
+        self.DBMS.write("SUBSCRIBE_TO_TOURNAMENT",{'_USER_ID_':uid,
+                                                   '_TOURNAMENT_ID_':self.tid})
+        
 
 
 
@@ -465,13 +477,75 @@ class Notification:
 
 
 class Submission:
-    def __init__(self):
+    def __init__(self,sid):
+        self.DBMS = DBMS()
+        self.sid = sid
+
+    def get_submission_info(self):
         pass
+
+    def get_notification_info(self):
+        pass #_USER_NAME_ _BATTLE_NAME_
+
+
 
 
 class Educator:
-    def __init__(self):
-        pass
+    def __init__(self,uid):
+        self.DBMS = DBMS()
+        self.uid = uid
+
+    def create_battle(self,battle_data):
+        current_tournament = Tournament(battle_data['_TOURNAMENT_ID_'])
+
+        battle_id = current_tournament.create_battle(battle_data)
+
+        new_battle = Battle(battle_id)
+
+        self.battle_page_info = new_battle.get_battle_page_info()
+
+        return self.battle_page_info
+
+
+    def create_tournament(self,tournament_data):
+        new_tournament = Tournament()
+
+        new_tournament.create_tournament(tournament_data)
+
+        self.tournament_page_info = new_tournament.get_tournament_page_info()
+
+        return self.tournament_page_info
+
+    def assign_manual_score(self,score_info):
+        """
+        {"_BATTLE_ID_":bid,
+         "_SUBMISSION_ID_":sid,
+         "_SCORE_":score}
+        """
+        # update the submission entry
+        self.DBMS.write("ASSIGN_MANUAL_SCORE",score_info)
+
+        # send a notification       
+
+        ScoredSubmission = Submission(score_info["sid"])
+
+        notification_info = ScoredSubmission.get_notification_info()
+        
+        SubmissionScoredNotification = Notification('SUBMISSION_SCORED') 
+
+        SubmissionScoredNotification.register_notfications_to_messageboard(notification_info)
+        
+
+    def end_tournament(self,tid):
+        T = Tournament(tid)
+        T.end_tournament()
+
+
+
+    def create_badge(self,tid,badge_logic):
+        T = Tournament(tid)
+        T.create_badge(badge_logic)
+
 
 
 if __name__ == "__main__":

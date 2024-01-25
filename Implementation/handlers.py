@@ -119,7 +119,7 @@ class BadgeHandler:
 
         return formatted_date
     
-    def query_badge_notification_info(self,bid,uid):
+    def query_badge_notification_info(self,uid,bid):
         # Get badge name
         badge_name = self.DBMS.read('GET_BADGE_NAME',{'_BADGE_ID_':bid})['badge_name'].values[0]
 

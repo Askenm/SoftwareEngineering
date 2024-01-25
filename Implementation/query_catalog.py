@@ -43,7 +43,15 @@ query_catalog = {
                      INSERT INTO ckb.groups (group_name, bid, uid)
                      VALUES ('_GROUP_NAME_', _BATTLE_ID_, _USER_ID_);
 
-                     """
+                     """,
+       "SUBSCRIBE_TO_TOURNAMENT":  """
+                                   INSERT INTO ckb.subscriptions (uid, tid)  
+                                   VALUES ( _USER_ID_,_TOURNAMENT_ID_);
+                                   """,
+       "ASSIGN_MANUAL_SCORE":      """
+                                   INSERT INTO ckb.submissions (bid, sid,score)
+                                   VALUES ( _BATTLE_ID_,_SUBMISSION_ID_,_SCORE_);
+                                   """
     },
     "read": {
         "GET_BATTLE_RANKINGS": """SELECT 
@@ -246,6 +254,33 @@ query_catalog = {
        "GET_CURRENT_BADGE_HOLDERS":       """
                                           SELECT * FROM ckb.badgeholders
                                           WHERE bid = _BADGE_ID_
-                                          """
+                                          """,
+       "GET_TOURNAMENT_NAME":      """
+                                   SELECT tournament_name FROM ckb.tournaments t
+                                   WHERE tid = _TOURNAMENT_ID_
+                                   """,
+
+       "":    """
+              SELECT u.uid,u.user_name FROM 
+              ckb.battles b 
+              INNER JOIN ckb.tournaments t
+              ON b.tournament_id = t.tid
+              INNER JOIN ckb.subscriptions s
+              ON s.tid = t.tid
+              INNER JOIN ckb.users u
+              ON s.uid = u.uid
+
+              WHERE 
+              b.bid = _BATTLE_ID_
+              AND
+              u.uid NOT IN 
+              (SELECT g.uid FROM 
+              ckb.battles b 
+              INNER JOIN ckb.tournaments t
+              ON b.tournament_id = t.tid
+              INNER JOIN ckb.groups g
+              ON g.bid = b.bid
+              WHERE b.bid = _BATTLE_ID_)
+              """
     },
 }

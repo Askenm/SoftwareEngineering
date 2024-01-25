@@ -14,5 +14,13 @@ notification_catalog = {
 
                         We wish you good luck in the wars to come! 
                         The CodeKataBattles Team 
-                        """
+                        """,
+
+    "SUBMISSION_SCORED":    """
+                            Hi _USER_NAME_!\n
+                            Your submission to _BATTLE_NAME_ has been scored by your educator! 
+
+                            Kindly,
+                            The CodeKataBattles Team 
+                            """
 }
