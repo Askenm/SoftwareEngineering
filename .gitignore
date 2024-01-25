@@ -1,2 +1,8 @@
 github_ssh
 github_ssh.pub
+# Ignore MacOS system files
+.DS_Store
+
+# Ignore Python compiled files
+__pycache__/
+*.pyc
