@@ -52,8 +52,8 @@ elif st.session_state['login_status']:
                 Page("My_Profile_page.py", "My Profile", "𖠌"),
                 Page("Tournament_page.py", ""),
                 Page("Battle_page.py", ""),
-                Page("Login_signup.py", ""),
-                
+                Page("Login_signup_test.py", "test"),
+                Page("Logout_page.py", "Logout" )
             ]
             
         )
