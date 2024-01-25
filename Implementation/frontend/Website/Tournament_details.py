@@ -32,13 +32,13 @@ def show():
             "Subscriber count": [100, 50, 75],
             "Creator": ["John", "Aske", "Lise"],
             "Battle Count": [100, 50, 75],
-            "Tournament id": [150, 50, 75],})
+            "Battle_Id": [150, 50, 75],})
 
         selection = dataframe_with_selections(df)
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
-            button_call("Tournament details")
+            st.session_state['Battle_Id'] = selection['selected_rows']['Battle_Id'].iloc[0]
+            button_call("Battle details")
 
     with c4:
         st.write('##')
@@ -49,13 +49,13 @@ def show():
             "Subscriber count": [190, 50, 75],
             "Creator": ["John", "Aske", "Lise"],
             "Battle Count": [100, 50, 75],
-            "Tournament id": [150, 50, 75],})
+            "User id": [150, 50, 75],})
 
         selection = dataframe_with_selections(df)
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
-            button_call("Tournament details")
+            st.session_state['User_Id'] = selection['selected_rows']['User id'].iloc[0]
+            button_call("My Profile")
         
         
 
@@ -74,7 +74,7 @@ def show():
 
         if selection['selected_rows_indices'] != []:
             st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
-            button_call("Tournament details")
+            button_call("Battle details")
     
 
 

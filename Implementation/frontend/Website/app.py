@@ -17,10 +17,11 @@ def setup(__file__):
 
     # Define the page navigation
     pages = {
-    "Tournaments": My_Tournaments_page,
     "Home": Home_page,
-    "My profile": My_Profile_page,
-    "My battles": My_Battles_page,
+    "My Tournaments": My_Tournaments_page,
+    "My Battles": My_Battles_page,
+    "My Profile": My_Profile_page,
+    
 }
 
     educator_pages = {"Create Battle": Create_battle,

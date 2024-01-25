@@ -4,7 +4,7 @@ import streamlit as st
 
 
 def show():
-    st.markdown(f"# 𖠌 Welcome back {st.session_state.to_dict()['username']}")
+    st.markdown(f"# ⛩️ Welcome back, {st.session_state.to_dict()['username']}")
     st.write('#')
 
     col1, col2 = st.columns(2)
@@ -54,7 +54,7 @@ def show():
 
     with c3[0]:
         option = st.selectbox(
-        "Search user profile",
+        "Search other users",
         ("Email", "Home phone", "Mobile phone"),
         index=None,
         placeholder="Select user profile...",
