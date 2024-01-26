@@ -198,7 +198,10 @@ class Tournament:
 
         EXPECTED FORMAT OF THE TORUNAMENT DATA
         tournament_data = {'_TOURNAMENT_NAME_':'Tournament Name',
-                            '_CREATOR_':user_id}
+                            '_CREATOR_':'user_id',
+                            '_DESCRIPTION_':"lorem ipsum",
+                            '_SUBSCRIPTION_DEADLINE__:'yyyy-mm-dd'}
+                            
 
         """
         self.tournament_data = tournament_data
