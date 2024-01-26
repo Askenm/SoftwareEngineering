@@ -1,6 +1,6 @@
-from DataPersitenceService import DBMS
-import GithubManagementService as GMS
-from notification_catalog import notification_catalog
+from .DataPersitenceService import DBMS
+from . import GithubManagementService as GMS
+from .notification_catalog import notification_catalog
 from datetime import datetime
 
 

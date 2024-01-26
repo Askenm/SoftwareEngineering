@@ -1,9 +1,12 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from DataPersitenceService import DBMS
-from backend import Notification
 from datetime import datetime
+
+
+from .DataPersitenceService import DBMS
+from .backend import Notification
+
 
 class NotificationHandler:
     def __init__(self):

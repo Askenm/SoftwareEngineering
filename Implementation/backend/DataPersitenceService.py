@@ -3,7 +3,7 @@ The purpose of this is to write all the functionality required to edit the main 
 """
 from sqlalchemy import create_engine, text
 import pandas as pd
-from query_catalog import query_catalog
+from .query_catalog import query_catalog
 
 
 class DBMS:

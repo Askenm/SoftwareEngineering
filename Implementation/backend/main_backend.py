@@ -1,6 +1,6 @@
 import schedule
 import time
-from handlers import NotificationHandler, BadgeHandler, SubmissionHandler
+from .handlers import NotificationHandler, BadgeHandler, SubmissionHandler
 
 def job():
     # Badges

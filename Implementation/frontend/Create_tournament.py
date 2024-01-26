@@ -1,5 +1,8 @@
 import streamlit as st
 import datetime
+from backend.backend import Tournament
+
+
 
 def show():
     with st.form(key='tournament_form'):
@@ -42,7 +45,15 @@ def show():
 
         if submit_button:
             # Handle the form submission here
-            st.write("Tournament Name:", tournament_name)
+
+            NewTournament = Tournament()
+
+            tournament_data = {'_TOURNAMENT_NAME_': tournament_name,
+                            '_CREATOR_':st.session_state['user_id']}
+
+            NewTournament.create_tournament(tournament_data)
+
+            """st.write("Tournament Name:", tournament_name)
             st.write("Subscription Deadline:", subscription_deadline)
             st.write("Status:", status)
             st.write("Creator Name:", creator_name)
@@ -53,4 +64,7 @@ def show():
             if status == 'Active':
                 st.write("Ongoing Rankings:", ongoing_rankings)
             st.write("Subscriber Count:", subscriber_count)
-            st.write("List of Subscribers:", list_of_subscribers)
+            st.write("List of Subscribers:", list_of_subscribers)"""
+
+
+

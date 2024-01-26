@@ -1,6 +1,7 @@
 import pandas as pd
-from util import button_call, dataframe_with_selections
+from .util import button_call, dataframe_with_selections
 import streamlit as st
+from backend.backend import Tournament
 
 def show():
     #hardcoded for testing
