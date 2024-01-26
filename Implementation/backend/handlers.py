@@ -186,3 +186,44 @@ class BadgeHandler:
 
             # upload notification of badge assignment to messageboard
             self.badge_awarded_notification(_uid, bid)
+
+
+
+class SubmissionHandler:
+    def __init__(self):
+        self.DBMS = DBMS()
+
+    def check_for_submissions(self):
+        new_subs = self.DBMS.read("GET_NEW_SUBMISSIONS",{})
+        for row_idx,row in new_subs.iterrows():
+            self.register_submission_notfications_to_messageboard(row['gid'])
+
+            self.DBMS.write('MARK_SUBMISSION_AS_SENT',{'_SUBMISSION_ID_':row['smid']})
+
+
+    def structure_badge_notification_info(self,row):
+        return {row['uid'].values[0]:{'_USER_NAME_':row['user_name'],
+                                      '_BATTLE_NAME_':row['battle_name'],
+                                      '_BATTLE_ID_':row['bid'].values[0],
+                                      '_TOURNAMENT_ID_':row['tournament_id']}}
+    
+
+
+    def register_submission_notfications_to_messageboard(self,gid):
+
+        users = self.DBMS.read('GET_USERS_FROM_GID',{'_GROUP_ID_':gid})
+
+        for rix, row in users.iterrows():
+            #print(row)
+            notification_info = self.structure_badge_notification_info(row)
+
+            SubmissionNotification = Notification('NEW_SUBMISSION')
+
+            SubmissionNotification.register_notfications_to_messageboard(notification_info)
+
+
+
+
+if __name__ =='__main__':
+    SH = SubmissionHandler()
+    SH.check_for_submissions()

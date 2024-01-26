@@ -68,13 +68,15 @@ CREATE TABLE ckb.users (
     is_educator BOOLEAN 
 );
 
+
 -- Submissions table
 CREATE TABLE ckb.submissions (
     smid SERIAL PRIMARY KEY,
     gid INT,
     battle_id INT,
     submission_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    submission_score DECIMAL
+    submission_score DECIMAL,
+    notification_registered BOOLEAN DEFAULT FALSE
 );
 
 -- Subscriptions table

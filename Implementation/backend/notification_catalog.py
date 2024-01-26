@@ -22,5 +22,12 @@ notification_catalog = {
 
                             Kindly,
                             The CodeKataBattles Team 
+                            """,
+    "NEW_SUBMISSION":       """
+                            Hi _USER_NAME_!\n
+                            Your submission to _BATTLE_NAME_ has been scored and is available through the webpage! 
+
+                            Kindly,
+                            The CodeKataBattles Team 
                             """
 }

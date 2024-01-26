@@ -517,9 +517,10 @@ class Educator:
         return self.tournament_page_info
 
     def assign_manual_score(self,score_info):
+        # TODO : ISSUES WITH IDENTIFYING PRECISE SUBMISSIONS
         """
         {"_BATTLE_ID_":bid,
-         "_SUBMISSION_ID_":sid,
+         "_GROUP_ID_":gid,
          "_SCORE_":score}
         """
         # update the submission entry

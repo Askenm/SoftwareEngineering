@@ -49,8 +49,17 @@ query_catalog = {
                                    VALUES ( _USER_ID_,_TOURNAMENT_ID_);
                                    """,
        "ASSIGN_MANUAL_SCORE":      """
-                                   INSERT INTO ckb.submissions (bid, sid,score)
+                                   INSERT INTO ckb.submissions (bid, smid,score) -- FIX THIS DOESNT WORK
                                    VALUES ( _BATTLE_ID_,_SUBMISSION_ID_,_SCORE_);
+                                   """,
+       "ASSIGN_AUTOMATIC_SCORE":      """
+                            INSERT INTO ckb.submissions (bid, gid,score)
+                            VALUES ( _BATTLE_ID_,_GROUP_ID_,_SCORE_);
+                            """,
+       "MARK_SUBMISSION_AS_SENT":  """
+                                   UPDATE ckb.submissions
+                                   SET notification_registered = TRUE
+                                   WHERE smid = _SUBMISSION_ID_;
                                    """
     },
     "read": {
@@ -260,7 +269,7 @@ query_catalog = {
                                    WHERE tid = _TOURNAMENT_ID_
                                    """,
 
-       "":    """
+       "GET_UNASSIGNED_SUBSCRIBERS":    """
               SELECT u.uid,u.user_name FROM 
               ckb.battles b 
               INNER JOIN ckb.tournaments t
@@ -281,6 +290,18 @@ query_catalog = {
               INNER JOIN ckb.groups g
               ON g.bid = b.bid
               WHERE b.bid = _BATTLE_ID_)
+              """,
+       "GET_NEW_SUBMISSIONS":    """SELECT * FROM ckb.submissions WHERE notification_registered = false;""",
+       "GET_USERS_FROM_GID":    """
+              SELECT * FROM ckb.groups g
+              INNER JOIN ckb.battles b 
+              on g.bid = b.bid
+              INNER JOIN ckb.users u
+              ON g.uid = u.uid
+              INNER JOIN ckb.tournaments t
+              ON t.tid = b.tournament_id
+
+              WHERE g.gid = _GROUP_ID_
               """
     },
 }

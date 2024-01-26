@@ -1,6 +1,6 @@
 import schedule
 import time
-from handlers import NotificationHandler, BadgeHandler
+from handlers import NotificationHandler, BadgeHandler, SubmissionHandler
 
 def job():
     # Badges
@@ -8,10 +8,17 @@ def job():
     BH = BadgeHandler()
     BH.check_for_badges()
 
+    # Submissions
+    print("Checking for submissions...")
+    SH = SubmissionHandler()
+    SH.check_for_submissions()
+
     # Notifications
-    print("Checking for notifications...")
+    print("Checking for notifications...\n\n")
     NH = NotificationHandler()
     NH.check_for_notifications()
+
+
 
 
     
