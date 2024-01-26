@@ -15,6 +15,10 @@ import frontend.Create_badge as Create_badge
 
 from frontend.Authenticator_role.streamlit_authenticator import Authenticate
 
+
+from backend.backend import Student,Educator
+
+
 def setup(__file__):
     # Set up the main configuration of the app
     st.set_page_config(page_title="CodeKata Battles", page_icon="CBK")

@@ -1,6 +1,6 @@
 import streamlit as st
 import datetime
-from backend.backend import Tournament
+from backend.backend import Tournament, Educator
 
 
 
@@ -18,7 +18,7 @@ def show():
         #status = st.radio("Status", ['Active', 'Inactive'])
 
         # Text input for creator's name
-        creator_name = st.text_input("Creator Name")
+        # creator_name = st.text_input("Creator Name")
 
         # Text area for brief description
         brief_description = st.text_area("Brief Description")
@@ -46,15 +46,12 @@ def show():
         if submit_button:
             # Handle the form submission here
 
-            NewTournament = Tournament()
-
-            # TODO : ADD subscription_deadline AND brief_description to backend
             tournament_data = {'_TOURNAMENT_NAME_': tournament_name,
-                            '_CREATOR_':st.session_state['user_id'],
                             '_SUBSCRIPTION_DEADLINE_':subscription_deadline,
                             '_DESCRIPTION_':brief_description}
 
-            NewTournament.create_tournament(tournament_data)
+            st.session_state['user_object'].create_tournament(tournament_data)
+            st.balloons()
 
             """
             

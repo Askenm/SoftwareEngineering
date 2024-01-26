@@ -30,7 +30,10 @@ class Battle:
             '_TOURNAMENT_ID_':tid,
             '_BATTLE_REPO_': 'URL of the associated GitHub repository',
             '_BATTLE_CREATOR_': Creator's ID,
-            '_END_DATE_': 'End date of the battle'
+            '_END_DATE_': 'End date of the battle',
+            '_REGISTRATION_DEADLINE_':'End date of registration for the battle',
+            '_MIN_GROUP_SIZE_': 1,
+            '_MAX_GROUP_SIZE_': 4
         }
         """
         self.battle_data = battle_data
@@ -186,6 +189,7 @@ class Tournament:
         """
         self.tid = tid
         self.DBMS = DBMS()
+        self.tournament_data = {}
 
     def create_tournament(self, tournament_data):
         """
@@ -273,9 +277,12 @@ class Tournament:
     def create_badge(self,badge_logic):
         badge = Badge(self.tid)
 
-        badge.create_badge_logic(badge_logic)
+        return badge.create_badge_logic(badge_logic)
+
 
     def create_battle(self,battle_data):
+
+        
         battle_data['_TOURNAMENT_ID_'] = self.tid
         battle_data['_BATTLE_CREATOR_'] = self.tournament_data['educator_id']
 
@@ -322,6 +329,7 @@ class Badge:
         badge_logic['_TOURNAMENT_ID_'] = self.tid
         # Write badge logic to the database
         self.DBMS.write("CREATE_BADGE", badge_logic)
+        return 0
 
     def assign_badge(self, uid, bid):
         """
@@ -500,18 +508,21 @@ class Educator:
 
     def create_battle(self,battle_data):
         current_tournament = Tournament(battle_data['_TOURNAMENT_ID_'])
+        current_tournament.get_tournament_page_info()
 
         battle_id = current_tournament.create_battle(battle_data)
 
         new_battle = Battle(battle_id)
 
-        self.battle_page_info = new_battle.get_battle_page_info()
+        self.battle_page_info = new_battle.get_battle_page_info(self.uid)
 
         return self.battle_page_info
 
 
     def create_tournament(self,tournament_data):
         new_tournament = Tournament()
+
+        tournament_data['_CREATOR_'] = self.uid
 
         new_tournament.create_tournament(tournament_data)
 
@@ -548,7 +559,7 @@ class Educator:
 
     def create_badge(self,tid,badge_logic):
         T = Tournament(tid)
-        T.create_badge(badge_logic)
+        return T.create_badge(badge_logic)
 
 
 
