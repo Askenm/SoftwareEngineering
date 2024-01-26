@@ -1,8 +1,5 @@
-import os
-import random
-
 import pandas as pd
-from util import button_call
+from util import button_call, dataframe_with_selections
 import streamlit as st
 
 def show():
@@ -14,23 +11,41 @@ def show():
     with col1:
 
         st.subheader ("My ongoing Tournmanents")
-        #can st.button label be replaced with id dependant DB content of specific tournaments?
-        #can switch page be provided with DB id of the corresponding tournament, for Tournament_page to be populated with the corresponding tournament data?
-        if st.button("Python Iteration tournament"):
-            button_call("My battles")
-        
-        # check this for page link open in same tab while keeping session state: https://github.com/streamlit/streamlit/issues/7464
-        if st.button("Python Iteration tournament", key="bla"):
-            button_call("My profile")
+        df = pd.DataFrame(
+        {
+            "Tournament name": ["Basic", "Medium", "Advanced"],
+            "Subscriber count": [100, 50, 75],
+            "Creator": ["John", "Aske", "Lise"],
+            "Battle Count": [100, 50, 75],
+            "Tournament id": [100, 50, 75],
 
-            
+        }
+        )
+
+        selection = dataframe_with_selections(df)
+
+
+        if selection['selected_rows_indices'] != []:
+            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
+            button_call("Tournament details")
+
 
     with col2:
         st.subheader ("My upcoming Tournaments")
-        #hardcoded, to be replaced by fetched tournament info from DB
-        
-        button = st.link_button(
-            "Python Iterations tournament  \nsubscription deadline: date",
-            "/My%20Profile"
-            )
+        df = pd.DataFrame(
+        {
+            "Tournament name": ["Basic", "Medium", "Advanced"],
+            "Subscriber count": [100, 50, 75],
+            "Creator": ["John", "Aske", "Lise"],
+            "Battle Count": [100, 50, 75],
+            "Tournament id": [100, 200, 75],
+
+        }
+        )
+
+        selection = dataframe_with_selections(df)
+
+        if selection['selected_rows_indices'] != []:
+            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
+            button_call("Tournament details")
 
