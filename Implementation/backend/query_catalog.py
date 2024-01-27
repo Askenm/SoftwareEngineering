@@ -2,8 +2,24 @@
 query_catalog = {
     "write": {
         "CREATE_BATTLE": """
-                                          INSERT INTO ckb.battles (battle_name, battle_description, tournament_id, github_repo, creator,end_date)
-                                          VALUES ('_BATTLE_NAME_', '_BATTLE_DESC_', _TOURNAMENT_ID_, '_BATTLE_REPO_', '_BATTLE_CREATOR_','_END_DATE_')
+                                          INSERT INTO ckb.battles (battle_name, 
+                                                                   battle_description, 
+                                                                   tournament_id, 
+                                                                   github_repo, 
+                                                                   creator,
+                                                                   end_date,
+                                                                   registration_deadline,
+                                                                   min_group_size,
+                                                                   max_group_size)
+                                          VALUES ('_BATTLE_NAME_', 
+                                                  '_BATTLE_DESC_', 
+                                                  _TOURNAMENT_ID_, 
+                                                  '_BATTLE_REPO_', 
+                                                  '_BATTLE_CREATOR_',
+                                                  '_END_DATE_',
+                                                  '_REGISTRATION_DEADLINE_',
+                                                  _MIN_GROUP_SIZE_,
+                                                  _MAX_GROUP_SIZE_)
                                           RETURNING bid;
                                           """,
         "END_TOURNAMENT": """
@@ -13,8 +29,8 @@ query_catalog = {
 
                                             """,
         "CREATE_TOURNAMENT": """
-                                                 INSERT INTO ckb.tournaments (tournament_name, creator)
-                                                 VALUES ('_TOURNAMENT_NAME_', '_CREATOR_')
+                                                 INSERT INTO ckb.tournaments (tournament_name, creator,description,subscription_deadline)
+                                                 VALUES ('_TOURNAMENT_NAME_', '_CREATOR_','_DESCRIPTION_','_SUBSCRIPTION_DEADLINE_')
                                                  RETURNING tid;
                                                  """,
         "CREATE_BADGE": """

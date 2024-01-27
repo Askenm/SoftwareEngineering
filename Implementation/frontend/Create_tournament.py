@@ -1,6 +1,6 @@
 import streamlit as st
 import datetime
-from backend.backend import Tournament
+from backend.backend import Tournament, Educator
 
 
 
@@ -15,30 +15,30 @@ def show():
         subscription_deadline = st.date_input("Subscription Deadline", min_value=datetime.date.today())
 
         # Radio buttons for status
-        status = st.radio("Status", ['Active', 'Inactive'])
+        #status = st.radio("Status", ['Active', 'Inactive'])
 
         # Text input for creator's name
-        creator_name = st.text_input("Creator Name")
+        # creator_name = st.text_input("Creator Name")
 
         # Text area for brief description
         brief_description = st.text_area("Brief Description")
 
         # Display active battles if the tournament is active
-        if status == 'Active':
-            active_battles = st.multiselect("Active Battles", ["Battle 1", "Battle 2", "Battle 3"])
+        #if status == 'Active':
+        #    active_battles = st.multiselect("Active Battles", ["Battle 1", "Battle 2", "Battle 3"])
 
         # Multiselect for upcoming battles
-        upcoming_battles = st.multiselect("Upcoming Battles", ["Battle 4", "Battle 5", "Battle 6"])
+        # upcoming_battles = st.multiselect("Upcoming Battles", ["Battle 4", "Battle 5", "Battle 6"])
 
         # Display ongoing rankings if the tournament is active
-        if status == 'Active':
-            ongoing_rankings = st.text("Ongoing Rankings")  # Modify as needed for your data structure
+        #if status == 'Active':
+        #    ongoing_rankings = st.text("Ongoing Rankings")  # Modify as needed for your data structure
 
         # Number input for subscriber count
-        subscriber_count = st.number_input("Subscriber Count", min_value=0, max_value=10000, step=1)
+        #subscriber_count = st.number_input("Subscriber Count", min_value=0, max_value=10000, step=1)
 
         # Multiselect for list of subscribers
-        list_of_subscribers = st.multiselect("List of Subscribers", ["Subscriber 1", "Subscriber 2", "Subscriber 3"])
+        #list_of_subscribers = st.multiselect("List of Subscribers", ["Subscriber 1", "Subscriber 2", "Subscriber 3"])
 
         # Form submit button
         submit_button = st.form_submit_button(label='Create Tournament')
@@ -46,14 +46,16 @@ def show():
         if submit_button:
             # Handle the form submission here
 
-            NewTournament = Tournament()
-
             tournament_data = {'_TOURNAMENT_NAME_': tournament_name,
-                            '_CREATOR_':st.session_state['user_id']}
+                            '_SUBSCRIPTION_DEADLINE_':subscription_deadline,
+                            '_DESCRIPTION_':brief_description}
 
-            NewTournament.create_tournament(tournament_data)
+            st.session_state['user_object'].create_tournament(tournament_data)
+            st.balloons()
 
-            """st.write("Tournament Name:", tournament_name)
+            """
+            
+            st.write("Tournament Name:", tournament_name)
             st.write("Subscription Deadline:", subscription_deadline)
             st.write("Status:", status)
             st.write("Creator Name:", creator_name)
@@ -64,7 +66,9 @@ def show():
             if status == 'Active':
                 st.write("Ongoing Rankings:", ongoing_rankings)
             st.write("Subscriber Count:", subscriber_count)
-            st.write("List of Subscribers:", list_of_subscribers)"""
+            st.write("List of Subscribers:", list_of_subscribers)
+            
+            """
 
 
 

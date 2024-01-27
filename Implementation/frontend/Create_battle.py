@@ -10,30 +10,43 @@ def show():
         # Text input for battle name
         battle_name = st.text_input("Battle Name")
 
-        # Selectbox for parent tournament
-        parent_tournament = st.selectbox("Parent Tournament", ["Tournament 1", "Tournament 2", "Tournament 3"])
 
         # Date input for deadlines
         registration_deadline = st.date_input("Registration Deadline", min_value=datetime.date.today())
         final_submission_deadline = st.date_input("Final Submission Deadline", min_value=datetime.date.today())
 
-        # Radio buttons for status
-        status = st.radio("Status", ['Active', 'Inactive'])
-
-        # Text input for creator's name
-        creator_name = st.text_input("Creator Name")
+        brief_description = st.text_area("Brief Description")
 
         # Number input for min/max number of students per team
         min_students = st.number_input("Min Number of Students per Team", min_value=1, max_value=100, step=1)
         max_students = st.number_input("Max Number of Students per Team", min_value=1, max_value=100, step=1)
 
-        # Multiselect for participant list
-        participant_list = st.multiselect("Participant List", ["Student 1", "Student 2", "Student 3"])
-
         # Form submit button
         submit_button = st.form_submit_button(label='Create Battle')
 
         if submit_button:
+
+            battle_data = {'_BATTLE_NAME_': battle_name,
+                            '_REGISTRATION_DEADLINE_':registration_deadline,
+                            "_END_DATE_":final_submission_deadline,
+                            '_BATTLE_DESC_':brief_description,
+                            '_TOURNAMENT_ID_':st.session_state['current_tournament_id'],
+                            '_MIN_GROUP_SIZE_':min_students,
+                            '_MAX_GROUP_SIZE_':max_students}
+
+            returned = st.session_state['user_object'].create_battle(battle_data)
+
+
+            # TODO : FIX ENTIRE GITHUB IMPLEMENTATION IN BACKEND MODULE
+            if returned == 0:
+                st.balloons()
+            else:
+                st.error(returned)
+
+
+            
+
+            """
             # Handle the form submission here
             st.write("Battle Name:", battle_name)
             st.write("Parent Tournament:", parent_tournament)
@@ -44,5 +57,6 @@ def show():
             st.write("Min Students per Team:", min_students)
             st.write("Max Students per Team:", max_students)
             st.write("Participant List:", participant_list)
+            """
 
 

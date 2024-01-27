@@ -15,6 +15,10 @@ import frontend.Create_badge as Create_badge
 
 from frontend.Authenticator_role.streamlit_authenticator import Authenticate
 
+
+from backend.backend import Student,Educator
+
+
 def setup(__file__):
     # Set up the main configuration of the app
     st.set_page_config(page_title="CodeKata Battles", page_icon="CBK")
@@ -75,7 +79,29 @@ def show_pages_based_on_role():
 if __name__ == '__main__':
     # Initiliazes the authenticator object, session state dict, and pages dict
     pages, educator_pages, hidden_pages, config, authenticator = setup(__file__)
-        
+
+    # SCAFFOLDING
+    ###############
+    # This should be retrieved from the DB upon login
+    st.session_state['user_id'] = 5
+    user_role = 'Educator'
+
+    # This should be tracked when navigating to the a given tournament/battle page
+    # Only hardcoded here in order to test other functionality
+    st.session_state['current_tournament_id'] = 16
+    st.session_state['current_battle_id'] = 16
+
+    ################
+
+    # A global Student or Educator object is assigned upon login
+    # these objects can be used to view stuff, create stuff, delete stuff etc
+    roles = {'Educator':Educator,
+             'Student':Student}
+    
+    # The object is saved in the session_state here
+    st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
+    
+
     # Main app logic
     if not st.session_state['login_status'] or st.session_state['logout']:
         st.session_state['logout'] = False

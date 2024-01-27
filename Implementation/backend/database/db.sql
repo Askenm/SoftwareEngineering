@@ -7,7 +7,10 @@ CREATE TABLE ckb.battles (
     github_repo VARCHAR(255) NOT NULL,
     creator VARCHAR(255),
     create_date DATE DEFAULT CURRENT_DATE,
-    end_date DATE
+    end_date DATE,
+    registration_deadline DATE,
+    min_group_size INT,
+    max_group_size INT,
     );
 
 -- Tournament table
