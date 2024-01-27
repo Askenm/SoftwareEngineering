@@ -1,6 +1,7 @@
 import pandas as pd
 from .util import button_call, dataframe_with_selections
 import streamlit as st
+from backend.backend import Tournament
 
 
 def show():
@@ -12,45 +13,54 @@ def show():
 
     with col1:
 
-        st.subheader ("Ongoing Tournmanents")
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [100, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 50, 75],
-            "Tournament id": [100, 50, 75],
+        st.subheader ("🏆 Ongoing Tournmanents")
+        
+        OngoingTournaments = Tournament(1)
+        OngoingTournaments.get_tournament_page_info()
+        OngoingTournamentsdf = OngoingTournaments.ongoing_tournaments
+        
+     #   df = pd.DataFrame(
+     #   {
+     #       "Tournament name": ["Basic", "Medium", "Advanced"],
+     #       "Subscriber count": [100, 50, 75],
+     #       "Creator": ["John", "Aske", "Lise"],
+     #       "Battle Count": [100, 50, 75],
+     #       "Tournament id": [100, 50, 75],
 
-        }
-        )
+     #   }
+     #   )
 
-        selection = dataframe_with_selections(df)
+        selection = dataframe_with_selections(OngoingTournamentsdf)
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
+            st.session_state['Tournament_Id'] = selection['selected_rows']['tid'].iloc[0]
             button_call("Tournament details")
 
 
     with col2:
-        st.subheader ("Upcoming Tournaments")
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [100, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 50, 75],
-            "Tournament id": [100, 200, 75],
+        st.subheader ("🏆 Upcoming Tournaments")
+         
+        UpcomingTournaments = Tournament(1)
+        UpcomingTournaments.get_tournament_page_info()
+        UpcomingTournamentsdf = UpcomingTournaments.upcoming_tournaments
+         
+      #  df = pd.DataFrame(
+      #  {
+      #      "Tournament name": ["Basic", "Medium", "Advanced"],
+      #      "Subscriber count": [100, 50, 75],
+      #      "Creator": ["John", "Aske", "Lise"],
+      #      "Battle Count": [100, 50, 75],
+      #      "Tournament id": [100, 200, 75],
 
-        }
-        )
+      #  }
+      #  )
 
-        selection = dataframe_with_selections(df,)
-        # st.write("Your selection:")
-        # st.write(selection)
+        selection = dataframe_with_selections(UpcomingTournamentsdf,)
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
+            st.session_state['Tournament_Id'] = selection['selected_rows']['tid'].iloc[0]    #change 'tournament_name' tid 
             button_call("Tournament details")
+            st.write(st.session_state['Tournament_Id'])
 
     with c3[0]:
         option = st.selectbox(

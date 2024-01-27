@@ -119,8 +119,17 @@ query_catalog = {
                                                  ORDER BY BattleQuery.score desc
                                                  """,
         "GET_TOURNAMENT_PAGE_INFO": """
-                                                 SELECT tournament_name,creator FROM ckb.tournaments t
+                                                 SELECT tournament_name,creator, description, subscription_deadline FROM ckb.tournaments t
                                                  WHERE t.tid = _TOURNAMENT_ID_
+                                                 """,
+                                                 
+       "GET_UPCOMING_TOURNAMENTS": """          SELECT tournament_name, creator, description, subscription_deadline, tid FROM ckb.tournaments
+                                                 WHERE subscription_deadline >= NOW()::DATE
+                                                 AND end_date IS NULL                                           
+                                                 """,
+       "GET_ONGOING_TOURNAMENTS": """           SELECT tournament_name, creator, description, subscription_deadline, tid FROM ckb.tournaments
+                                                 WHERE subscription_deadline < NOW()::DATE
+                                                 AND end_date IS NULL                                           
                                                  """,
         "GET_RELATED_BATTLES": """
                                                  SELECT b.battle_name,
