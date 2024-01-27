@@ -327,6 +327,63 @@ query_catalog = {
               ON t.tid = b.tournament_id
 
               WHERE g.gid = _GROUP_ID_
-              """
+              """,
+       "GET_EDUCATOR_BATTLES":     """
+                                   SELECT 
+                                   b.bid,
+                                   battle_name ,
+                                   registration_deadline,
+                                   b.end_date,
+                                   battle_description,
+                                   github_repo,
+                                   min_group_size,
+                                   max_group_size,
+                                   user_name as creator,
+                                   tournament_name
+                                   FROM 
+                                   ckb.battles b
+                                   INNER JOIN
+                                   ckb.tournaments t 
+                                   ON b.tournament_id = t.tid
+
+                                   INNER JOIN
+                                   ckb.users u 
+                                   ON b.creator = u.uid
+
+                                   WHERE b.creator = _USER_ID_
+                                   """,
+       "GET_EDUCATOR_TOURNAMENTS":     """
+                                   SELECT 
+                                   t.tid,
+                                   tournament_name ,
+                                   subscription_deadline ,
+                                   description,
+				       count(distinct b.bid) as num_battles,
+                                   u.user_name as creator_name
+                                   FROM ckb.tournaments t
+                                   INNER JOIN ckb.users u 
+                                   on creator = uid
+                                   INNER JOIN ckb.battles b
+                                   on b.tournament_id = t.tid
+                                   WHERE t.creator = _USER_ID_
+								   
+                                   GROUP BY 
+                                   t.tid,tournament_name,
+                                   subscription_deadline,
+                                   description,
+                                   u.user_name; 
+                                   """,
+       "GET_GROUPS": """
+                     select g.group_name,string_agg(user_name,' - ') as Members from ckb.groups g
+                     INNER JOIN
+                     ckb.users u 
+                     ON u.uid = g.uid
+                     WHERE bid = _BATTLE_ID_
+                     GROUP BY g.group_name
+                     """,
+
+       "GET_PARTICIPANTS":  """
+                            SELECT uid from ckb.groups where bid = _BATTLE_ID_
+                            """
     },
 }

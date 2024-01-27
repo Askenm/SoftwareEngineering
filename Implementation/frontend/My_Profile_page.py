@@ -9,10 +9,9 @@ def show():
         st.write('#')
         st.subheader ("🏅 Awarded Badges")
         
-        UserProfile = Student(1)
-        UserProfile.get_student_page()
+        st.session_state['user_object'].get_home_page()
         
-        UserProfileBadgesdf = UserProfile.user_information['user_badges']
+        UserProfileBadgesdf = st.session_state['user_object'].user_information['user_badges']
         st.dataframe(UserProfileBadgesdf, hide_index = True)
         
         

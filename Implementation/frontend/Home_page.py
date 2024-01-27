@@ -11,6 +11,35 @@ def show():
     col1, col2 = st.columns(2)
     c3 = st.columns(1)
 
+    st.session_state['user_object'].get_home_page()
+    st.subheader ("🏆 My Tournmanents")
+    
+
+    selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_tournaments'])
+
+    if selection['selected_rows_indices'] != []:
+        button_call("Tournament details")
+
+
+
+    st.subheader ("🏆 My Battles")
+    
+
+    selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_battles'])
+
+    if selection['selected_rows_indices'] != []:
+        button_call("Battle details")
+
+
+    if st.session_state['role']=='Student':
+        st.subheader ("🏆 My Badges")
+    
+
+        selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_badges'])
+
+
+
+    """
     with col1:
 
         st.subheader ("🏆 Ongoing Tournmanents")
@@ -36,7 +65,7 @@ def show():
             st.session_state['Tournament_Id'] = selection['selected_rows']['tid'].iloc[0]
             button_call("Tournament details")
 
-
+    
     with col2:
         st.subheader ("🏆 Upcoming Tournaments")
          
@@ -62,6 +91,7 @@ def show():
             button_call("Tournament details")
             st.write(st.session_state['Tournament_Id'])
 
+    
     with c3[0]:
         option = st.selectbox(
         "Search other users",
@@ -71,3 +101,4 @@ def show():
         )
 
         st.write('You selected:', option)
+    """

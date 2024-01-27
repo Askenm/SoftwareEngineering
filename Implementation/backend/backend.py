@@ -15,6 +15,16 @@ class Battle:
         self.DBMS = DBMS()
         self.battle_data = {}
 
+
+
+    def get_groups(self):
+        if self.bid is None:
+            print("Specify a battleID")
+            return
+
+
+        self.groups = self.DBMS.read('GET_GROUPS',{'_BATTLE_ID_':self.bid})
+
     def create_battle(self, battle_data):
         """
         Create a new battle in the database.
@@ -97,6 +107,9 @@ class Battle:
 
         return user_affiliations
     
+    def get_participants(self):
+        return self.DBMS.read('GET_PARTICIPANTS',{'_BATTLE_ID_':self.bid}).values
+    
 
     def get_battle_page_info(self, uid):
         """
@@ -108,6 +121,7 @@ class Battle:
         if self.bid is None:
             print("Specify a battleID")
             return
+        
 
         # Retrieve battle information
         self.battle_data_df = self.DBMS.read(
@@ -123,6 +137,10 @@ class Battle:
         self.battle_rankings = self.DBMS.read(
             "GET_BATTLE_RANKINGS", {"_BATTLE_ID_": self.bid}
         )
+
+        self.get_groups()
+
+        self.participants = self.get_participants()
 
         # Compile final battle information
         self.battle_data = {
@@ -143,10 +161,10 @@ class Battle:
 
 
         
-        non_subscribed_users = self.users_subscribed_to_tournament(user_ids)
-        if len(non_subscribed_users)>0:
-            tournament_name = self.DBMS.read("GET_TOURNAMENT_NAME",{'_TOURNAMENT_ID_':self.battle_data_df['tournament_id'].values[0]})
-            return f"Users {', '.join(non_subscribed_users)} are not subscribed to tournament {tournament_name}"
+        #non_subscribed_users = self.users_subscribed_to_tournament(user_ids)
+        #if len(non_subscribed_users)>0:
+        #    tournament_name = self.DBMS.read("GET_TOURNAMENT_NAME",{'_TOURNAMENT_ID_':self.battle_data_df['tournament_id'].values[0]})
+        #    return f"Users {', '.join(non_subscribed_users)} are not subscribed to tournament {tournament_name}"
 
         
 
@@ -440,7 +458,7 @@ class Student:
         self.uid = uid
         self.DBMS = DBMS()
 
-    def get_student_page(self):
+    def get_home_page(self):
         """
         Compile information for a student's page.
 
@@ -460,6 +478,14 @@ class Student:
             "user_battles": user_battles,
             "user_badges": user_badges,
         }
+
+    def get_battle_page_info(self,bid):
+
+        self.battle = Battle(bid)
+
+        self.battle.get_battle_page_info(self.uid)
+        
+        self.battle.get_unassigned_subscribers()
 
 
 # Notification and Submission classes have been marked as placeholders and need further implementation.
@@ -516,6 +542,25 @@ class Educator:
         self.DBMS = DBMS()
         self.uid = uid
 
+
+    def get_home_page(self):
+        """
+        Compile information for a student's page.
+
+        :return: None. Retrieves and sets various attributes related to the student.
+        """
+        # Get tournaments
+        user_tournaments = self.DBMS.read(
+            "GET_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+
+        user_battles = self.DBMS.read("GET_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
+
+        self.user_information = {
+            "user_tournaments": user_tournaments,
+            "user_battles": user_battles
+        }
+
     def create_battle(self,battle_data):
         current_tournament = Tournament(battle_data['_TOURNAMENT_ID_'])
         current_tournament.get_tournament_page_info()
@@ -570,6 +615,15 @@ class Educator:
     def create_badge(self,tid,badge_logic):
         T = Tournament(tid)
         return T.create_badge(badge_logic)
+    
+
+    def get_battle_page_info(self,bid):
+
+        self.battle = Battle(bid)
+
+        self.battle.get_battle_page_info(self.uid)
+
+        self.battle.get_unassigned_subscribers()
 
 
 

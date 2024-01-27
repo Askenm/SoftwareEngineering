@@ -13,8 +13,6 @@ import frontend.My_Profile_page as My_Profile_page
 import frontend.My_Battles_page as My_Battles_page
 import frontend.Create_badge as Create_badge
 
-from frontend.Authenticator_role.streamlit_authenticator import Authenticate
-
 
 from backend.backend import Student,Educator
 
@@ -101,19 +99,5 @@ if __name__ == '__main__':
     if isinstance(st.session_state['role'],str):
         st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
 
-    if st.session_state['login_status']:
-        st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
-        pages = show_pages_based_on_role()
-        if not st.session_state['switch_pages_button']:
-            pages[st.session_state['sidebar_page']].show()
-        else:
-            st.session_state['switch_pages_button'] = False
-            if st.session_state['current_page'] not in pages:
-                hidden_pages[st.session_state['current_page']].show()
-            else:
-                pages[st.session_state['current_page']].show()
-            
-    else:
-        st.error("Please log in to access this page")
-
-
+    
+    Battle_details.show()
