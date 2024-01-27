@@ -1,4 +1,3 @@
-yaml
 sqlalchemy
 psycopg2-binary
 pandas
