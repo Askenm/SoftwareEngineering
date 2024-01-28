@@ -270,14 +270,14 @@ class Tournament:
         )
         
         # Retrieve all ongoing tournaments
-        self.ongoing_tournaments = self.DBMS.read(
-            "GET_ONGOING_TOURNAMENTS", {"_TOURNAMENT_ID_": self.tid}
-        )
+        #self.ongoing_tournaments = self.DBMS.read(
+        #    "GET_ONGOING_TOURNAMENTS", {"_TOURNAMENT_ID_": self.tid}
+        #)
         
         # Retrieve all upcoming tournaments
-        self.upcoming_tournaments = self.DBMS.read(
-            "GET_UPCOMING_TOURNAMENTS", {"_TOURNAMENT_ID_": self.tid}
-        )
+        #self.upcoming_tournaments = self.DBMS.read(
+        #    "GET_UPCOMING_TOURNAMENTS", {"_TOURNAMENT_ID_": self.tid}
+        #)
 
         # Compile final tournament information
         self.tournament_data = {

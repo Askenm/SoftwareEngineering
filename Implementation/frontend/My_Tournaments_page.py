@@ -6,6 +6,12 @@ def show():
     st.markdown("# 🏆 My Tournaments")
     st.write('#')
 
+
+    #st.session_state
+
+
+
+    """
     col1, col2 = st.columns(2)
 
     with col1:
@@ -48,4 +54,6 @@ def show():
         if selection['selected_rows_indices'] != []:
             st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
             button_call("Tournament details")
+
+    """
 

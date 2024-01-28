@@ -49,12 +49,14 @@ def show():
 
         with c2:
             if battle_simple_data['registration_deadline'].values[0] > datetime.now().date() and \
-            st.session_state['user_object'].uid not in st.session_state['current_battle'].participants:
+            st.session_state['user_object'].uid not in st.session_state['current_battle'].participants \
+            and st.session_state['role'] == 'Student':
                 if st.button("💥 REGISTER"):
 
                     st.session_state.show_form = True
 
                     st.experimental_rerun()
+
 
 
         

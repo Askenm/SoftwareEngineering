@@ -5,3 +5,4 @@ numpy
 pygithub
 PyYAML
 bcrypt
+extra_streamlit_components
