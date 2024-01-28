@@ -72,12 +72,12 @@ if __name__ == '__main__':
     # This should be retrieved from the DB upon login
     st.session_state['user_id'] = 5
 
-    st.session_state['role'] = "Student" 
+    st.session_state['role'] = "Educator" 
 
     st.session_state['name'] = 'Aske Schytt Meineche'
 
     st.session_state['username'] = 'AskeMeineche'
-    
+
     st.session_state['login_status'] = True
 
     # This should be tracked when navigating to the a given tournament/battle page

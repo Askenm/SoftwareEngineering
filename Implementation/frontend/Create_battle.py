@@ -18,12 +18,19 @@ def show():
 
 
         selected_indexes = [YourTournaments.index(uname) for uname in options]
-        TournamentID = st.session_state['your_tournaments'].iloc[selected_indexes]['tid'].values.tolist()[0]
+        if selected_indexes:
+            TournamentID = st.session_state['your_tournaments'].iloc[selected_indexes]['tid'].values.tolist()[0]
+        
 
         # Text input for battle name
         battle_name = st.text_input("Battle Name")
 
         github_repo = st.text_input("Battle Repository")
+
+        manual_scoring = st.radio("Choose the scoring method:", ('Manual Scoring', 'Automatic Scoring'), index=1)
+
+        manual_scoring = {'Manual Scoring':'TRUE',
+                          'Automatic Scoring':'FALSE'}[manual_scoring]
 
 
         # Date input for deadlines
@@ -42,6 +49,7 @@ def show():
 
         # Form submit button
         submit_button = st.form_submit_button(label='Create Battle')
+        st.write(manual_scoring)
 
         if submit_button:
 
@@ -52,7 +60,8 @@ def show():
                             '_TOURNAMENT_ID_':TournamentID,
                             '_MIN_GROUP_SIZE_':min_students,
                             '_MAX_GROUP_SIZE_':max_students,
-                            '_BATTLE_REPO_':github_repo}
+                            '_BATTLE_REPO_':github_repo,
+                            '_MANUAL_SCORING_':manual_scoring}
 
             returned = st.session_state['user_object'].create_battle(battle_data)
 

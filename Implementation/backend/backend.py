@@ -43,7 +43,8 @@ class Battle:
             '_END_DATE_': 'End date of the battle',
             '_REGISTRATION_DEADLINE_':'End date of registration for the battle',
             '_MIN_GROUP_SIZE_': 1,
-            '_MAX_GROUP_SIZE_': 4
+            '_MAX_GROUP_SIZE_': 4,
+            '_MANUAL_SCORING_' : boolean
         }
         """
         self.battle_data = battle_data
@@ -56,6 +57,7 @@ class Battle:
             return "Battle Name Taken"
 
         # Insert the battle into the database and get its ID
+        print(battle_data)
         self.bid = self.DBMS.write("CREATE_BATTLE", battle_data).fetchone()[0]
         self.battle_data["_BATTLE_ID_"] = self.bid
 

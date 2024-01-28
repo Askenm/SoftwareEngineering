@@ -10,7 +10,8 @@ query_catalog = {
                                                                    end_date,
                                                                    registration_deadline,
                                                                    min_group_size,
-                                                                   max_group_size)
+                                                                   max_group_size,
+                                                                   manual_scoring)
                                           VALUES ('_BATTLE_NAME_', 
                                                   '_BATTLE_DESC_', 
                                                   _TOURNAMENT_ID_, 
@@ -19,7 +20,8 @@ query_catalog = {
                                                   '_END_DATE_',
                                                   '_REGISTRATION_DEADLINE_',
                                                   _MIN_GROUP_SIZE_,
-                                                  _MAX_GROUP_SIZE_)
+                                                  _MAX_GROUP_SIZE_,
+                                                  _MANUAL_SCORING_)
                                           RETURNING bid;
                                           """,
         "END_TOURNAMENT": """
