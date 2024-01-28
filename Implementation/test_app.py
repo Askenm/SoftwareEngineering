@@ -72,6 +72,14 @@ if __name__ == '__main__':
     # This should be retrieved from the DB upon login
     st.session_state['user_id'] = 5
 
+    st.session_state['role'] = "Student" 
+
+    st.session_state['name'] = 'Aske Schytt Meineche'
+
+    st.session_state['username'] = 'AskeMeineche'
+    
+    st.session_state['login_status'] = True
+
     # This should be tracked when navigating to the a given tournament/battle page
     # Only hardcoded here in order to test other functionality
     st.session_state['current_tournament_id'] = 16
@@ -92,10 +100,7 @@ if __name__ == '__main__':
 
     st.session_state['logout'] = False
 
-    st.session_state['role'] = "Student" 
-    st.session_state['name'] = 'Aske Schytt Meineche'
-    st.session_state['username'] = 'AskeMeineche'
-    st.session_state['login_status'] = True
+    
 
     if isinstance(st.session_state['role'],str):
         st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
