@@ -3,6 +3,7 @@ from .util import button_call, dataframe_with_selections
 import streamlit as st
 
 def show():
+    # TODO : MISSING PROPER SUBMISSION ID FORWARDING WHEN PRESSING A SUBMISSION ON BATTLE PAGE AS AN EDUCATOR
     submission_id = 13
     # Read submission from DB
 

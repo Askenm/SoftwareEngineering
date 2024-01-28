@@ -5,6 +5,7 @@ import streamlit as st
 
 def show():
     with st.form(key='battle_form'):
+        # TODO : EVERYTHING GOOD
         st.markdown("# Create New Battle")
 
         st.session_state['user_object'].get_home_page()

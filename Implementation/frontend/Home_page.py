@@ -5,6 +5,8 @@ from backend.backend import Tournament
 
 
 def show():
+    # TODO : Maybe changes here (Leonie)
+    
     st.markdown(f"# ⛩️ Welcome back, {st.session_state.to_dict()['username']}")
     st.write('#')
 

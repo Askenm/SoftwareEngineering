@@ -32,12 +32,12 @@ def check_date_exceeds(comparison_date):
     :param comparison_date: A date in "yyyy-mm-dd" format to compare against.
     :return: True if current_date exceeds comparison_date, False otherwise.
     """
-    current_date = datetime.now().strftime("%Y-%m-%d")
+    current_date = datetime.now()#.strftime("%Y-%m-%d")
     # Convert both dates from string to datetime objects
-    current_date_obj = datetime.strptime(current_date, "%Y-%m-%d")
-    comparison_date_obj = datetime.strptime(comparison_date, "%Y-%m-%d")
+    #current_date_obj = datetime.strptime(current_date, "%Y-%m-%d")
+    #comparison_date_obj = datetime.strptime(comparison_date, "%Y-%m-%d")
 
     # Compare the dates
-    return current_date_obj > comparison_date_obj
+    return #current_date_obj > comparison_date_obj
 
 

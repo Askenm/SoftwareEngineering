@@ -6,6 +6,7 @@ from backend.backend import Tournament, Educator
 
 def show():
     with st.form(key='tournament_form'):
+        # TODO : EVERYTHING GOOD
         st.markdown("# Create New Tournament")
 
         # Text input for tournament name

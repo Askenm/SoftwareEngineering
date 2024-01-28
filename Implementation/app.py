@@ -19,6 +19,8 @@ from frontend.Authenticator_role.streamlit_authenticator import Authenticate
 from backend.backend import Student,Educator
 
 
+
+
 def setup(__file__):
     # Set up the main configuration of the app
     st.set_page_config(page_title="CodeKata Battles", page_icon="CBK")
@@ -81,6 +83,7 @@ if __name__ == '__main__':
     pages, educator_pages, hidden_pages, config, authenticator = setup(__file__)
 
     # SCAFFOLDING
+    # TODO
     ###############
     # This should be retrieved from the DB upon login
     st.session_state['user_id'] = 5

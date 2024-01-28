@@ -2,6 +2,8 @@ import streamlit as st
 
 def show():
     with st.form(key='badge_form'):
+        # TODO : EVERYTHING GOOD
+        
         st.markdown("# Create New Badge")
 
         # Text input for badge name

@@ -10,9 +10,13 @@ if "current_battle_id" not in st.session_state.keys():
 
 
 def show():
-    #hardcoded for testing
-    #title should be fetched from DB of specific battle
-    #need to figure out how to get st.switch_pages to pass on a battle ID to Battle_page.py
+    # hardcoded for testing
+    # title should be fetched from DB of specific battle
+    # TODO : Everything here should work if the correct battle ID is simply saved to the st.session_state['current_battle_id']
+    # TODO : Additionally, the submissions frame should be interactive for educators IF the battle supports manual evaluation
+    # TODO : (continued) this can be retrieved through the database and stored in the backend.Battle object under get_battle_data.
+
+    
 
     if 'show_form' not in st.session_state:
         st.session_state.show_form = False
