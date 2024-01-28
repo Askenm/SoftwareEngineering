@@ -67,8 +67,9 @@ query_catalog = {
                                    VALUES ( _USER_ID_,_TOURNAMENT_ID_);
                                    """,
        "ASSIGN_MANUAL_SCORE":      """
-                                   INSERT INTO ckb.submissions (bid, smid,score) -- FIX THIS DOESNT WORK
-                                   VALUES ( _BATTLE_ID_,_SUBMISSION_ID_,_SCORE_);
+                                   UPDATE ckb.submissions
+                                   SET submission_score = _SCORE_ 
+                                   WHERE smid = _SUBMISSION_ID_;
                                    """,
        "ASSIGN_AUTOMATIC_SCORE":      """
                             INSERT INTO ckb.submissions (bid, gid,score)
@@ -189,7 +190,8 @@ query_catalog = {
                             s.gid,
                             group_name,
                             submission_datetime,
-                            submission_score
+                            submission_score,
+                            group_repository
                             FROM
                             ckb.submissions s
                             INNER JOIN ckb.groups g
@@ -391,6 +393,10 @@ query_catalog = {
                                    SELECT * from ckb.subscriptions
                                    WHERE uid = _USER_ID_
                                    AND tid = _TOURNAMENT_ID_
-                                   """
+                                   """,
+
+       "GET_SUBMISSION":    """
+                            
+                            """
     },
 }

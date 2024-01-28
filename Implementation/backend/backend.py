@@ -712,6 +712,13 @@ class Educator:
     def get_tournaments(self):
         self.DBMS.read("GET_EDUCATOR_TOURNAMENTS",self.uid)
 
+    def get_submission(self,smid):
+        return self.DBMS.read('GET_SUBMISSIONS',{'_CONDITIONAL_':f"smid = {str(smid)}"})
+
+
+    def score_submission(self,score,smid):
+        self.DBMS.write('ASSIGN_MANUAL_SCORE',{'_SCORE_':score,
+                                               '_SUBMISSION_ID_':smid})
 
 
 

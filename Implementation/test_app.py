@@ -11,6 +11,8 @@ import frontend.Create_battle as Create_battle
 import frontend.My_Profile_page as My_Profile_page
 import frontend.My_Battles_page as My_Battles_page
 import frontend.Create_badge as Create_badge
+import frontend.Submissions as Submissions
+
 
 from frontend.Authenticator_role.streamlit_authenticator import Authenticate
 
@@ -39,7 +41,8 @@ def setup(__file__):
 
     educator_pages = {"Create Battle": Create_battle,
                   "Create Tournament": Create_tournament, 
-                  "Create Badge": Create_badge
+                  "Create Badge": Create_badge,
+                  "Submissions":Submissions
 }
     hidden_pages = {
     "Battle details": Battle_details,
