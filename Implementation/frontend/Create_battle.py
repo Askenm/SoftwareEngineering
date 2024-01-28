@@ -7,8 +7,23 @@ def show():
     with st.form(key='battle_form'):
         st.markdown("# Create New Battle")
 
+        st.session_state['user_object'].get_home_page()
+        st.session_state['your_tournaments'] = st.session_state['user_object'].user_information['user_tournaments']
+
+        YourTournaments = st.session_state['your_tournaments']['tournament_name'].values.tolist()
+        # Multi-select list
+        options = st.multiselect("Your Tournaments", 
+                                 YourTournaments
+                                 ,max_selections=1)
+
+
+        selected_indexes = [YourTournaments.index(uname) for uname in options]
+        TournamentID = st.session_state['your_tournaments'].iloc[selected_indexes]['tid'].values.tolist()[0]
+
         # Text input for battle name
         battle_name = st.text_input("Battle Name")
+
+        github_repo = st.text_input("Battle Repository")
 
 
         # Date input for deadlines
@@ -21,6 +36,10 @@ def show():
         min_students = st.number_input("Min Number of Students per Team", min_value=1, max_value=100, step=1)
         max_students = st.number_input("Max Number of Students per Team", min_value=1, max_value=100, step=1)
 
+
+
+
+
         # Form submit button
         submit_button = st.form_submit_button(label='Create Battle')
 
@@ -30,14 +49,14 @@ def show():
                             '_REGISTRATION_DEADLINE_':registration_deadline,
                             "_END_DATE_":final_submission_deadline,
                             '_BATTLE_DESC_':brief_description,
-                            '_TOURNAMENT_ID_':st.session_state['current_tournament_id'],
+                            '_TOURNAMENT_ID_':TournamentID,
                             '_MIN_GROUP_SIZE_':min_students,
-                            '_MAX_GROUP_SIZE_':max_students}
+                            '_MAX_GROUP_SIZE_':max_students,
+                            '_BATTLE_REPO_':github_repo}
 
             returned = st.session_state['user_object'].create_battle(battle_data)
 
 
-            # TODO : FIX ENTIRE GITHUB IMPLEMENTATION IN BACKEND MODULE
             if returned == 0:
                 st.balloons()
             else:

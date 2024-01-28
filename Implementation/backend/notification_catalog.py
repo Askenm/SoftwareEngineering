@@ -29,5 +29,12 @@ notification_catalog = {
 
                             Kindly,
                             The CodeKataBattles Team 
+                            """,
+    "SUBSCRIBED":           """
+                            Hi _USER_NAME_!\n
+                            Welcome to _TOURNAMENT_NAME_!   
+
+                            We wish you good luck in the wars to come! 
+                            The CodeKataBattles Team 
                             """
 }

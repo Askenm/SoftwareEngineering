@@ -208,6 +208,7 @@ class Tournament:
         self.tid = tid
         self.DBMS = DBMS()
         self.tournament_data = {}
+        
 
     def create_tournament(self, tournament_data):
         """
@@ -239,7 +240,7 @@ class Tournament:
         self.tid = self.DBMS.write("CREATE_TOURNAMENT", tournament_data).fetchone()[0]
         self.tournament_data["_TOURNAMENT_ID_"] = self.tid
 
-    def get_tournament_page_info(self):
+    def get_tournament_page_info(self,uid=None):
         """
         Compile information for the tournament page.
 
@@ -301,6 +302,8 @@ class Tournament:
         # Update the tournament status to indicate it has ended
         self.DBMS.write("END_TOURNAMENT", {"_TOURNAMENT_ID_": self.tid})
 
+        self.active = False
+
 
     def create_badge(self,badge_logic):
         badge = Badge(self.tid)
@@ -318,9 +321,50 @@ class Tournament:
         bid = battle.create_battle(battle_data)
 
 
+    def get_notification_info(self,uid):
+
+        user_name = self.DBMS.read('GET_USER_NAME_FROM_UID',{'_USER_ID_':uid})
+
+        notification_info = {uid:{'_TOURNAMENT_NAME_':self.tournament_data['tournament_name'],
+                             '_USER_NAME_':user_name['user_name'].values[0],
+                             '_TOURNAMENT_ID_':self.tid}}
+        
+        return notification_info
+
+
     def subscribe(self,uid):
         self.DBMS.write("SUBSCRIBE_TO_TOURNAMENT",{'_USER_ID_':uid,
                                                    '_TOURNAMENT_ID_':self.tid})
+        
+        SubscriptionNotification = Notification('SUBSCRIBED')
+
+        notification_info = self.get_notification_info(uid)
+
+        SubscriptionNotification.register_notfications_to_messageboard(notification_info)
+        
+
+
+        
+
+    def get_affiliation(self,uid,role):
+        if role == 'Educator':
+            if uid == self.tournament_data['educator_id']:
+                affiliation = 'Owner'
+            else:
+                affiliation = 'Unrelated'
+
+        
+        else:
+            res = self.DBMS.read("IS_USER_SUBSCRIBED",{'_USER_ID_':uid,
+                                                 '_TOURNAMENT_ID_':self.tid})
+            
+            if res.shape[0]>0:
+                affiliation = 'Subscribed'
+            else:
+                affiliation = 'Not Subscribed'
+
+
+        return affiliation
         
 
 
@@ -487,6 +531,27 @@ class Student:
         
         self.battle.get_unassigned_subscribers()
 
+    def get_tournament_page_info(self,tid):
+
+        self.tid = tid
+
+        self.tournament = Tournament(tid)
+
+        self.tournament.get_tournament_page_info(self.uid)
+
+    def get_affiliation(self):
+
+        return self.tournament.get_affiliation(self.uid,role = 'Student')
+    
+    
+        
+    
+    def subscribe(self):
+
+        self.tournament.subscribe(self.uid)
+
+        
+
 
 # Notification and Submission classes have been marked as placeholders and need further implementation.
 class Notification:
@@ -519,6 +584,8 @@ class Notification:
                     "_BATTLE_ID_": "NULL",
                 },
             )
+
+    
 
 
 
@@ -567,11 +634,12 @@ class Educator:
 
         battle_id = current_tournament.create_battle(battle_data)
 
-        new_battle = Battle(battle_id)
+        self.battle = Battle(battle_id)
 
-        self.battle_page_info = new_battle.get_battle_page_info(self.uid)
+        return 0
+    
 
-        return self.battle_page_info
+
 
 
     def create_tournament(self,tournament_data):
@@ -624,6 +692,24 @@ class Educator:
         self.battle.get_battle_page_info(self.uid)
 
         self.battle.get_unassigned_subscribers()
+
+
+    def get_tournament_page_info(self,tid):
+
+        self.tid = tid
+
+        self.tournament = Tournament(tid)
+
+        self.tournament.get_tournament_page_info(self.uid)
+
+    def get_affiliation(self):
+
+        return self.tournament.get_affiliation(self.uid,role = 'Educator')
+    
+
+    def get_tournaments(self):
+        self.DBMS.read("GET_EDUCATOR_TOURNAMENTS",self.uid)
+
 
 
 

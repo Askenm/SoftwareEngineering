@@ -28,7 +28,7 @@ def show():
      #   if selection['selected_rows_indices'] != []:
      #       st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
      #       button_call("Tournament details")
-
+        """
         st.write('###')
         st.subheader ("🏆 Subscribed Tournaments")
         
@@ -47,3 +47,4 @@ def show():
         if selection['selected_rows_indices'] != []:
             st.session_state['Tournament_Id'] = selection['selected_rows']['tournament_name'].iloc[0]
             button_call("Tournament details")
+        """

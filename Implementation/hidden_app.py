@@ -69,7 +69,7 @@ if __name__ == '__main__':
     # SCAFFOLDING
     ###############
     # This should be retrieved from the DB upon login
-    st.session_state['user_id'] = 5
+    st.session_state['user_id'] = 2
 
     # This should be tracked when navigating to the a given tournament/battle page
     # Only hardcoded here in order to test other functionality
@@ -100,4 +100,4 @@ if __name__ == '__main__':
         st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
 
     
-    Battle_details.show()
+    Tournament_details.show()

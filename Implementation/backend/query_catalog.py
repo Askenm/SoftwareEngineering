@@ -384,6 +384,11 @@ query_catalog = {
 
        "GET_PARTICIPANTS":  """
                             SELECT uid from ckb.groups where bid = _BATTLE_ID_
-                            """
+                            """,
+       "IS_USER_SUBSCRIBED":       """
+                                   SELECT * from ckb.subscriptions
+                                   WHERE uid = _USER_ID_
+                                   AND tid = _TOURNAMENT_ID_
+                                   """
     },
 }

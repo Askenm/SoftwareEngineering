@@ -5,8 +5,8 @@ from datetime import datetime
 
 
 # SCAFFOLDING
-bid = 29
-
+if "current_battle_id" not in st.session_state.keys():
+    st.session_state['current_battle_id'] = 29
 
 
 def show():
@@ -19,7 +19,7 @@ def show():
 
 
     if not st.session_state.show_form:
-        st.session_state['user_object'].get_battle_page_info(bid)
+        st.session_state['user_object'].get_battle_page_info(st.session_state['current_battle_id'])
         st.session_state['free_group_members'] = st.session_state['user_object'].battle.unassigned_subs
 
         st.session_state['current_battle'] = st.session_state['user_object'].battle
