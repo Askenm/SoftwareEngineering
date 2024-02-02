@@ -6,6 +6,17 @@ def show():
     st.markdown("# 🏆 My Tournaments")
     st.write('#')
 
+    st.session_state['user_object'].get_home_page()
+   # st.subheader ("🏆 My Tournmanents")
+    
+
+    selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_tournaments'])
+
+    if selection['selected_rows_indices'] != []:
+        button_call("Tournament details")
+
+
+
 
     #st.session_state
 

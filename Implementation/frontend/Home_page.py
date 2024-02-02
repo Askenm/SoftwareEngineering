@@ -13,6 +13,7 @@ def show():
     col1, col2 = st.columns(2)
     c3 = st.columns(1)
 
+    """
     st.session_state['user_object'].get_home_page()
     st.subheader ("🏆 My Tournmanents")
     
@@ -39,9 +40,9 @@ def show():
 
         selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_badges'])
 
-
-
     """
+
+    
     with col1:
 
         st.subheader ("🏆 Ongoing Tournmanents")
@@ -103,4 +104,4 @@ def show():
         )
 
         st.write('You selected:', option)
-    """
+    
