@@ -13,9 +13,11 @@ def show():
     ThisTournament = Tournament(TournamentId)
     ThisTournament.get_tournament_page_info()
     """
-    
+    print(f"{st.session_state['current_tournament_id']=}")
     st.session_state['user_object'].get_tournament_page_info(st.session_state['current_tournament_id'])
+    
     st.session_state['current_tournament'] = st.session_state['user_object'].tournament
+    print(f"{st.session_state['user_object'].tournament.tournament_data_df=}")
 
     st.session_state["affiliation"] = st.session_state['user_object'].get_affiliation()
 
@@ -70,14 +72,6 @@ def show():
         
         # edit the query catalog and backend: new function to retrieve specifically ongoing battles from the related ones
         ThisTournamentBattlesdf = st.session_state['current_tournament'].related_battles
-        
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [100, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 50, 75],
-            "Battle_Id": [150, 50, 75],})
 
         selection = dataframe_with_selections(ThisTournamentBattlesdf)
     
@@ -91,14 +85,6 @@ def show():
         st.subheader ("🚀 Ranking")
         
         ThisTournamentRankingdf = st.session_state['current_tournament'].tournament_rankings
-        
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [190, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 50, 75],
-            "User id": [150, 50, 75],})
 
         selection = dataframe_with_selections(ThisTournamentRankingdf)
 

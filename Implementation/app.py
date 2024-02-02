@@ -38,18 +38,19 @@ def setup(__file__):
     "My Battles": My_Battles_page,
     "My Profile": My_Profile_page,
     
-}
+    }
 
     educator_pages = {"Create Battle": Create_battle,
                   "Create Tournament": Create_tournament, 
                   "Create Badge": Create_badge
-}
+    }
     hidden_pages = {
     "Battle details": Battle_details,
     "Tournament details": Tournament_details,
 
-}
+    }
 
+    # TODO: Replace the use of the yaml file with 
     config_path = Path(__file__).parent / "config.yaml"
     with open(config_path) as file:
         config = yaml.safe_load(file)
@@ -62,7 +63,7 @@ def setup(__file__):
     config['cookie']['expiry_days']
     )   
     
-    return pages,educator_pages,hidden_pages,config,authenticator
+    return pages, educator_pages, hidden_pages, config, authenticator
 
 
 
@@ -90,7 +91,7 @@ if __name__ == '__main__':
 
     # This should be tracked when navigating to the a given tournament/battle page
     # Only hardcoded here in order to test other functionality
-    st.session_state['current_tournament_id'] = 16
+    #st.session_state['current_tournament_id'] = 16
     st.session_state['current_battle_id'] = 29
     ################
 
@@ -116,9 +117,11 @@ if __name__ == '__main__':
         st.session_state['role'] = user_info.get('role', None)  
         st.session_state['name'] = name
         if isinstance(st.session_state['role'],str):
+            #print(st.session_state.to_dict())
             st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
 
     elif st.session_state['login_status']:
+        st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
         st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
         pages = show_pages_based_on_role()
         if not st.session_state['switch_pages_button']:

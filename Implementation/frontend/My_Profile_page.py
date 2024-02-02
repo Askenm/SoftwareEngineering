@@ -11,6 +11,7 @@ def show():
         
         st.session_state['user_object'].get_home_page()
         
+        print(f'{st.session_state["user_object"].user_information=}')
         UserProfileBadgesdf = st.session_state['user_object'].user_information['user_badges']
         st.dataframe(UserProfileBadgesdf, hide_index = True)
         

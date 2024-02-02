@@ -242,7 +242,7 @@ class Tournament:
         self.tid = self.DBMS.write("CREATE_TOURNAMENT", tournament_data).fetchone()[0]
         self.tournament_data["_TOURNAMENT_ID_"] = self.tid
 
-    def get_tournament_page_info(self,uid=None):
+    def get_tournament_page_info(self):
         """
         Compile information for the tournament page.
 
@@ -503,6 +503,9 @@ class Student:
         """
         self.uid = uid
         self.DBMS = DBMS()
+        self.tournament = None
+        self.user_information = None
+        self.battle = None
 
     def get_home_page(self):
         """
@@ -539,14 +542,12 @@ class Student:
 
         self.tournament = Tournament(tid)
 
-        self.tournament.get_tournament_page_info(self.uid)
+        self.tournament.get_tournament_page_info() 
 
     def get_affiliation(self):
 
         return self.tournament.get_affiliation(self.uid,role = 'Student')
     
-    
-        
     
     def subscribe(self):
 
@@ -702,7 +703,7 @@ class Educator:
 
         self.tournament = Tournament(tid)
 
-        self.tournament.get_tournament_page_info(self.uid)
+        self.tournament.get_tournament_page_info()
 
     def get_affiliation(self):
 

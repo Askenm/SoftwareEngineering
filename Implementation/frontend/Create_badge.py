@@ -27,6 +27,8 @@ def show():
 
 
         selected_indexes = [YourTournaments.index(uname) for uname in options]
+        print(f"{st.session_state['your_tournaments']=}")
+        print(f"{st.session_state['your_tournaments'].iloc[selected_indexes]['tid']=}")
         TournamentID = st.session_state['your_tournaments'].iloc[selected_indexes]['tid'].values.tolist()[0]
 
         # Form submit button
