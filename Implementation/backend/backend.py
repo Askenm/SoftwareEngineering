@@ -257,11 +257,17 @@ class Tournament:
         self.tournament_data_df = self.DBMS.read(
             "GET_TOURNAMENT_PAGE_INFO", {"_TOURNAMENT_ID_": self.tid}
         )
-
-        # Retrieve related battles
-        self.related_battles = self.DBMS.read(
-            "GET_RELATED_BATTLES", {"_TOURNAMENT_ID_": self.tid}
+        
+        # Retrieve related battles that are ongoing
+        self.related_battles_ongoing = self.DBMS.read(
+            "GET_RELATED_BATTLES_ONGOING", {"_TOURNAMENT_ID_": self.tid}
         )
+        
+        # Retrieve related battles that are upcoming
+        self.related_battles_upcoming = self.DBMS.read(
+            "GET_RELATED_BATTLES_UPCOMING", {"_TOURNAMENT_ID_": self.tid}
+        )
+
 
         # Retrieve tournament rankings
         self.tournament_rankings = self.DBMS.read(
@@ -287,7 +293,7 @@ class Tournament:
         self.tournament_data = {
             "tournament_name": self.tournament_data_df["tournament_name"].values[0],
             "educator_id":self.tournament_data_df["creator"].values[0],
-            "related_battles": self.related_battles,
+            "related_battles": self.related_battles_ongoing,
             "tournament_rankings": self.tournament_rankings,
             "badges": self.badges,
         }
@@ -518,15 +524,35 @@ class Student:
         user_tournaments = self.DBMS.read(
             "GET_USER_TOURNAMENTS", {"_USER_ID_": self.uid}
         )
+        
+        user_ongoing_tournaments = self.DBMS.read(
+            "GET_USER_ONGOING_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_upcoming_tournaments = self.DBMS.read(
+            "GET_USER_UPCOMING_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_name = self.DBMS.read('GET_USER_NAME_FROM_UID',{'_USER_ID_':self.uid})['user_name'].values[0]
+    
 
         user_battles = self.DBMS.read("GET_USER_BATTLES", {"_USER_ID_": self.uid})
+        
+        user_ongoing_battles = self.DBMS.read("GET_USER_ONGOING_BATTLES", {"_USER_ID_": self.uid})
+
+        user_upcoming_battles = self.DBMS.read("GET_USER_UPCOMING_BATTLES", {"_USER_ID_": self.uid})
 
         user_badges = self.DBMS.read("GET_USER_BADGES", {"_USER_ID_": self.uid})
 
         self.user_information = {
             "user_tournaments": user_tournaments,
+            "user_ongoing_tournaments": user_ongoing_tournaments,
+            "user_upcoming_tournaments": user_upcoming_tournaments,
             "user_battles": user_battles,
+            "user_ongoing_battles": user_ongoing_battles,
+            "user_upcoming_battles": user_upcoming_battles,
             "user_badges": user_badges,
+            "user_name": user_name,
         }
 
     def get_battle_page_info(self,bid):
@@ -624,12 +650,31 @@ class Educator:
         user_tournaments = self.DBMS.read(
             "GET_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
         )
+        
+        user_ongoing_tournaments = self.DBMS.read(
+            "GET_ONGOING_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_upcoming_tournaments = self.DBMS.read(
+            "GET_UPCOMING_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
 
         user_battles = self.DBMS.read("GET_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
 
+        user_ongoing_battles = self.DBMS.read("GET_ONGOING_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
+        
+        user_upcoming_battles = self.DBMS.read("GET_UPCOMING_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
+        
+        user_name = self.DBMS.read("GET_USER_NAME_FROM_UID", {"_USER_ID_": self.uid})['user_name'].values[0]
+
         self.user_information = {
             "user_tournaments": user_tournaments,
-            "user_battles": user_battles
+            "user_ongoing_tournaments": user_ongoing_tournaments,
+            "user_upcoming_tournaments": user_upcoming_tournaments,
+            "user_battles": user_battles,
+            "user_ongoing_battles": user_ongoing_battles,
+            "user_upcoming_battles": user_upcoming_battles,
+            "user_name": user_name
         }
 
     def create_battle(self,battle_data):

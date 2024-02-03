@@ -6,18 +6,11 @@ import time
 
 def show():
 
-    """
-    print(st.session_state.to_dict()['Tournament_Id'])
-    TournamentId = st.session_state.to_dict()['Tournament_Id']
-    print(st.session_state.to_dict()['Tournament_Id'])
-    ThisTournament = Tournament(TournamentId)
-    ThisTournament.get_tournament_page_info()
-    """
-    print(f"{st.session_state['current_tournament_id']=}")
+  #  print(f"{st.session_state['current_tournament_id']=}")
     st.session_state['user_object'].get_tournament_page_info(st.session_state['current_tournament_id'])
     
     st.session_state['current_tournament'] = st.session_state['user_object'].tournament
-    print(f"{st.session_state['user_object'].tournament.tournament_data_df=}")
+ #   print(f"{st.session_state['user_object'].tournament.tournament_data_df=}")
 
     st.session_state["affiliation"] = st.session_state['user_object'].get_affiliation()
 
@@ -26,9 +19,9 @@ def show():
 
     c1, c2, = st.columns([3, 1])
     c3, = st.columns(1)
-    c4, = st.columns(1)
-    c5, = st.columns(1)
-    c6, = st.columns(1)
+    c4, c5 = st.columns(2)
+    c6, c7 = st.columns(2)
+    
 
     with c1:
         st.caption("Description")
@@ -42,7 +35,7 @@ def show():
 
     
     if st.session_state["affiliation"] == "Not Subscribed":
-        with c4:
+        with c1:
             if st.button("💥 SUBSCRIBE"):
                     
                     # Subscribe to tournament
@@ -56,7 +49,7 @@ def show():
             # SUBSCRIBE FUNCTIONALITY
     
     elif st.session_state["affiliation"] == 'Owner':
-        with c4:
+        with c1:
             if st.button("💥 END TOURNAMENT"):
                 st.session_state['current_tournament'].end_tournament()
                 st.balloons()
@@ -69,42 +62,41 @@ def show():
     with c4: 
         st.write('##')
         st.subheader ("⚔️ Ongoing Battles")
-        
-        # edit the query catalog and backend: new function to retrieve specifically ongoing battles from the related ones
-        ThisTournamentBattlesdf = st.session_state['current_tournament'].related_battles
 
-        selection = dataframe_with_selections(ThisTournamentBattlesdf)
-    
+        selection = dataframe_with_selections(st.session_state['current_tournament'].related_battles_ongoing)
+        
         if selection['selected_rows_indices'] != []:
-            st.session_state['current_battle_id'] = selection['selected_rows']['Battle_Id'].iloc[0]
-            print(st.session_state['current_battle_id'])
+            st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]
+         #   print(st.session_state['current_battle_id'])
             button_call("Battle details")
 
-    with c5:
+    with c5: 
+        st.write('##')
+        st.subheader ("⚔️ Upcoming Battles")
+
+        selection = dataframe_with_selections(st.session_state['current_tournament'].related_battles_upcoming)
+        
+        if selection['selected_rows_indices'] != []:
+            st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]
+        #    print(st.session_state['current_battle_id'])
+            button_call("Battle details")
+
+    with c6:
         st.write('##')
         st.subheader ("🚀 Ranking")
         
-        ThisTournamentRankingdf = st.session_state['current_tournament'].tournament_rankings
-
-        selection = dataframe_with_selections(ThisTournamentRankingdf)
+        selection = dataframe_with_selections(st.session_state['current_tournament'].tournament_rankings)
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['User_Id'] = selection['selected_rows']['User id'].iloc[0]
+            st.session_state['user_Id'] = selection['selected_rows']['uid'].iloc[0]
             button_call("My Profile")
         
     
-    with c6:
+    with c7:
         st.write('##')
-        st.subheader ("🚀 Badges")
+        st.subheader ("🏅 Badges")
         
-        ThisTournamentBadgesf = st.session_state['current_tournament'].badges
-
-        selection = dataframe_with_selections(ThisTournamentBadgesf)
-
-        if selection['selected_rows_indices'] != []:
-            st.session_state['User_Id'] = selection['selected_rows']['User id'].iloc[0]
-            button_call("My Profile")
- 
+        st.dataframe(st.session_state['current_tournament'].badges, hide_index=True)
 
     
 

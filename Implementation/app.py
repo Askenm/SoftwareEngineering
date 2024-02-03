@@ -96,7 +96,7 @@ if __name__ == '__main__':
     # This should be tracked when navigating to the a given tournament/battle page
     # Only hardcoded here in order to test other functionality
     #st.session_state['current_tournament_id'] = 16
-    st.session_state['current_battle_id'] = 29
+    #st.session_state['current_battle_id'] = 29
     ################
     st.session_state['user_id'] = 5
 
