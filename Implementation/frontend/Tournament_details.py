@@ -88,7 +88,7 @@ def show():
         selection = dataframe_with_selections(st.session_state['current_tournament'].tournament_rankings)
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['user_Id'] = selection['selected_rows']['User id'].iloc[0]
+            st.session_state['user_Id'] = selection['selected_rows']['uid'].iloc[0]
             button_call("My Profile")
         
     
