@@ -6,11 +6,11 @@ import time
 
 def show():
 
-    print(f"{st.session_state['current_tournament_id']=}")
+  #  print(f"{st.session_state['current_tournament_id']=}")
     st.session_state['user_object'].get_tournament_page_info(st.session_state['current_tournament_id'])
     
     st.session_state['current_tournament'] = st.session_state['user_object'].tournament
-    print(f"{st.session_state['user_object'].tournament.tournament_data_df=}")
+ #   print(f"{st.session_state['user_object'].tournament.tournament_data_df=}")
 
     st.session_state["affiliation"] = st.session_state['user_object'].get_affiliation()
 
@@ -66,8 +66,8 @@ def show():
         selection = dataframe_with_selections(st.session_state['current_tournament'].related_battles_ongoing)
         
         if selection['selected_rows_indices'] != []:
-            st.session_state['current_battle_id'] = selection['selected_rows']['Battle_Id'].iloc[0]
-            print(st.session_state['current_battle_id'])
+            st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]
+         #   print(st.session_state['current_battle_id'])
             button_call("Battle details")
 
     with c5: 
@@ -77,8 +77,8 @@ def show():
         selection = dataframe_with_selections(st.session_state['current_tournament'].related_battles_upcoming)
         
         if selection['selected_rows_indices'] != []:
-            st.session_state['current_battle_id'] = selection['selected_rows']['Battle_Id'].iloc[0]
-            print(st.session_state['current_battle_id'])
+            st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]
+        #    print(st.session_state['current_battle_id'])
             button_call("Battle details")
 
     with c6:

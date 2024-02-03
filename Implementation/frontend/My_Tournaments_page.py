@@ -20,7 +20,6 @@ def show():
 
         if selection['selected_rows_indices'] != []:
             st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
-            print(f"prut {st.session_state['current_tournament_id']=}")
             button_call("Tournament details")
 
     with col2[0]:
@@ -30,5 +29,4 @@ def show():
 
         if selection['selected_rows_indices'] != []:
             st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
-            print(f"prut {st.session_state['current_tournament_id']=}")
             button_call("Tournament details")

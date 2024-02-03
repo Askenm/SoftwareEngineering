@@ -536,6 +536,10 @@ class Student:
     
 
         user_battles = self.DBMS.read("GET_USER_BATTLES", {"_USER_ID_": self.uid})
+        
+        user_ongoing_battles = self.DBMS.read("GET_USER_ONGOING_BATTLES", {"_USER_ID_": self.uid})
+
+        user_upcoming_battles = self.DBMS.read("GET_USER_UPCOMING_BATTLES", {"_USER_ID_": self.uid})
 
         user_badges = self.DBMS.read("GET_USER_BADGES", {"_USER_ID_": self.uid})
 
@@ -544,6 +548,8 @@ class Student:
             "user_ongoing_tournaments": user_ongoing_tournaments,
             "user_upcoming_tournaments": user_upcoming_tournaments,
             "user_battles": user_battles,
+            "user_ongoing_battles": user_ongoing_battles,
+            "user_upcoming_battles": user_upcoming_battles,
             "user_badges": user_badges,
             "user_name": user_name,
         }
@@ -654,6 +660,10 @@ class Educator:
 
         user_battles = self.DBMS.read("GET_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
 
+        user_ongoing_battles = self.DBMS.read("GET_ONGOING_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
+        
+        user_upcoming_battles = self.DBMS.read("GET_UPCOMING_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
+        
         user_name = self.DBMS.read("GET_USER_NAME_FROM_UID", {"_USER_ID_": self.uid})['user_name'].values[0]
 
         self.user_information = {
@@ -661,6 +671,8 @@ class Educator:
             "user_ongoing_tournaments": user_ongoing_tournaments,
             "user_upcoming_tournaments": user_upcoming_tournaments,
             "user_battles": user_battles,
+            "user_ongoing_battles": user_ongoing_battles,
+            "user_upcoming_battles": user_upcoming_battles,
             "user_name": user_name
         }
 

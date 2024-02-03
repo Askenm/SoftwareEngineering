@@ -5,8 +5,8 @@ from datetime import datetime
 
 
 # SCAFFOLDING
-if "current_battle_id" not in st.session_state.keys():
-    st.session_state['current_battle_id'] = 29
+#if "current_battle_id" not in st.session_state.keys():
+#    st.session_state['current_battle_id'] = 29
 
 
 def show():
