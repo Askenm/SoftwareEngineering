@@ -256,11 +256,17 @@ class Tournament:
         self.tournament_data_df = self.DBMS.read(
             "GET_TOURNAMENT_PAGE_INFO", {"_TOURNAMENT_ID_": self.tid}
         )
-
-        # Retrieve related battles
-        self.related_battles = self.DBMS.read(
-            "GET_RELATED_BATTLES", {"_TOURNAMENT_ID_": self.tid}
+        
+        # Retrieve related battles that are ongoing
+        self.related_battles_ongoing = self.DBMS.read(
+            "GET_RELATED_BATTLES_ONGOING", {"_TOURNAMENT_ID_": self.tid}
         )
+        
+        # Retrieve related battles that are upcoming
+        self.related_battles_upcoming = self.DBMS.read(
+            "GET_RELATED_BATTLES_UPCOMING", {"_TOURNAMENT_ID_": self.tid}
+        )
+
 
         # Retrieve tournament rankings
         self.tournament_rankings = self.DBMS.read(
@@ -286,7 +292,7 @@ class Tournament:
         self.tournament_data = {
             "tournament_name": self.tournament_data_df["tournament_name"].values[0],
             "educator_id":self.tournament_data_df["creator"].values[0],
-            "related_battles": self.related_battles,
+            "related_battles": self.related_battles_ongoing,
             "tournament_rankings": self.tournament_rankings,
             "badges": self.badges,
         }

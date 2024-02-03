@@ -150,14 +150,16 @@ query_catalog = {
                                                  WHERE subscription_deadline < NOW()::DATE
                                                  AND end_date IS NULL                                           
                                                  """,
-        "GET_RELATED_BATTLES": """
-                                                 SELECT b.battle_name,
+
+       "GET_RELATED_BATTLES_ONGOING": """
+                                          SELECT b.battle_name,
                                                  CASE WHEN b.end_date < NOW()::DATE
                                                  THEN 'Ended'
                                                  ELSE 'Ongoing'
                                                  END
                                                  as battle_status,
-                                                 b.create_date,
+                                                 b.min_group_size,
+                                                 b.max_group_size,
                                                  b.end_date
                                                  FROM ckb.battles b
                                                  INNER JOIN 
@@ -166,10 +168,31 @@ query_catalog = {
                                                  
                                                  
                                                  WHERE t.tid = _TOURNAMENT_ID_
+                                                 AND registration_deadline < NOW()::DATE
                                                  
                                                  ORDER BY b.end_date desc
                                                  
                                                  """,
+                                                 
+       "GET_RELATED_BATTLES_UPCOMING": """
+                                                 SELECT b.battle_name,
+                                                 b.registration_deadline,
+                                                 b.min_group_size,
+                                                 b.max_group_size
+                                                 
+                                                 FROM ckb.battles b
+                                                 INNER JOIN 
+                                                 ckb.tournaments t
+                                                 ON b.tournament_id = t.tid
+                                                 
+                                                 
+                                                 WHERE t.tid = _TOURNAMENT_ID_
+                                                 AND registration_deadline >= NOW()::DATE
+                                                 
+                                                 ORDER BY b.end_date desc
+                                                 
+                                                 """,
+       
         "IS_EDUCATOR": """
                             SELECT is_educator FROM ckb.users WHERE uid = _USER_ID_
                             """,
