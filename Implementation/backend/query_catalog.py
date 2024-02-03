@@ -79,7 +79,11 @@ query_catalog = {
                                    UPDATE ckb.submissions
                                    SET notification_registered = TRUE
                                    WHERE smid = _SUBMISSION_ID_;
-                                   """
+                                   """,
+       "ADD_USER":   """
+                     INSERT INTO ckb.users (uid, create_date, user_email, user_name, password, is_educator, github_user_name)  
+                     VALUES (_uid_, _create_date_, '_user_email_', '_user_name_', '_password_', _is_educator_, '_github_')
+                     """
     },
     "read": {
         "GET_BATTLE_RANKINGS": """SELECT 
@@ -576,6 +580,18 @@ query_catalog = {
 
        "GET_SUBMISSION":    """
                             
-                            """
+                            """,
+       "GET_CREDENTIALS": """
+                            SELECT user_email, uid, user_name, password, is_educator
+                            FROM ckb.users;
+                     """,
+       "GET_MAX_ID": """
+                     SELECT MAX(uid) AS highest_uid
+                     FROM ckb.users;
+                     """,
+       "GET_ID": """
+                     SELECT uid FROM ckb.users u
+                     WHERE user_name = _USER_NAME_
+                     """,
     },
 }

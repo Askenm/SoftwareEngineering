@@ -4,6 +4,7 @@ from .notification_catalog import notification_catalog
 from datetime import datetime
 
 
+
 class Battle:
     def __init__(self, bid=None):
         """
@@ -687,10 +688,6 @@ class Educator:
 
         return 0
     
-
-
-
-
     def create_tournament(self,tournament_data):
         new_tournament = Tournament()
 
@@ -726,7 +723,6 @@ class Educator:
     def end_tournament(self,tid):
         T = Tournament(tid)
         T.end_tournament()
-
 
 
     def create_badge(self,tid,badge_logic):
@@ -767,7 +763,48 @@ class Educator:
         self.DBMS.write('ASSIGN_MANUAL_SCORE',{'_SCORE_':score,
                                                '_SUBMISSION_ID_':smid})
 
+class Authentication_info:
+    def __init__(self):
+        self.DBMS = DBMS()
+    
+    def get_credentials(self):
+        df = self.DBMS.read("GET_CREDENTIALS",{})
+        # Transform the DataFrame to the desired dictionary format
+        user_dict = {}
+        for _, row in df.iterrows():
+            username = row['user_name']
+            user_dict[username] = {
+                'email': row['user_email'],
+                'id': row['uid'],
+                'logged_in': False,  # Assuming default value as False
+                'name': username,
+                'password': row['password'],
+                'role': 'Educator' if row['is_educator'] else 'Student'
+            }
 
+        # The final dictionary
+        formatted_dict = {'usernames': user_dict}
+        
+        return formatted_dict
+    
+    def get_max_id(self):
+        return self.DBMS.read("GET_MAX_ID",{}).iloc[0].values[0]
 
+    def add_user(self, user_dict:dict):
+        print(user_dict)
+        self.DBMS.write("ADD_USER", {
+        "_uid_": "DEFAULT", 
+        "_create_date_": "CURRENT_DATE",
+        "_user_email_": user_dict['email'],
+        "_user_name_": user_dict['name'],
+        "_password_": user_dict['password'],
+        "_is_educator_": user_dict['role'] == 'Educator',
+        "_github_": user_dict['github']
+            })
+    def get_uid(self, username):
+        if username != '':
+            return self.DBMS.read("GET_ID", {"_USER_NAME_":username}).iloc[0].values[0]
+        else:
+            return ''
 if __name__ == "__main__":
     pass

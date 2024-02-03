@@ -16,7 +16,7 @@ import frontend.Create_badge as Create_badge
 from frontend.Authenticator_role.streamlit_authenticator import Authenticate
 
 
-from backend.backend import Student,Educator
+from backend.backend import Student,Educator,Authentication_info
 
 
 
@@ -50,20 +50,25 @@ def setup(__file__):
 
     }
 
-    # TODO: Replace the use of the yaml file with 
-    config_path = Path(__file__).parent / "config.yaml"
-    with open(config_path) as file:
-        config = yaml.safe_load(file)
-
+    # TODO: Replace the use of the yaml file with database interaction
+    # config_path = Path(__file__).parent / "config.yaml"
+    # with open(config_path) as file:
+    #     config = yaml.safe_load(file)
+    # print(f"{config['credentials'], config['cookie']['name'], config['cookie']['key'], config['cookie']['expiry_days']=}")
+    Authentication = Authentication_info()
+    credentials = Authentication.get_credentials()
+    max_id_ = Authentication.get_max_id()
+    # print(f'{credentials=}')
     # Initialize authenticator with the configuration
     authenticator = Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days']
+    credentials,
+    cookie_name="CKB_cookie",
+    key="CKB_key",
+    cookie_expiry_days=30,
+    max_id=max_id_
     )   
     
-    return pages, educator_pages, hidden_pages, config, authenticator
+    return pages, educator_pages, hidden_pages, authenticator, credentials, Authentication
 
 
 
@@ -81,20 +86,19 @@ def show_pages_based_on_role():
 
 if __name__ == '__main__':
     # Initiliazes the authenticator object, session state dict, and pages dict
-    pages, educator_pages, hidden_pages, config, authenticator = setup(__file__)
+    pages, educator_pages, hidden_pages, authenticator, credentials, Authentication = setup(__file__)
 
     # SCAFFOLDING
     # TODO
     ###############
-    # This should be retrieved from the DB upon login
-    st.session_state['user_id'] = 5
+    
 
     # This should be tracked when navigating to the a given tournament/battle page
     # Only hardcoded here in order to test other functionality
     #st.session_state['current_tournament_id'] = 16
     #st.session_state['current_battle_id'] = 29
     ################
-
+    st.session_state['user_id'] = 5
 
 
 
@@ -103,27 +107,34 @@ if __name__ == '__main__':
     roles = {'Educator':Educator,
              'Student':Student}
     
-    # The object is saved in the session_state here
-    
     
 
     # Main app logic
     if not st.session_state['login_status'] or st.session_state['logout']:
+        print(f"{st.session_state['login_status'], st.session_state['logout']=}")
         st.session_state['logout'] = False
         authenticator, username, name = Login_signup.show(authenticator)
-
         # Fetch and store the user's role upon successful login
-        user_info = config['credentials']['usernames'].get(username, {})
+        user_info = credentials['usernames'].get(username, {})
         st.session_state['role'] = user_info.get('role', None)  
         st.session_state['name'] = name
+        # print(f"\n\n{username=}\n\n")
+        # st.session_state['user_id'] = Authentication.get_uid(username)
+        # st.session_state['user_id'] = 5
+        # print(f"\n\n{st.session_state['user_id']=}\n\n")
         if isinstance(st.session_state['role'],str):
             #print(st.session_state.to_dict())
             st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
 
     elif st.session_state['login_status']:
-        st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
+        print(f"{st.session_state['login_status']=}")
+        
+        if isinstance(st.session_state['role'],str):
+            st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
         st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
         pages = show_pages_based_on_role()
+        # print(f"{st.session_state.to_dict()=}")
+        authenticator.logout("Logout", "sidebar")
         if not st.session_state['switch_pages_button']:
             pages[st.session_state['sidebar_page']].show()
         else:
@@ -133,7 +144,6 @@ if __name__ == '__main__':
             else:
                 pages[st.session_state['current_page']].show()
             
-        authenticator.logout("Logout", "sidebar")
     else:
         st.error("Please log in to access this page")
 
