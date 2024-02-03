@@ -495,25 +495,15 @@ query_catalog = {
                                    """,
                                    
        "GET_EDUCATOR_TOURNAMENTS":     """
-                                   SELECT 
-                                   t.tid,
-                                   tournament_name,
-                                   subscription_deadline,
-                                   description,
-				       count(distinct b.bid) as num_battles,
-                                   u.user_name as creator_name
+                                   SELECT  t.creator, t.tid, tournament_name, subscription_deadline, description, u.user_name as creator_name,COUNT(b.bid) AS number_of_battles
                                    FROM ckb.tournaments t
                                    INNER JOIN ckb.users u 
-                                   on creator = uid
-                                   INNER JOIN ckb.battles b
-                                   on b.tournament_id = t.tid
+                                   on t.creator = uid
+                                   LEFT JOIN 
+                                   ckb.battles b ON t.tid = b.tournament_id
                                    WHERE t.creator = _USER_ID_
-								   
                                    GROUP BY 
-                                   t.tid,tournament_name,
-                                   subscription_deadline,
-                                   description,
-                                   u.user_name; 
+                                   t.creator, t.tid, t.tournament_name, t.subscription_deadline, t.description, u.user_name
                                    """,
        "GET_ONGOING_EDUCATOR_TOURNAMENTS":     """
                                    SELECT 

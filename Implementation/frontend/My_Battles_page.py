@@ -16,14 +16,13 @@ def show():
         st.subheader ("⚔️ My ongoing Battles")
         
         selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_ongoing_battles'])
-
         if selection['selected_rows_indices'] != []:
             st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]
             button_call("Battle details")
 
     with col2[0]:
         st.subheader ("⚔️ My upcoming Battles")
-        
+        print(f"{st.session_state['user_object'].user_information['user_upcoming_battles']=}")
         selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_upcoming_battles'])
 
         if selection['selected_rows_indices'] != []:

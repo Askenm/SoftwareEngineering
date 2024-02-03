@@ -21,16 +21,18 @@ def show():
 
         YourTournaments = st.session_state['your_tournaments']['tournament_name'].values.tolist()
         # Multi-select list
-        options = st.multiselect("Your Tournaments", 
-                                 YourTournaments
-                                 ,max_selections=1)
+        selected_index = st.selectbox("Your Tournaments", 
+                                 YourTournaments)
 
 
-        selected_indexes = [YourTournaments.index(uname) for uname in options]
+        print(selected_index)
+        print(YourTournaments)
         print(f"{st.session_state['your_tournaments']=}")
-        print(f"{st.session_state['your_tournaments'].iloc[selected_indexes]['tid']=}")
-        TournamentID = st.session_state['your_tournaments'].iloc[selected_indexes]['tid'].values.tolist()[0]
-
+        print(f"{st.session_state['your_tournaments'].loc[st.session_state['your_tournaments']==selected_index]=}")
+        try: 
+            TournamentID = st.session_state['your_tournaments'].loc[st.session_state['your_tournaments']['tournament_name'] == selected_index]
+        except IndexError as e: 
+            print(e)
         # Form submit button
         submit_button = st.form_submit_button(label='Create Badge')
 

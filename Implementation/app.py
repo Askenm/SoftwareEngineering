@@ -104,7 +104,6 @@ if __name__ == '__main__':
     elif st.session_state['login_status']:
         print(f"{st.session_state['login_status']=}")
         st.session_state['user_id'] = Authentication.get_uid(st.session_state['username'])
-        print(f"\n\n{st.session_state['user_id']=}\n\n")
         if isinstance(st.session_state['role'],str):
             st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
         st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
@@ -112,10 +111,13 @@ if __name__ == '__main__':
         # print(f"{st.session_state.to_dict()=}")
         authenticator.logout("Logout", "sidebar")
         if not st.session_state['switch_pages_button']:
+            print(st.session_state['current_page'], "porut")
+
             pages[st.session_state['sidebar_page']].show()
         else:
             st.session_state['switch_pages_button'] = False
             if st.session_state['current_page'] not in pages:
+                print(st.session_state['current_page'], "prut")
                 hidden_pages[st.session_state['current_page']].show()
             else:
                 pages[st.session_state['current_page']].show()

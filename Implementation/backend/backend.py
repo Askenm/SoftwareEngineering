@@ -345,7 +345,7 @@ class Tournament:
     def subscribe(self,uid):
         self.DBMS.write("SUBSCRIBE_TO_TOURNAMENT",{'_USER_ID_':uid,
                                                    '_TOURNAMENT_ID_':self.tid})
-        
+        print('subscribe backend')
         SubscriptionNotification = Notification('SUBSCRIBED')
 
         notification_info = self.get_notification_info(uid)
@@ -542,7 +542,7 @@ class Student:
         user_ongoing_battles = self.DBMS.read("GET_USER_ONGOING_BATTLES", {"_USER_ID_": self.uid})
 
         user_upcoming_battles = self.DBMS.read("GET_USER_UPCOMING_BATTLES", {"_USER_ID_": self.uid})
-
+        
         self.user_badges = self.DBMS.read("GET_USER_BADGES", {"_USER_ID_": self.uid})
 
         self.user_information = {
@@ -578,7 +578,7 @@ class Student:
     
     
     def subscribe(self):
-
+        print('Student subscribe')
         self.tournament.subscribe(self.uid)
 
     def get_studentslist(self):
@@ -767,6 +767,8 @@ class Educator:
     def get_studentslist(self):
         Studentlist = self.DBMS.read("GET_STUDENTS",{})
         return tuple(Studentlist['user_name']), Studentlist 
+    
+
 class Authentication_info:
     def __init__(self):
         self.DBMS = DBMS()

@@ -5,7 +5,7 @@ from backend.backend import Tournament
 import time
 
 def show():
-
+    print("\nTournament details\n")
   #  print(f"{st.session_state['current_tournament_id']=}")
     st.session_state['user_object'].get_tournament_page_info(st.session_state['current_tournament_id'])
     
@@ -35,16 +35,15 @@ def show():
     
     if st.session_state["affiliation"] == "Not Subscribed":
         with c1:
-            if st.button("💥 SUBSCRIBE"):
-                    
-                    # Subscribe to tournament
-                    st.session_state['user_object'].subscribe()
-                    
-                    st.balloons()
+            toggle = st.button("💥 SUBSCRIBE")
+            print(f"{toggle=}")
+            if toggle:
+                # Subscribe to tournament
+                st.session_state['user_object'].subscribe()
+                st.balloons()
+                time.sleep(2)
 
-                    time.sleep(2)
-
-                    st.experimental_rerun()
+                #st.experimental_rerun()
             # SUBSCRIBE FUNCTIONALITY
     
     elif st.session_state["affiliation"] == 'Owner':
@@ -54,7 +53,7 @@ def show():
                 st.balloons()
                 time.sleep(2)
 
-                st.experimental_rerun()
+                #st.experimental_rerun()
                 
             # CANCEL FUNCTIONALITY
 
