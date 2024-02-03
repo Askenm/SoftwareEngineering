@@ -20,8 +20,8 @@ def show():
     c1, c2, = st.columns([3, 1])
     c3, = st.columns(1)
     c4, c5 = st.columns(2)
-    c6, = st.columns(1)
-    c7, = st.columns(1)
+    c6, c7 = st.columns(2)
+    
 
     with c1:
         st.caption("Description")

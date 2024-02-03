@@ -523,6 +523,17 @@ class Student:
         user_tournaments = self.DBMS.read(
             "GET_USER_TOURNAMENTS", {"_USER_ID_": self.uid}
         )
+        
+        user_ongoing_tournaments = self.DBMS.read(
+            "GET_USER_ONGOING_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_upcoming_tournaments = self.DBMS.read(
+            "GET_USER_UPCOMING_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_name = self.DBMS.read('GET_USER_NAME_FROM_UID',{'_USER_ID_':self.uid})['user_name'].values[0]
+    
 
         user_battles = self.DBMS.read("GET_USER_BATTLES", {"_USER_ID_": self.uid})
 
@@ -530,8 +541,11 @@ class Student:
 
         self.user_information = {
             "user_tournaments": user_tournaments,
+            "user_ongoing_tournaments": user_ongoing_tournaments,
+            "user_upcoming_tournaments": user_upcoming_tournaments,
             "user_battles": user_battles,
             "user_badges": user_badges,
+            "user_name": user_name,
         }
 
     def get_battle_page_info(self,bid):
@@ -629,12 +643,25 @@ class Educator:
         user_tournaments = self.DBMS.read(
             "GET_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
         )
+        
+        user_ongoing_tournaments = self.DBMS.read(
+            "GET_ONGOING_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_upcoming_tournaments = self.DBMS.read(
+            "GET_UPCOMING_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
 
         user_battles = self.DBMS.read("GET_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
 
+        user_name = self.DBMS.read("GET_USER_NAME_FROM_UID", {"_USER_ID_": self.uid})['user_name'].values[0]
+
         self.user_information = {
             "user_tournaments": user_tournaments,
-            "user_battles": user_battles
+            "user_ongoing_tournaments": user_ongoing_tournaments,
+            "user_upcoming_tournaments": user_upcoming_tournaments,
+            "user_battles": user_battles,
+            "user_name": user_name
         }
 
     def create_battle(self,battle_data):

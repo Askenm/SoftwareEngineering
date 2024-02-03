@@ -3,28 +3,18 @@ from .util import button_call, dataframe_with_selections
 import streamlit as st
 from backend.backend import Tournament
 
-
 def show():
-    # TODO : Maybe changes here (Leonie)
     
-    st.markdown(f"# ⛩️ Welcome back, {st.session_state.to_dict()['username']}")
+    st.session_state['user_object'].get_home_page()
+   
+    st.markdown(f"# ⛩️ Welcome back, {st.session_state['user_object'].user_information['user_name']}")
     st.write('#')
 
     col1, col2 = st.columns(2)
     c3 = st.columns(1)
 
+
     """
-    st.session_state['user_object'].get_home_page()
-    st.subheader ("🏆 My Tournmanents")
-    
-
-    selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_tournaments'])
-
-    if selection['selected_rows_indices'] != []:
-        button_call("Tournament details")
-
-
-
     st.subheader ("🏆 My Battles")
     
 
@@ -47,22 +37,7 @@ def show():
 
         st.subheader ("🏆 Ongoing Tournmanents")
         
-        OngoingTournaments = Tournament(1)
-        OngoingTournaments.get_tournament_page_info()
-        OngoingTournamentsdf = OngoingTournaments.ongoing_tournaments
-        
-     #   df = pd.DataFrame(
-     #   {
-     #       "Tournament name": ["Basic", "Medium", "Advanced"],
-     #       "Subscriber count": [100, 50, 75],
-     #       "Creator": ["John", "Aske", "Lise"],
-     #       "Battle Count": [100, 50, 75],
-     #       "Tournament id": [100, 50, 75],
-
-     #   }
-     #   )
-
-        selection = dataframe_with_selections(OngoingTournamentsdf)
+        selection = dataframe_with_selections(selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_ongoing_tournaments']))
 
         if selection['selected_rows_indices'] != []:
             st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]

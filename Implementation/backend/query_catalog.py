@@ -268,6 +268,32 @@ query_catalog = {
                                    ON t.tid = s.tid
                                    WHERE s.uid = _USER_ID_
                                    """,
+       
+       "GET_USER_ONGOING_TOURNAMENTS": """
+                                   SELECT tournament_name,
+                                   description
+                                   from 
+                                   ckb.tournaments t
+                                   INNER JOIN ckb.subscriptions s
+                                   ON t.tid = s.tid
+                                   WHERE s.uid = _USER_ID_
+                                   AND t.subscription_deadline < NOW()::DATE
+                                   AND t.end_date IS NULL
+                                   """,
+      
+       "GET_USER_UPCOMING_TOURNAMENTS": """
+                                   SELECT tournament_name,
+                                   subscription_deadline ,
+                                   description
+                                   from 
+                                   ckb.tournaments t
+                                   INNER JOIN ckb.subscriptions s
+                                   ON t.tid = s.tid
+                                   WHERE s.uid = _USER_ID_
+                                   AND subscription_deadline >= NOW()::DATE
+                                   AND end_date IS NULL
+                                   """,
+       
         "GET_USER_BATTLES": """
                                    select battle_name,group_name,b.end_date 
                                    FROM ckb.groups g
@@ -382,8 +408,8 @@ query_catalog = {
        "GET_EDUCATOR_TOURNAMENTS":     """
                                    SELECT 
                                    t.tid,
-                                   tournament_name ,
-                                   subscription_deadline ,
+                                   tournament_name,
+                                   subscription_deadline,
                                    description,
 				       count(distinct b.bid) as num_battles,
                                    u.user_name as creator_name
@@ -400,6 +426,51 @@ query_catalog = {
                                    description,
                                    u.user_name; 
                                    """,
+       "GET_ONGOING_EDUCATOR_TOURNAMENTS":     """
+                                   SELECT 
+                                   t.tid,
+                                   tournament_name,
+                                   description,
+				       count(distinct b.bid) as num_battles,
+                                   u.user_name as creator_name
+                                   FROM ckb.tournaments t
+                                   INNER JOIN ckb.users u 
+                                   on creator = uid
+                                   INNER JOIN ckb.battles b
+                                   on b.tournament_id = t.tid
+                                   WHERE t.creator = _USER_ID_
+                                   AND t.subscription_deadline < NOW()::DATE
+                                   AND t.end_date IS NULL 
+								   
+                                   GROUP BY 
+                                   t.tid,tournament_name,
+                                   description,
+                                   u.user_name; 
+                                   """,
+       "GET_UPCOMING_EDUCATOR_TOURNAMENTS":     """
+                                   SELECT 
+                                   t.tid,
+                                   tournament_name,
+                                   subscription_deadline,
+                                   description,
+				       count(distinct b.bid) as num_battles,
+                                   u.user_name as creator_name
+                                   FROM ckb.tournaments t
+                                   INNER JOIN ckb.users u 
+                                   on creator = uid
+                                   INNER JOIN ckb.battles b
+                                   on b.tournament_id = t.tid
+                                   WHERE t.creator = _USER_ID_
+                                   AND t.subscription_deadline >= NOW()::DATE
+                                   AND t.end_date IS NULL 
+								   
+                                   GROUP BY 
+                                   t.tid,tournament_name,
+                                   subscription_deadline,
+                                   description,
+                                   u.user_name; 
+                                   """,
+       
        "GET_GROUPS": """
                      select g.group_name,string_agg(user_name,' - ') as Members from ckb.groups g
                      INNER JOIN
