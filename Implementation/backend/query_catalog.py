@@ -317,13 +317,13 @@ query_catalog = {
                                    """,
         
         "GET_USER_ONGOING_BATTLES": """
-                                   select b.bid, battle_name,group_name,b.end_date 
+                                   select b.bid, battle_name, group_name, b.end_date 
                                    FROM ckb.groups g
                                    INNER JOIN ckb.battles b 
                                    ON b.bid = g.bid 
                                    WHERE g.uid = _USER_ID_
                                    AND b.registration_deadline < NOW()::DATE
-                                   AND b.end_date IS NULL
+                                   AND (b.end_date IS NULL OR b.end_date > NOW()::DATE)
                                    """,  
                                                              
         "GET_USER_UPCOMING_BATTLES": """
@@ -591,7 +591,11 @@ query_catalog = {
                      """,
        "GET_ID": """
                      SELECT uid FROM ckb.users u
-                     WHERE user_name = _USER_NAME_
+                     WHERE user_name = '_USER_NAME_'
+                     """,
+       "GET_STUDENTS": """
+                     SELECT user_name, uid FROM ckb.users u
+                     WHERE is_educator is FALSE
                      """,
     },
 }

@@ -543,7 +543,7 @@ class Student:
 
         user_upcoming_battles = self.DBMS.read("GET_USER_UPCOMING_BATTLES", {"_USER_ID_": self.uid})
 
-        user_badges = self.DBMS.read("GET_USER_BADGES", {"_USER_ID_": self.uid})
+        self.user_badges = self.DBMS.read("GET_USER_BADGES", {"_USER_ID_": self.uid})
 
         self.user_information = {
             "user_tournaments": user_tournaments,
@@ -552,7 +552,7 @@ class Student:
             "user_battles": user_battles,
             "user_ongoing_battles": user_ongoing_battles,
             "user_upcoming_battles": user_upcoming_battles,
-            "user_badges": user_badges,
+            "user_badges": self.user_badges,
             "user_name": user_name,
         }
 
@@ -581,7 +581,9 @@ class Student:
 
         self.tournament.subscribe(self.uid)
 
-        
+    def get_studentslist(self):
+        Studentlist = self.DBMS.read("GET_STUDENTS",{})
+        return tuple(Studentlist['user_name']), Studentlist 
 
 
 # Notification and Submission classes have been marked as placeholders and need further implementation.
@@ -796,14 +798,16 @@ class Authentication_info:
         "_uid_": "DEFAULT", 
         "_create_date_": "CURRENT_DATE",
         "_user_email_": user_dict['email'],
-        "_user_name_": user_dict['name'],
+        "_user_name_": user_dict['user_name'],
         "_password_": user_dict['password'],
         "_is_educator_": user_dict['role'] == 'Educator',
         "_github_": user_dict['github']
             })
     def get_uid(self, username):
+        # if username != '':
+        #     return self.DBMS.read("GET_ID", {"_USER_NAME_":username}).iloc[0].values[0]
         if username != '':
-            return self.DBMS.read("GET_ID", {"_USER_NAME_":username}).iloc[0].values[0]
+            return self.DBMS.read("GET_ID", {"_USER_NAME_":username}).iloc[0, 0] 
         else:
             return ''
 if __name__ == "__main__":

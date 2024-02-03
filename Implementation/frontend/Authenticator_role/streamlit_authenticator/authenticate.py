@@ -38,7 +38,7 @@ class Authenticate:
             A Validator object that checks the validity of the username, name, and email fields.
         """
         self.credentials                =   credentials
-        self.credentials['usernames']   =   {key.lower(): value for key, value in credentials['usernames'].items()}
+        self.credentials['usernames']   =   {key: value for key, value in credentials['usernames'].items()}
         self.cookie_name                =   cookie_name
         self.key                        =   key
         self.cookie_expiry_days         =   cookie_expiry_days
@@ -249,7 +249,7 @@ class Authenticate:
                 elif location == 'sidebar':
                     login_form = st.sidebar.form('Login')
                 login_form.subheader('Login' if 'Form name' not in fields else fields['Form name'])
-                self.username = login_form.text_input('Username' if 'Username' not in fields else fields['Username']).lower()
+                self.username = login_form.text_input('Username' if 'Username' not in fields else fields['Username'])
                 st.session_state['username'] = self.username
                 self.password = login_form.text_input('Password' if 'Password' not in fields else fields['Password'],
                                                        type='password')
@@ -360,7 +360,7 @@ class Authenticate:
             reset_password_form = st.sidebar.form('Reset password')
         
         reset_password_form.subheader('Reset password' if 'Form name' not in fields else fields['Form name'])
-        self.username = username.lower()
+        self.username = username
         self.password = reset_password_form.text_input('Current password' if 'Current password' not in fields else fields['Current password'], 
                                                        type='password')
         new_password = reset_password_form.text_input('New password' if 'New password' not in fields else fields['New password'], 
@@ -441,7 +441,7 @@ class Authenticate:
         max_id = Authentication.get_max_id()
         print(f'{max_id=}')
         print(f'{github_user_name=}\n')
-        self.credentials['usernames'][username] = {'name': name, 'password': Hasher([password]).generate()[0], 
+        self.credentials['usernames'][username] = {'user_name': username, 'password': Hasher([password]).generate()[0], 
                                                    'email': email, 'role':role, 'logged_in': False, "github": github_user_name,
                                                    'id': max_id + 1}
         if preauthorization:
@@ -498,7 +498,7 @@ class Authenticate:
             register_user_form = st.sidebar.form('Register user')
         register_user_form.subheader('Register User' if 'Form name' not in fields else fields['Form name'])
         new_email = register_user_form.text_input('Email' if 'Email' not in fields else fields['Email'])
-        new_username = register_user_form.text_input('Username' if 'Username' not in fields else fields['Username']).lower()
+        new_username = register_user_form.text_input('Username' if 'Username' not in fields else fields['Username'])
         new_name = register_user_form.text_input('Name' if 'Name' not in fields else fields['Name'])
         new_github_user_name = register_user_form.text_input('Github user name' if 'Github_user_name' not in fields else fields['Github_user_name'])
         new_password = register_user_form.text_input('Password' if 'Password' not in fields else fields['Password'], type='password')
@@ -575,7 +575,7 @@ class Authenticate:
             forgot_password_form = st.sidebar.form('Forgot password')
 
         forgot_password_form.subheader('Forget password' if 'Form name' not in fields else fields['Form name'])
-        username = forgot_password_form.text_input('Username' if 'Username' not in fields else fields['Username']).lower()
+        username = forgot_password_form.text_input('Username' if 'Username' not in fields else fields['Username'])
 
         if forgot_password_form.form_submit_button('Submit' if 'Submit' not in fields else fields['Submit']):
             if len(username) > 0:

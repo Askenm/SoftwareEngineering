@@ -50,11 +50,7 @@ def setup(__file__):
 
     }
 
-    # TODO: Replace the use of the yaml file with database interaction
-    # config_path = Path(__file__).parent / "config.yaml"
-    # with open(config_path) as file:
-    #     config = yaml.safe_load(file)
-    # print(f"{config['credentials'], config['cookie']['name'], config['cookie']['key'], config['cookie']['expiry_days']=}")
+
     Authentication = Authentication_info()
     credentials = Authentication.get_credentials()
     max_id_ = Authentication.get_max_id()
@@ -88,25 +84,11 @@ if __name__ == '__main__':
     # Initiliazes the authenticator object, session state dict, and pages dict
     pages, educator_pages, hidden_pages, authenticator, credentials, Authentication = setup(__file__)
 
-    # SCAFFOLDING
-    # TODO
-    ###############
-    
-
-    # This should be tracked when navigating to the a given tournament/battle page
-    # Only hardcoded here in order to test other functionality
-    #st.session_state['current_tournament_id'] = 16
-    #st.session_state['current_battle_id'] = 29
-    ################
-    st.session_state['user_id'] = 5
-
-
 
     # A global Student or Educator object is assigned upon login
     # these objects can be used to view stuff, create stuff, delete stuff etc
     roles = {'Educator':Educator,
              'Student':Student}
-    
     
 
     # Main app logic
@@ -118,17 +100,11 @@ if __name__ == '__main__':
         user_info = credentials['usernames'].get(username, {})
         st.session_state['role'] = user_info.get('role', None)  
         st.session_state['name'] = name
-        # print(f"\n\n{username=}\n\n")
-        # st.session_state['user_id'] = Authentication.get_uid(username)
-        # st.session_state['user_id'] = 5
-        # print(f"\n\n{st.session_state['user_id']=}\n\n")
-        if isinstance(st.session_state['role'],str):
-            #print(st.session_state.to_dict())
-            st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
 
     elif st.session_state['login_status']:
         print(f"{st.session_state['login_status']=}")
-        
+        st.session_state['user_id'] = Authentication.get_uid(st.session_state['username'])
+        print(f"\n\n{st.session_state['user_id']=}\n\n")
         if isinstance(st.session_state['role'],str):
             st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
         st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")

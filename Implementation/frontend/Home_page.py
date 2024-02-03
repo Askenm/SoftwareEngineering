@@ -1,7 +1,7 @@
 import pandas as pd
 from .util import button_call, dataframe_with_selections
 import streamlit as st
-from backend.backend import Tournament
+from backend.backend import Tournament, Student
 
 def show():
     
@@ -19,15 +19,21 @@ def show():
       
     # TO DO: User search function 
     with c3[0]:
-        
+        usernames, studentlist = st.session_state['user_object'].get_studentslist()
         option = st.selectbox(
         "𖠌 Search other users",
-        ("Email", "Home phone", "Mobile phone"),
+        usernames,
         index=None,
         placeholder="Select user profile...",
         )
 
         st.write('You selected:', option)
+        print(f"\n{option=}\n")
+        if option != None:
+            st.session_state['selected_userID'] = studentlist.loc[studentlist['user_name']==option,'uid'].iloc[0]
+            print(f'{st.session_state["selected_userID"]=}')
+            st.session_state['display_other_profile'] = True
+            button_call("My Profile")
     
     with c1[0]:
         st.write('#')
