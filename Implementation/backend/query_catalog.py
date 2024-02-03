@@ -322,8 +322,8 @@ query_catalog = {
                                    INNER JOIN ckb.battles b 
                                    ON b.bid = g.bid 
                                    WHERE g.uid = _USER_ID_
-                                   AND t.registration_deadline < NOW()::DATE
-                                   AND t.end_date IS NULL
+                                   AND b.registration_deadline < NOW()::DATE
+                                   AND b.end_date IS NULL
                                    """,  
                                                              
         "GET_USER_UPCOMING_BATTLES": """
@@ -332,8 +332,8 @@ query_catalog = {
                                    INNER JOIN ckb.battles b 
                                    ON b.bid = g.bid 
                                    WHERE g.uid = _USER_ID_
-                                   AND t.registration_deadline >= NOW()::DATE
-                                   AND t.end_date IS NULL
+                                   AND b.registration_deadline >= NOW()::DATE
+                                   AND b.end_date IS NULL
                                    """,                              
                                    
         "GET_USER_BADGES": """
