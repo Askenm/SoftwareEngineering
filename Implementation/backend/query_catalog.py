@@ -142,11 +142,11 @@ query_catalog = {
                                                  WHERE t.tid = _TOURNAMENT_ID_
                                                  """,
                                                  
-       "GET_UPCOMING_TOURNAMENTS": """          SELECT tournament_name, creator, description, subscription_deadline, tid FROM ckb.tournaments
+       "GET_UPCOMING_TOURNAMENTS": """          SELECT tournament_name, subscription_deadline, description, tid FROM ckb.tournaments
                                                  WHERE subscription_deadline >= NOW()::DATE
-                                                 AND end_date IS NULL                                           
+                                                                                           
                                                  """,
-       "GET_ONGOING_TOURNAMENTS": """           SELECT tournament_name, creator, description, subscription_deadline, tid FROM ckb.tournaments
+       "GET_ONGOING_TOURNAMENTS": """           SELECT tournament_name, description, tid FROM ckb.tournaments
                                                  WHERE subscription_deadline < NOW()::DATE
                                                  AND end_date IS NULL                                           
                                                  """,
