@@ -12,7 +12,7 @@ def show():
         
         # TO DO: log in with a user account to check if this condition works
        
-        if st.session_state['user_object'] == Student:
+        if  st.session_state['role'] == 'Student':
             st.subheader ("🏅 Awarded Badges")
             st.dataframe(st.session_state['user_object'].user_badges, hide_index=True)
         

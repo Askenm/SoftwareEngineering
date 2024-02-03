@@ -32,7 +32,7 @@ def show():
         battle_user_data = st.session_state['current_battle'].battle_data
         battle_simple_data = st.session_state['current_battle'].battle_data_df
 
-        st.markdown(f"# {battle_simple_data['battle_name'].values[0]}")
+        st.markdown(f"# ⚔️ {battle_simple_data['battle_name'].values[0]}")
         st.write('#')
 
         
@@ -47,7 +47,7 @@ def show():
         
             st.write(f"{battle_simple_data['battle_description'].values[0]}")
 
-            st.markdown("#### Battle Repository")
+            st.markdown("#### Battle GitHub Repository")
             st.write(f"{battle_simple_data['github_repo'].values[0]}")
             
 
