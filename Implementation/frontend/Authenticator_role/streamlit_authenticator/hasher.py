@@ -56,3 +56,7 @@ class Hasher:
         """
         bcrypt_regex = re.compile(r'^\$2[aby]\$\d+\$.{53}$')
         return bool(bcrypt_regex.match(hash_string))
+    
+if __name__ == '__main__':
+    hash = Hasher(['karl'])
+    print(hash._hash("karl"))
