@@ -764,7 +764,9 @@ class Educator:
     def score_submission(self,score,smid):
         self.DBMS.write('ASSIGN_MANUAL_SCORE',{'_SCORE_':score,
                                                '_SUBMISSION_ID_':smid})
-
+    def get_studentslist(self):
+        Studentlist = self.DBMS.read("GET_STUDENTS",{})
+        return tuple(Studentlist['user_name']), Studentlist 
 class Authentication_info:
     def __init__(self):
         self.DBMS = DBMS()
@@ -804,8 +806,6 @@ class Authentication_info:
         "_github_": user_dict['github']
             })
     def get_uid(self, username):
-        # if username != '':
-        #     return self.DBMS.read("GET_ID", {"_USER_NAME_":username}).iloc[0].values[0]
         if username != '':
             return self.DBMS.read("GET_ID", {"_USER_NAME_":username}).iloc[0, 0] 
         else:
