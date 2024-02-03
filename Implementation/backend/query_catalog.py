@@ -311,6 +311,27 @@ query_catalog = {
                                    ON b.bid = g.bid 
                                    WHERE g.uid = _USER_ID_
                                    """,
+        
+        "GET_USER_ONGOING_BATTLES": """
+                                   select b.bid, battle_name,group_name,b.end_date 
+                                   FROM ckb.groups g
+                                   INNER JOIN ckb.battles b 
+                                   ON b.bid = g.bid 
+                                   WHERE g.uid = _USER_ID_
+                                   AND t.registration_deadline < NOW()::DATE
+                                   AND t.end_date IS NULL
+                                   """,  
+                                                             
+        "GET_USER_UPCOMING_BATTLES": """
+                                   select b.bid, battle_name, registration_deadline, group_name,b.end_date 
+                                   FROM ckb.groups g
+                                   INNER JOIN ckb.battles b 
+                                   ON b.bid = g.bid 
+                                   WHERE g.uid = _USER_ID_
+                                   AND t.registration_deadline >= NOW()::DATE
+                                   AND t.end_date IS NULL
+                                   """,                              
+                                   
         "GET_USER_BADGES": """
                                    select badge_name,tournament_name,badge_achieved 
                                    FROM ckb.badge b

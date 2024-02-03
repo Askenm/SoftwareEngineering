@@ -18,7 +18,6 @@ def show():
     st.write('#')
 
     c1, c2, = st.columns([3, 1])
-    c3, = st.columns(1)
     c4, c5 = st.columns(2)
     c6, c7 = st.columns(2)
     
@@ -63,7 +62,7 @@ def show():
         st.write('##')
         st.subheader ("⚔️ Ongoing Battles")
 
-        selection = dataframe_with_selections(st.session_state['current_tournament'].related_battles_ongoing)
+        selection = dataframe_with_selections(st.session_state['current_tournament'].tournament_data['related_ongoing_battles'])
         
         if selection['selected_rows_indices'] != []:
             st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]
@@ -74,7 +73,7 @@ def show():
         st.write('##')
         st.subheader ("⚔️ Upcoming Battles")
 
-        selection = dataframe_with_selections(st.session_state['current_tournament'].related_battles_upcoming)
+        selection = dataframe_with_selections(st.session_state['current_tournament'].tournament_data['related_upcoming_battles'])
         
         if selection['selected_rows_indices'] != []:
             st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]

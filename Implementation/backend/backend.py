@@ -292,7 +292,8 @@ class Tournament:
         self.tournament_data = {
             "tournament_name": self.tournament_data_df["tournament_name"].values[0],
             "educator_id":self.tournament_data_df["creator"].values[0],
-            "related_battles": self.related_battles_ongoing,
+            "related_ongoing_battles": self.related_battles_ongoing,
+            "related_upcoming_battles": self.related_battles_upcoming,
             "tournament_rankings": self.tournament_rankings,
             "badges": self.badges,
         }
