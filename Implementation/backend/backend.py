@@ -61,6 +61,7 @@ class Battle:
         print(battle_data)
         self.bid = self.DBMS.write("CREATE_BATTLE", battle_data).fetchone()[0]
         self.battle_data["_BATTLE_ID_"] = self.bid
+        
 
         # TODO: Implement GitHub integration
 

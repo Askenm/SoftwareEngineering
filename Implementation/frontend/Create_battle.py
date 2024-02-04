@@ -13,6 +13,8 @@ def show():
         print(st.session_state['your_tournaments'])
         YourTournaments = st.session_state['your_tournaments']['tournament_name'].values.tolist()
         # Multi-select list
+        # options = st.selectbox("Your Tournaments", 
+        #                     YourTournaments)
         options = st.multiselect("Your Tournaments", 
                                  YourTournaments
                                  ,max_selections=1)

@@ -1,6 +1,4 @@
 import streamlit as st
-import yaml
-from pathlib import Path
 
 import frontend.Login_signup as Login_signup
 import frontend.Battle_details as Battle_details
@@ -77,6 +75,7 @@ def show_pages_based_on_role():
         return combined_pages
     elif st.session_state['role'] == "Student":
         st.session_state['sidebar_page'] = st.sidebar.radio("Select your page", list(pages))
+
         return pages 
     
 
@@ -108,7 +107,7 @@ if __name__ == '__main__':
             st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
         st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
         pages = show_pages_based_on_role()
-        # print(f"{st.session_state.to_dict()=}")
+        print(f"{st.session_state.to_dict()=}")
         authenticator.logout("Logout", "sidebar")
         if not st.session_state['switch_pages_button']:
             pages[st.session_state['sidebar_page']].show()

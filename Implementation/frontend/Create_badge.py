@@ -20,17 +20,11 @@ def show():
         st.session_state['your_tournaments'] = st.session_state['user_object'].user_information['user_tournaments']
 
         YourTournaments = st.session_state['your_tournaments']['tournament_name'].values.tolist()
-        # Multi-select list
         selected_index = st.selectbox("Your Tournaments", 
                                  YourTournaments)
 
-
-        print(selected_index)
-        # print(YourTournaments)
-        # print(f"{st.session_state['your_tournaments']=}")
-        # print(f"{st.session_state['your_tournaments'].loc[0, 'tid']=}")
         TournamentID = st.session_state['your_tournaments'][st.session_state['your_tournaments']['tournament_name'] == selected_index]['tid'].iloc[0]
-        print(f'{TournamentID=}')
+
 
         # Form submit button
         submit_button = st.form_submit_button(label='Create Badge')

@@ -6,6 +6,8 @@ import time
 
 def show():
     print("\nTournament details\n")
+    st.session_state['switch_pages_button'] = True
+    print(st.session_state['switch_pages_button'])
   #  print(f"{st.session_state['current_tournament_id']=}")
     st.session_state['user_object'].get_tournament_page_info(st.session_state['current_tournament_id'])
     
@@ -43,7 +45,7 @@ def show():
                 st.balloons()
                 time.sleep(2)
 
-                #st.experimental_rerun()
+                st.experimental_rerun()
             # SUBSCRIBE FUNCTIONALITY
     
     elif st.session_state["affiliation"] == 'Owner':

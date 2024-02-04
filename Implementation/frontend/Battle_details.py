@@ -10,6 +10,8 @@ from datetime import datetime
 
 
 def show():
+    st.session_state['switch_pages_button'] = True
+
     # hardcoded for testing
     # title should be fetched from DB of specific battle
     # TODO : Everything here should work if the correct battle ID is simply saved to the st.session_state['current_battle_id']
@@ -52,7 +54,9 @@ def show():
             
 
         with c2:
-            if battle_simple_data['registration_deadline'].values[0] > datetime.now().date() and \
+            print(battle_simple_data['registration_deadline'].values[0])
+            print(f"{st.session_state['current_battle'].participants=}")
+            if battle_simple_data['registration_deadline'].values[0] >= datetime.now().date() and \
             st.session_state['user_object'].uid not in st.session_state['current_battle'].participants \
             and st.session_state['role'] == 'Student':
                 if st.button("💥 REGISTER"):
@@ -112,7 +116,8 @@ def show():
             st.dataframe(battle_user_data['battle_rankings'])
 
             st.markdown("### Battle Submissions")
-            st.dataframe(battle_user_data['submissions'])
+            print(f"{battle_user_data['submissions']=}")
+            #st.dataframe(battle_user_data['submissions'])
 
 
             st.write('##')
