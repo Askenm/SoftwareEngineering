@@ -5,7 +5,7 @@ from backend.backend import Tournament
 import time
 
 def show():
-
+    # TODO : Again, mainly an ID forwarding issue
     """
     print(st.session_state.to_dict()['Tournament_Id'])
     TournamentId = st.session_state.to_dict()['Tournament_Id']
