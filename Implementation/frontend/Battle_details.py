@@ -5,22 +5,20 @@ from datetime import datetime
 
 
 # SCAFFOLDING
-if "current_battle_id" not in st.session_state.keys():
-    st.session_state['current_battle_id'] = 29
+#if "current_battle_id" not in st.session_state.keys():
+#    st.session_state['current_battle_id'] = 29
 
 
 def show():
+
     # hardcoded for testing
     # title should be fetched from DB of specific battle
     # TODO : Everything here should work if the correct battle ID is simply saved to the st.session_state['current_battle_id']
     # TODO : Additionally, the submissions frame should be interactive for educators IF the battle supports manual evaluation
     # TODO : (continued) this can be retrieved through the database and stored in the backend.Battle object under get_battle_data.
 
-    
-
     if 'show_form' not in st.session_state:
         st.session_state.show_form = False
-
 
     if not st.session_state.show_form:
         st.session_state['user_object'].get_battle_page_info(st.session_state['current_battle_id'])
@@ -32,7 +30,7 @@ def show():
         battle_user_data = st.session_state['current_battle'].battle_data
         battle_simple_data = st.session_state['current_battle'].battle_data_df
 
-        st.markdown(f"# {battle_simple_data['battle_name'].values[0]}")
+        st.markdown(f"# ⚔️ {battle_simple_data['battle_name'].values[0]}")
         st.write('#')
 
         
@@ -47,24 +45,23 @@ def show():
         
             st.write(f"{battle_simple_data['battle_description'].values[0]}")
 
-            st.markdown("#### Battle Repository")
+            st.markdown("#### Battle GitHub Repository")
             st.write(f"{battle_simple_data['github_repo'].values[0]}")
             
 
         with c2:
-            if battle_simple_data['registration_deadline'].values[0] > datetime.now().date() and \
+            print(battle_simple_data['registration_deadline'].values[0])
+            print(f"{st.session_state['current_battle'].participants=}")
+            if battle_simple_data['registration_deadline'].values[0] >= datetime.now().date() and \
             st.session_state['user_object'].uid not in st.session_state['current_battle'].participants \
             and st.session_state['role'] == 'Student':
                 if st.button("💥 REGISTER"):
-
+                    # print("button_call")
+                    # button_call("Battle details")
+                    #st.session_state['switch_pages_button'] = True
                     st.session_state.show_form = True
 
                     st.experimental_rerun()
-
-
-
-        
-
 
         with c3:
 
@@ -112,7 +109,8 @@ def show():
             st.dataframe(battle_user_data['battle_rankings'])
 
             st.markdown("### Battle Submissions")
-            st.dataframe(battle_user_data['submissions'])
+            print(f"{battle_user_data['submissions']=}")
+            #st.dataframe(battle_user_data['submissions'])
 
 
             st.write('##')

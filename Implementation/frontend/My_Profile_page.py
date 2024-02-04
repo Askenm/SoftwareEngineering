@@ -5,46 +5,37 @@ from backend.backend import Student
 
 
 def show():
-        st.markdown(f"# 𖠌 {st.session_state.to_dict()['username']}")
+        st.session_state['display_other_profile'] = st.session_state.to_dict().get('display_other_profile', False)
+        if st.session_state['display_other_profile']:
+            object = Student(st.session_state['selected_userID'])
+            st.session_state['display_other_profile'] = False
+        else:
+            object = st.session_state['user_object']
+        object.get_home_page()
+        
+        st.markdown(f"# 𖠌 {object.user_information['user_name']}")
         st.write('#')
-        st.subheader ("🏅 Awarded Badges")
         
-        st.session_state['user_object'].get_home_page()
+        # TO DO: log in with a user account to check if this condition works
+       
+        if  st.session_state['role'] == 'Student':
+            st.subheader ("🏅 Awarded Badges")
+            st.dataframe(object.user_badges, hide_index=True)
         
-        UserProfileBadgesdf = st.session_state['user_object'].user_information['user_badges']
-        st.dataframe(UserProfileBadgesdf, hide_index = True)
+            st.write('###')
+            st.subheader ("🏆 Subscribed Tournaments")
         
+            selection = dataframe_with_selections(object.user_information['user_tournaments'])
+
+            if selection['selected_rows_indices'] != []:
+                st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
+                button_call("Tournament details")
+        else:
+            st.subheader ("🏆 Subscribed Tournaments")
         
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [120, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 56, 75],
-            "Tournament id": [150, 50, 75],})
+            selection = dataframe_with_selections(object.user_information['user_tournaments'])
 
-     #   selection = dataframe_with_selections(df)
-
-     #   if selection['selected_rows_indices'] != []:
-     #       st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
-     #       button_call("Tournament details")
-        """
-        st.write('###')
-        st.subheader ("🏆 Subscribed Tournaments")
-        
-        UserProfileTournamentsdf = UserProfile.user_information['user_tournaments']
-
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [100, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 50, 75],
-            "Tournament id": [190, 50, 75],})
-
-        selection = dataframe_with_selections(UserProfileTournamentsdf)
-
-        if selection['selected_rows_indices'] != []:
-            st.session_state['Tournament_Id'] = selection['selected_rows']['tournament_name'].iloc[0]
-            button_call("Tournament details")
-        """
+            if selection['selected_rows_indices'] != []:
+                st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
+                button_call("Tournament details")
+            

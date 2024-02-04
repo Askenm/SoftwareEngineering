@@ -30,7 +30,7 @@ class DBMS:
         query = query_catalog["write"][query_name]
         for placeholder, value in query_processing_info.items():
             query = query.replace(placeholder, str(value))
-
+        print(f'{query=}')
         with self.engine.begin() as connection:
             query = text(query)
             return connection.execute(query)

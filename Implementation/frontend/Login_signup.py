@@ -31,7 +31,10 @@ def show(authenticator):
 
         elif authentication_status == None:
             st.warning("Please enter your username and password")
-
+        elif authentication_status == True:
+            #st.experimental_rerun()
+            print(f"{name, authentication_status, username=}")
+            pass
     # Display register widget
     if st.session_state['show_register']:
         try:

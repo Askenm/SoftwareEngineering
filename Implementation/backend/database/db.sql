@@ -68,7 +68,8 @@ CREATE TABLE ckb.users (
     create_date DATE DEFAULT CURRENT_DATE,
     user_email VARCHAR(255),
     github_user_name VARCHAR(255),
-    is_educator BOOLEAN 
+    is_educator BOOLEAN,
+    password VARCHAR(255)
 );
 
 

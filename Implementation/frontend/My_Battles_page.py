@@ -6,37 +6,25 @@ def show():
     st.markdown("# ⚔️ My Battles")
     st.write('#')
 
-    col1, col2 = st.columns(2)
+    st.session_state['user_object'].get_home_page()
 
-    with col1:
-        st.subheader ("My ongoing Battles")
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [120, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 56, 75],
-            "Battle_Id id": [150, 50, 77],})
+    col1 = st.columns(1) 
+    col2 = st.columns(1)
+    
+    with col1[0]:
 
-        selection = dataframe_with_selections(df)
+        st.subheader ("⚔️ My ongoing Battles")
+        selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_ongoing_battles'])
+        if selection['selected_rows_indices'] != []:
+            st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]
+            button_call("Battle details")
+
+    with col2[0]:
+        st.subheader ("⚔️ My upcoming Battles")
+        print(st.session_state['user_object'].user_information['user_upcoming_battles'])
+        selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_upcoming_battles'],key_="UUT")
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['Battle_Id'] = selection['selected_rows']['Battle_Id id'].iloc[0]
+            st.session_state['current_battle_id'] = selection['selected_rows']['bid'].iloc[0]
             button_call("Battle details")
-            
-
-    with col2:
-        st.subheader ("My upcoming Battles")
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [120, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 56, 75],
-            "Battle_Id id": [150, 57, 75],})
-
-        selection = dataframe_with_selections(df)
-
-        if selection['selected_rows_indices'] != []:
-            st.session_state['Battle_Id'] = selection['selected_rows']['Battle_Id id'].iloc[0]
-            button_call("Battle details")
+    

@@ -4,6 +4,7 @@ from .notification_catalog import notification_catalog
 from datetime import datetime
 
 
+
 class Battle:
     def __init__(self, bid=None):
         """
@@ -60,6 +61,7 @@ class Battle:
         print(battle_data)
         self.bid = self.DBMS.write("CREATE_BATTLE", battle_data).fetchone()[0]
         self.battle_data["_BATTLE_ID_"] = self.bid
+        
 
         # TODO: Implement GitHub integration
 
@@ -242,7 +244,7 @@ class Tournament:
         self.tid = self.DBMS.write("CREATE_TOURNAMENT", tournament_data).fetchone()[0]
         self.tournament_data["_TOURNAMENT_ID_"] = self.tid
 
-    def get_tournament_page_info(self,uid=None):
+    def get_tournament_page_info(self):
         """
         Compile information for the tournament page.
 
@@ -256,11 +258,17 @@ class Tournament:
         self.tournament_data_df = self.DBMS.read(
             "GET_TOURNAMENT_PAGE_INFO", {"_TOURNAMENT_ID_": self.tid}
         )
-
-        # Retrieve related battles
-        self.related_battles = self.DBMS.read(
-            "GET_RELATED_BATTLES", {"_TOURNAMENT_ID_": self.tid}
+        
+        # Retrieve related battles that are ongoing
+        self.related_battles_ongoing = self.DBMS.read(
+            "GET_RELATED_BATTLES_ONGOING", {"_TOURNAMENT_ID_": self.tid}
         )
+        
+        # Retrieve related battles that are upcoming
+        self.related_battles_upcoming = self.DBMS.read(
+            "GET_RELATED_BATTLES_UPCOMING", {"_TOURNAMENT_ID_": self.tid}
+        )
+
 
         # Retrieve tournament rankings
         self.tournament_rankings = self.DBMS.read(
@@ -273,20 +281,21 @@ class Tournament:
         )
         
         # Retrieve all ongoing tournaments
-        #self.ongoing_tournaments = self.DBMS.read(
-        #    "GET_ONGOING_TOURNAMENTS", {"_TOURNAMENT_ID_": self.tid}
-        #)
+        self.ongoing_tournaments = self.DBMS.read(
+            "GET_ONGOING_TOURNAMENTS", {"_TOURNAMENT_ID_": self.tid}
+        )
         
         # Retrieve all upcoming tournaments
-        #self.upcoming_tournaments = self.DBMS.read(
-        #    "GET_UPCOMING_TOURNAMENTS", {"_TOURNAMENT_ID_": self.tid}
-        #)
+        self.upcoming_tournaments = self.DBMS.read(
+            "GET_UPCOMING_TOURNAMENTS", {"_TOURNAMENT_ID_": self.tid}
+        )
 
         # Compile final tournament information
         self.tournament_data = {
             "tournament_name": self.tournament_data_df["tournament_name"].values[0],
             "educator_id":self.tournament_data_df["creator"].values[0],
-            "related_battles": self.related_battles,
+            "related_ongoing_battles": self.related_battles_ongoing,
+            "related_upcoming_battles": self.related_battles_upcoming,
             "tournament_rankings": self.tournament_rankings,
             "badges": self.badges,
         }
@@ -337,7 +346,7 @@ class Tournament:
     def subscribe(self,uid):
         self.DBMS.write("SUBSCRIBE_TO_TOURNAMENT",{'_USER_ID_':uid,
                                                    '_TOURNAMENT_ID_':self.tid})
-        
+        print('subscribe backend')
         SubscriptionNotification = Notification('SUBSCRIBED')
 
         notification_info = self.get_notification_info(uid)
@@ -503,6 +512,9 @@ class Student:
         """
         self.uid = uid
         self.DBMS = DBMS()
+        self.tournament = None
+        self.user_information = None
+        self.battle = None
 
     def get_home_page(self):
         """
@@ -514,15 +526,35 @@ class Student:
         user_tournaments = self.DBMS.read(
             "GET_USER_TOURNAMENTS", {"_USER_ID_": self.uid}
         )
+        
+        user_ongoing_tournaments = self.DBMS.read(
+            "GET_USER_ONGOING_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_upcoming_tournaments = self.DBMS.read(
+            "GET_USER_UPCOMING_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_name = self.DBMS.read('GET_USER_NAME_FROM_UID',{'_USER_ID_':self.uid})['user_name'].values[0]
+    
 
         user_battles = self.DBMS.read("GET_USER_BATTLES", {"_USER_ID_": self.uid})
+        
+        user_ongoing_battles = self.DBMS.read("GET_USER_ONGOING_BATTLES", {"_USER_ID_": self.uid})
 
-        user_badges = self.DBMS.read("GET_USER_BADGES", {"_USER_ID_": self.uid})
+        user_upcoming_battles = self.DBMS.read("GET_USER_UPCOMING_BATTLES", {"_USER_ID_": self.uid})
+        
+        self.user_badges = self.DBMS.read("GET_USER_BADGES", {"_USER_ID_": self.uid})
 
         self.user_information = {
             "user_tournaments": user_tournaments,
+            "user_ongoing_tournaments": user_ongoing_tournaments,
+            "user_upcoming_tournaments": user_upcoming_tournaments,
             "user_battles": user_battles,
-            "user_badges": user_badges,
+            "user_ongoing_battles": user_ongoing_battles,
+            "user_upcoming_battles": user_upcoming_battles,
+            "user_badges": self.user_badges,
+            "user_name": user_name,
         }
 
     def get_battle_page_info(self,bid):
@@ -539,20 +571,20 @@ class Student:
 
         self.tournament = Tournament(tid)
 
-        self.tournament.get_tournament_page_info(self.uid)
+        self.tournament.get_tournament_page_info() 
 
     def get_affiliation(self):
 
         return self.tournament.get_affiliation(self.uid,role = 'Student')
     
     
-        
-    
     def subscribe(self):
-
+        print('Student subscribe')
         self.tournament.subscribe(self.uid)
 
-        
+    def get_studentslist(self):
+        Studentlist = self.DBMS.read("GET_STUDENTS",{})
+        return tuple(Studentlist['user_name']), Studentlist 
 
 
 # Notification and Submission classes have been marked as placeholders and need further implementation.
@@ -622,12 +654,31 @@ class Educator:
         user_tournaments = self.DBMS.read(
             "GET_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
         )
+        
+        user_ongoing_tournaments = self.DBMS.read(
+            "GET_ONGOING_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
+        
+        user_upcoming_tournaments = self.DBMS.read(
+            "GET_UPCOMING_EDUCATOR_TOURNAMENTS", {"_USER_ID_": self.uid}
+        )
 
         user_battles = self.DBMS.read("GET_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
 
+        user_ongoing_battles = self.DBMS.read("GET_ONGOING_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
+        
+        user_upcoming_battles = self.DBMS.read("GET_UPCOMING_EDUCATOR_BATTLES", {"_USER_ID_": self.uid})
+        
+        user_name = self.DBMS.read("GET_USER_NAME_FROM_UID", {"_USER_ID_": self.uid})['user_name'].values[0]
+
         self.user_information = {
             "user_tournaments": user_tournaments,
-            "user_battles": user_battles
+            "user_ongoing_tournaments": user_ongoing_tournaments,
+            "user_upcoming_tournaments": user_upcoming_tournaments,
+            "user_battles": user_battles,
+            "user_ongoing_battles": user_ongoing_battles,
+            "user_upcoming_battles": user_upcoming_battles,
+            "user_name": user_name
         }
 
     def create_battle(self,battle_data):
@@ -640,10 +691,6 @@ class Educator:
 
         return 0
     
-
-
-
-
     def create_tournament(self,tournament_data):
         new_tournament = Tournament()
 
@@ -681,7 +728,6 @@ class Educator:
         T.end_tournament()
 
 
-
     def create_badge(self,tid,badge_logic):
         T = Tournament(tid)
         return T.create_badge(badge_logic)
@@ -702,7 +748,7 @@ class Educator:
 
         self.tournament = Tournament(tid)
 
-        self.tournament.get_tournament_page_info(self.uid)
+        self.tournament.get_tournament_page_info()
 
     def get_affiliation(self):
 
@@ -719,8 +765,53 @@ class Educator:
     def score_submission(self,score,smid):
         self.DBMS.write('ASSIGN_MANUAL_SCORE',{'_SCORE_':score,
                                                '_SUBMISSION_ID_':smid})
+    def get_studentslist(self):
+        Studentlist = self.DBMS.read("GET_STUDENTS",{})
+        return tuple(Studentlist['user_name']), Studentlist 
+    
 
+class Authentication_info:
+    def __init__(self):
+        self.DBMS = DBMS()
+    
+    def get_credentials(self):
+        df = self.DBMS.read("GET_CREDENTIALS",{})
+        # Transform the DataFrame to the desired dictionary format
+        user_dict = {}
+        for _, row in df.iterrows():
+            username = row['user_name']
+            user_dict[username] = {
+                'email': row['user_email'],
+                'id': row['uid'],
+                'logged_in': False,  # Assuming default value as False
+                'name': username,
+                'password': row['password'],
+                'role': 'Educator' if row['is_educator'] else 'Student'
+            }
 
+        # The final dictionary
+        formatted_dict = {'usernames': user_dict}
+        
+        return formatted_dict
+    
+    def get_max_id(self):
+        return self.DBMS.read("GET_MAX_ID",{}).iloc[0].values[0]
 
+    def add_user(self, user_dict:dict):
+        print(user_dict)
+        self.DBMS.write("ADD_USER", {
+        "_uid_": "DEFAULT", 
+        "_create_date_": "CURRENT_DATE",
+        "_user_email_": user_dict['email'],
+        "_user_name_": user_dict['user_name'],
+        "_password_": user_dict['password'],
+        "_is_educator_": user_dict['role'] == 'Educator',
+        "_github_": user_dict['github']
+            })
+    def get_uid(self, username):
+        if username != '':
+            return self.DBMS.read("GET_ID", {"_USER_NAME_":username}).iloc[0, 0] 
+        else:
+            return ''
 if __name__ == "__main__":
     pass

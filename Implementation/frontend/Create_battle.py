@@ -10,9 +10,11 @@ def show():
 
         st.session_state['user_object'].get_home_page()
         st.session_state['your_tournaments'] = st.session_state['user_object'].user_information['user_tournaments']
-
+        print(st.session_state['your_tournaments'])
         YourTournaments = st.session_state['your_tournaments']['tournament_name'].values.tolist()
         # Multi-select list
+        # options = st.selectbox("Your Tournaments", 
+        #                     YourTournaments)
         options = st.multiselect("Your Tournaments", 
                                  YourTournaments
                                  ,max_selections=1)
@@ -55,13 +57,13 @@ def show():
         if submit_button:
 
             battle_data = {'_BATTLE_NAME_': battle_name,
-                            '_REGISTRATION_DEADLINE_':registration_deadline,
-                            "_END_DATE_":final_submission_deadline,
                             '_BATTLE_DESC_':brief_description,
                             '_TOURNAMENT_ID_':TournamentID,
+                            '_BATTLE_REPO_':github_repo,
+                            "_END_DATE_":final_submission_deadline,
+                            '_REGISTRATION_DEADLINE_':registration_deadline,
                             '_MIN_GROUP_SIZE_':min_students,
                             '_MAX_GROUP_SIZE_':max_students,
-                            '_BATTLE_REPO_':github_repo,
                             '_MANUAL_SCORING_':manual_scoring}
 
             returned = st.session_state['user_object'].create_battle(battle_data)

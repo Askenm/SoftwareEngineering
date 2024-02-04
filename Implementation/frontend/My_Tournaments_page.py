@@ -6,54 +6,27 @@ def show():
     st.markdown("# 🏆 My Tournaments")
     st.write('#')
 
+    st.session_state['user_object'].get_home_page()
 
-    #st.session_state
+    col1 = st.columns(1) 
+    col2 = st.columns(1)
+    
 
+    with col1[0]:
 
-
-    """
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        st.subheader ("My ongoing Tournmanents")
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [100, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 50, 75],
-            "Tournament id": [100, 50, 75],
-
-        }
-        )
-
-        selection = dataframe_with_selections(df)
-
+        st.subheader ("🏆 My ongoing Tournmanents")
+        
+        selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_ongoing_tournaments'])
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
+            st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
             button_call("Tournament details")
 
-
-    with col2:
-        st.subheader ("My upcoming Tournaments")
-        df = pd.DataFrame(
-        {
-            "Tournament name": ["Basic", "Medium", "Advanced"],
-            "Subscriber count": [100, 50, 75],
-            "Creator": ["John", "Aske", "Lise"],
-            "Battle Count": [100, 50, 75],
-            "Tournament id": [100, 200, 75],
-
-        }
-        )
-
-        selection = dataframe_with_selections(df)
+    with col2[0]:
+        st.subheader ("🏆 My upcoming Tournaments")
+        
+        selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_upcoming_tournaments'])
 
         if selection['selected_rows_indices'] != []:
-            st.session_state['Tournament_Id'] = selection['selected_rows']['Tournament id'].iloc[0]
+            st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
             button_call("Tournament details")
-
-    """
-

@@ -11,13 +11,13 @@ from .hasher import Hasher
 from .validator import Validator
 from .utils import generate_random_pw
 from .exceptions import CredentialsError, ForgotError, LoginError, RegisterError, ResetError, UpdateError
-
+from backend.backend import Authentication_info
 class Authenticate:
     """
     This class will create login, logout, register user, reset password, forgot password, 
     forgot username, and modify user details widgets.
     """
-    def __init__(self, credentials: dict, cookie_name: str, key: str, cookie_expiry_days: float=30.0, 
+    def __init__(self, credentials: dict, cookie_name: str, key: str, cookie_expiry_days: float=30.0, max_id=None,
         preauthorized: Optional[list]=None, validator: Optional[Validator]=None):
         """
         Create a new instance of "Authenticate".
@@ -38,7 +38,7 @@ class Authenticate:
             A Validator object that checks the validity of the username, name, and email fields.
         """
         self.credentials                =   credentials
-        self.credentials['usernames']   =   {key.lower(): value for key, value in credentials['usernames'].items()}
+        self.credentials['usernames']   =   {key: value for key, value in credentials['usernames'].items()}
         self.cookie_name                =   cookie_name
         self.key                        =   key
         self.cookie_expiry_days         =   cookie_expiry_days
@@ -46,6 +46,7 @@ class Authenticate:
         self.cookie_manager             =   stx.CookieManager()
         self.validator                  =   validator if validator is not None else Validator()
         self.config_path                =   "config.yaml"
+        self.idmax                      =   max_id
 
         for username, _ in self.credentials['usernames'].items():
             if 'logged_in' not in self.credentials['usernames'][username]:
@@ -248,7 +249,7 @@ class Authenticate:
                 elif location == 'sidebar':
                     login_form = st.sidebar.form('Login')
                 login_form.subheader('Login' if 'Form name' not in fields else fields['Form name'])
-                self.username = login_form.text_input('Username' if 'Username' not in fields else fields['Username']).lower()
+                self.username = login_form.text_input('Username' if 'Username' not in fields else fields['Username'])
                 st.session_state['username'] = self.username
                 self.password = login_form.text_input('Password' if 'Password' not in fields else fields['Password'],
                                                        type='password')
@@ -359,7 +360,7 @@ class Authenticate:
             reset_password_form = st.sidebar.form('Reset password')
         
         reset_password_form.subheader('Reset password' if 'Form name' not in fields else fields['Form name'])
-        self.username = username.lower()
+        self.username = username
         self.password = reset_password_form.text_input('Current password' if 'Current password' not in fields else fields['Current password'], 
                                                        type='password')
         new_password = reset_password_form.text_input('New password' if 'New password' not in fields else fields['New password'], 
@@ -397,7 +398,7 @@ class Authenticate:
         """
         return any(value in d.values() for d in self.credentials['usernames'].values())
 
-    def _register_credentials(self, username: str, name: str, password: str, email: str, role:str, preauthorization: bool,
+    def _register_credentials(self, username: str, name: str, password: str, email: str, role:str, github_user_name: str, preauthorization: bool,
                                domains: list):
         """
         Adds to credentials dictionary the new user's information.
@@ -436,13 +437,19 @@ class Authenticate:
         validator = Validator()
         if not validator.validate_role(role):
             raise RegisterError('Invalid role selected')
-        self.credentials['usernames'][username] = {'name': name, 'password': Hasher([password]).generate()[0], 
-                                                   'email': email, 'role':role, 'logged_in': False,
-                                                   'id': secrets.token_hex(32//2)}
+        Authentication = Authentication_info()
+        max_id = Authentication.get_max_id()
+        print(f'{max_id=}')
+        print(f'{github_user_name=}\n')
+        self.credentials['usernames'][username] = {'user_name': username, 'password': Hasher([password]).generate()[0], 
+                                                   'email': email, 'role':role, 'logged_in': False, "github": github_user_name,
+                                                   'id': max_id + 1}
         if preauthorization:
             self.preauthorized['emails'].remove(email)
+        
+        Authentication.add_user(self.credentials['usernames'][username])
         # Update config.yaml file
-        self._update_config_file()
+        # self._update_config_file()
         
 
 
@@ -453,6 +460,7 @@ class Authenticate:
                                     'Password':'Password', 
                                     'Repeat password':'Repeat password',
                                     'Role': 'Role',
+                                    "Github_user_name": "Github user name",
                                     'Register':'Register'}) -> bool:
         """
         Creates a register new user widget.
@@ -490,8 +498,9 @@ class Authenticate:
             register_user_form = st.sidebar.form('Register user')
         register_user_form.subheader('Register User' if 'Form name' not in fields else fields['Form name'])
         new_email = register_user_form.text_input('Email' if 'Email' not in fields else fields['Email'])
-        new_username = register_user_form.text_input('Username' if 'Username' not in fields else fields['Username']).lower()
+        new_username = register_user_form.text_input('Username' if 'Username' not in fields else fields['Username'])
         new_name = register_user_form.text_input('Name' if 'Name' not in fields else fields['Name'])
+        new_github_user_name = register_user_form.text_input('Github user name' if 'Github_user_name' not in fields else fields['Github_user_name'])
         new_password = register_user_form.text_input('Password' if 'Password' not in fields else fields['Password'], type='password')
         new_password_repeat = register_user_form.text_input('Repeat password' if 'Repeat password' not in fields else fields['Repeat password'],
                                                              type='password')
@@ -505,13 +514,13 @@ class Authenticate:
                 raise RegisterError('Passwords do not match')
             if preauthorization:
                 if new_email in self.preauthorized['emails']:
-                    self._register_credentials(new_username, new_name, new_password, new_email, new_role, 
+                    self._register_credentials(new_username, new_name, new_password, new_email, new_role, new_github_user_name,
                                                preauthorization, domains)
                     return new_email, new_username, new_name, new_role
                 else:
                     raise RegisterError('User not preauthorized to register')
             else:
-                self._register_credentials(new_username, new_name, new_password, new_email, new_role, 
+                self._register_credentials(new_username, new_name, new_password, new_email, new_role, new_github_user_name,
                                            preauthorization, domains)
                 return new_email, new_username, new_name, new_role
             
@@ -566,7 +575,7 @@ class Authenticate:
             forgot_password_form = st.sidebar.form('Forgot password')
 
         forgot_password_form.subheader('Forget password' if 'Form name' not in fields else fields['Form name'])
-        username = forgot_password_form.text_input('Username' if 'Username' not in fields else fields['Username']).lower()
+        username = forgot_password_form.text_input('Username' if 'Username' not in fields else fields['Username'])
 
         if forgot_password_form.form_submit_button('Submit' if 'Submit' not in fields else fields['Submit']):
             if len(username) > 0:
