@@ -29,6 +29,9 @@ def setup(__file__):
     if 'switch_pages_button' not in st.session_state:
         st.session_state['switch_pages_button'] = False
 
+    if 'sidebar_page_old' not in st.session_state:
+        st.session_state['sidebar_page_old'] = "Home"
+
     # Define the page navigation
     pages = {
     "Home": Home_page,
@@ -75,7 +78,6 @@ def show_pages_based_on_role():
         return combined_pages
     elif st.session_state['role'] == "Student":
         st.session_state['sidebar_page'] = st.sidebar.radio("Select your page", list(pages))
-
         return pages 
     
 
@@ -107,11 +109,16 @@ if __name__ == '__main__':
             st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
         st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
         pages = show_pages_based_on_role()
-        print(f"{st.session_state.to_dict()=}")
+        #print(f"{st.session_state.to_dict()=}")
         authenticator.logout("Logout", "sidebar")
-        if not st.session_state['switch_pages_button']:
+        if not st.session_state['switch_pages_button'] and  not (st.session_state['sidebar_page_old'] != st.session_state['sidebar_page']):
+            print('sidebar show')
             pages[st.session_state['sidebar_page']].show()
         else:
+            print(st.session_state['switch_pages_button'], st.session_state['sidebar_page_old'] != st.session_state['sidebar_page'])
+            print(len(st.session_state['sidebar_page_old']), len(st.session_state['sidebar_page']))
+            print(st.session_state['sidebar_page_old'], st.session_state['sidebar_page'])
+            print('switch_pages_button show')
             st.session_state['switch_pages_button'] = False
             if st.session_state['current_page'] not in pages:
                 print(st.session_state['current_page'], "prut")

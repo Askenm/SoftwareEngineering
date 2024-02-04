@@ -10,7 +10,6 @@ from datetime import datetime
 
 
 def show():
-    st.session_state['switch_pages_button'] = True
 
     # hardcoded for testing
     # title should be fetched from DB of specific battle
@@ -18,11 +17,8 @@ def show():
     # TODO : Additionally, the submissions frame should be interactive for educators IF the battle supports manual evaluation
     # TODO : (continued) this can be retrieved through the database and stored in the backend.Battle object under get_battle_data.
 
-    
-
     if 'show_form' not in st.session_state:
         st.session_state.show_form = False
-
 
     if not st.session_state.show_form:
         st.session_state['user_object'].get_battle_page_info(st.session_state['current_battle_id'])
@@ -60,15 +56,12 @@ def show():
             st.session_state['user_object'].uid not in st.session_state['current_battle'].participants \
             and st.session_state['role'] == 'Student':
                 if st.button("💥 REGISTER"):
-
+                    # print("button_call")
+                    # button_call("Battle details")
+                    #st.session_state['switch_pages_button'] = True
                     st.session_state.show_form = True
 
                     st.experimental_rerun()
-
-
-
-        
-
 
         with c3:
 
