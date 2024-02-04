@@ -21,7 +21,7 @@ def show():
     with c3[0]:
         usernames, studentlist = st.session_state['user_object'].get_studentslist()
         option = st.selectbox(
-        "𖠌 Search other users",
+        "𖠌 Visit students profiles",
         usernames,
         index=None,
         placeholder="Select user profile...",

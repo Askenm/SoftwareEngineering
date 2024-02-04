@@ -111,8 +111,6 @@ if __name__ == '__main__':
         # print(f"{st.session_state.to_dict()=}")
         authenticator.logout("Logout", "sidebar")
         if not st.session_state['switch_pages_button']:
-            print(st.session_state['current_page'], "porut")
-
             pages[st.session_state['sidebar_page']].show()
         else:
             st.session_state['switch_pages_button'] = False

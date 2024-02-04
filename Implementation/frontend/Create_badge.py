@@ -26,13 +26,12 @@ def show():
 
 
         print(selected_index)
-        print(YourTournaments)
-        print(f"{st.session_state['your_tournaments']=}")
-        print(f"{st.session_state['your_tournaments'].loc[st.session_state['your_tournaments']==selected_index]=}")
-        try: 
-            TournamentID = st.session_state['your_tournaments'].loc[st.session_state['your_tournaments']['tournament_name'] == selected_index]
-        except IndexError as e: 
-            print(e)
+        # print(YourTournaments)
+        # print(f"{st.session_state['your_tournaments']=}")
+        # print(f"{st.session_state['your_tournaments'].loc[0, 'tid']=}")
+        TournamentID = st.session_state['your_tournaments'][st.session_state['your_tournaments']['tournament_name'] == selected_index]['tid'].iloc[0]
+        print(f'{TournamentID=}')
+
         # Form submit button
         submit_button = st.form_submit_button(label='Create Badge')
 
