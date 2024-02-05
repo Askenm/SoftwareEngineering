@@ -42,7 +42,7 @@ if st.session_state["affiliation"] == "Not Subscribed":
             st.balloons()
             time.sleep(2)
 
-            st.experimental_rerun()
+            st.rerun()
         # SUBSCRIBE FUNCTIONALITY
 
 elif st.session_state["affiliation"] == 'Owner':
@@ -52,7 +52,7 @@ elif st.session_state["affiliation"] == 'Owner':
             st.balloons()
             time.sleep(2)
 
-            #st.experimental_rerun()
+            #st.rerun()
             
         # CANCEL FUNCTIONALITY
 

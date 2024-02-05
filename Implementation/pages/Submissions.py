@@ -27,7 +27,7 @@ if selected_index != submissions_list[0]:
         st.toast('Submission Scored')
         st.balloons()
         
-        st.experimental_rerun()
+        st.rerun()
 
 # Upload information upon button press
 # Send notification

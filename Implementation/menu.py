@@ -1,5 +1,4 @@
 import streamlit as st
-from backend.backend import Student, Educator
 
 def authenticated_menu():
     # Show a navigation menu for authenticated users
