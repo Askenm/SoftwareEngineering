@@ -1,42 +1,8 @@
+# Front_page.py
+from menu import menu
+from backend.backend import Authentication_info, Student,Educator
 import streamlit as st
-
-import frontend.Login_signup as Login_signup
-import frontend.Battle_details as Battle_details
-import frontend.My_Tournaments_page as My_Tournaments_page
-import frontend.Home_page as Home_page
-import frontend.Create_tournament as Create_tournament
-import frontend.Tournament_details as Tournament_details
-import frontend.Create_battle as Create_battle
-import frontend.My_Profile_page as My_Profile_page
-import frontend.My_Battles_page as My_Battles_page
-import frontend.Create_badge as Create_badge
-import frontend.Submissions as Submissions
-
-from frontend.Authenticator_role.streamlit_authenticator import Authenticate
-
-
-from backend.backend import Student,Educator,Authentication_info
-
-def init_pages():
-        # Define the page navigation
-    pages = {
-    "Home": Home_page,
-    "My Tournaments": My_Tournaments_page,
-    "My Battles": My_Battles_page,
-    "My Profile": My_Profile_page,
-    }
-
-    educator_pages = {"Create Battle": Create_battle,
-                  "Create Tournament": Create_tournament, 
-                  "Create Badge": Create_badge,
-                  "Submissions": Submissions
-    }
-    
-    hidden_pages = {
-    "Battle details": Battle_details,
-    "Tournament details": Tournament_details,
-    }
-    return pages, educator_pages, hidden_pages
+from pages.Authenticator_role.streamlit_authenticator.authenticate import Authenticate
 
 def login_setup():
     Authentication = Authentication_info()
@@ -50,70 +16,63 @@ def login_setup():
     cookie_expiry_days=30,
     max_id=max_id_
     )
-    
     return Authentication,credentials,authenticator
 
-def setup(__file__):
-    # Set up the main configuration of the app
-    st.set_page_config(page_title="CodeKata Battles", page_icon="CBK")
+Authentication,credentials,authenticator = login_setup()
+
+st.title("Login/Sign up")
+def init_variables():
+    # Toggle buttons for login and register
+    if 'show_login' not in st.session_state:
+        st.session_state['show_login'] = False
+
+    if 'show_register' not in st.session_state:
+        st.session_state['show_register'] = False
+
+    if "role" not in st.session_state:
+        st.session_state.role = None
 
     if 'login_status' not in st.session_state:
         st.session_state['login_status'] = False
 
-    if 'switch_pages_button' not in st.session_state:
-        st.session_state['switch_pages_button'] = False
+    if st.button("Login"):
+        st.session_state['show_login'] = True
+        st.session_state['show_register'] = False
 
-    pages, educator_pages, hidden_pages = init_pages()
-
-    Authentication, credentials, authenticator = login_setup()   
-    roles = {'Educator':Educator,
-             'Student':Student}
-    
-    return pages, educator_pages, hidden_pages, authenticator, credentials, Authentication, roles
+    if st.button("Register"):
+        st.session_state['show_register'] = True
+        st.session_state['show_login'] = False
+    st.session_state['authenticator'] = authenticator
+    return None,None
 
 
-def show_pages_based_on_role():
-    """Function that returns the pages appropriate pages based on role"""
-    if st.session_state['role'] == "Educator":
-        combined_pages = {**pages, **educator_pages}
-        st.session_state['sidebar_page'] = st.sidebar.radio("Select your page", list(combined_pages))
-        return combined_pages
-    elif st.session_state['role'] == "Student":
-        st.session_state['sidebar_page'] = st.sidebar.radio("Select your page", list(pages))
-        return pages 
-    
+username, name = init_variables()
 
-if __name__ == '__main__':
-    # Initiliazes the authenticator object, session state dict, and pages dict
-    pages, educator_pages, hidden_pages, authenticator, credentials, Authentication, roles = setup(__file__)
+# Display login widget
+if st.session_state['show_login']:
+    name, authentication_status, username = authenticator.login("main")
+    st.session_state['login_status'] = authentication_status
+    if authentication_status == False:
+        st.error("Username/password is incorrect")
 
-    # Main app logic
-    if not st.session_state['login_status'] or st.session_state['logout']:
-        print(f"{st.session_state['login_status'], st.session_state['logout']=}")
-        st.session_state['logout'] = False
-        authenticator, username, name = Login_signup.show(authenticator)
-        # Fetch and store the user's role upon successful login
-        st.session_state['role']  = credentials['usernames'].get(username, {}).get('role', None)
+    elif authentication_status == None:
+        st.warning("Please enter your username and password")
 
-    elif st.session_state['login_status']:
-        print(f"{st.session_state['login_status']=}")
-        st.session_state['user_id'] = Authentication.get_uid(st.session_state['username'])
-        if isinstance(st.session_state['role'],str):
-            st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
-        st.sidebar.title(f"Welcome {st.session_state['name']}, {st.session_state['role']}")
-        pages = show_pages_based_on_role()
-        authenticator.logout("Logout", "sidebar")
-        if not st.session_state['switch_pages_button']:
-            print('sidebar_page')
-            pages[st.session_state['sidebar_page']].show()
-        else:
-            print('current_page')
-            st.session_state['switch_pages_button'] = False
-            if st.session_state['current_page'] not in pages:
-                hidden_pages[st.session_state['current_page']].show()
-            else:
-                pages[st.session_state['current_page']].show()
-    else:
-        st.error("Please log in to access this page")
+# Display register widget
+if st.session_state['show_register']:
+    try:
+        if authenticator.register_user(preauthorization=False):
+            st.session_state['show_login'] = True
+    except Exception as e:
+        st.error(e)
 
+st.session_state['username'] = username
+st.session_state['role']  = credentials['usernames'].get(username, {}).get('role', None)
+roles ={"Student": Student, "Educator": Educator}
+if isinstance(st.session_state['role'],str):
+    st.session_state['user_id'] = Authentication.get_uid(st.session_state['username'])
+    st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
+    st.switch_page("pages/Home_page.py")
+
+menu() # Render the dynamic menu!
 
