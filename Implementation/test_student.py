@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import Mock, patch
-from backend.backend import Student, DBMS, Tournament, Battle
+import pandas as pd
+from backend.backend import Tournament, DBMS, Student, Battle
+#from backend.backend import Tournament, DBMS, Student, Battle
 #import psycopg2
 
 class TestStudent(unittest.TestCase):
@@ -19,11 +21,17 @@ class TestStudent(unittest.TestCase):
     @patch.object(DBMS, 'read')
     def test_get_home_page(self, mock_dbms_read):
         # Set up mock responses
+        df_tournaments = pd.DataFrame()
         mock_dbms_read.side_effect = [
-            {"user_tournaments": [], "user_ongoing_tournaments": [], "user_upcoming_tournaments": []},
-            {"user_battles": [], "user_ongoing_battles": [], "user_upcoming_battles": []},
-            {"user_badges": []},
-            {"user_name": "John Doe"}
+            df_tournaments,
+           pd.DataFrame({"tid": [1, 2, 3],
+                         "tournament_name": ["tournament1", "tournament2", "tournament3"]}),
+           pd.DataFrame(),
+            pd.DataFrame({"user_name": ["John Doe"]}),
+            pd.DataFrame(),
+            pd.DataFrame(),
+            pd.DataFrame(),
+            pd.DataFrame()
         ]
 
         # Call the method
@@ -31,7 +39,12 @@ class TestStudent(unittest.TestCase):
 
         # Check if the attributes are set correctly
         self.assertEqual(self.student.user_information["user_name"], "John Doe")
-
+      #  self.assertEqual(self.student.user_information["user_tournaments"]["tid"].values[0], 2 )
+      #  self.assertListEqual(self.student.user_information["user_tournaments"].columns.tolist(), ["tid", "tournament_name"] )
+      
+      # test that the corect df fetched from the db are assigned to the correct key in the user_information object dicionary
+        self.assertIs(self.student.user_information["user_tournaments"], df_tournaments)
+        
     @patch.object(DBMS, 'read')
     def test_get_battle_page_info(self, mock_dbms_read):
         # Set up mock responses
@@ -42,7 +55,7 @@ class TestStudent(unittest.TestCase):
         ]
 
         # Mock Battle class
-        with patch('your_module.Battle') as mock_battle:
+        with patch('Ckb_battle') as mock_battle:
             # Mock the battle instance
             mock_battle_instance = Mock()
             mock_battle.return_value = mock_battle_instance
