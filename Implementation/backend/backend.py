@@ -61,7 +61,7 @@ class Battle:
         print(battle_data)
         self.bid = self.DBMS.write("CREATE_BATTLE", battle_data).fetchone()[0]
         self.battle_data["_BATTLE_ID_"] = self.bid
-        
+
 
         # TODO: Implement GitHub integration
 
@@ -769,6 +769,18 @@ class Educator:
         Studentlist = self.DBMS.read("GET_STUDENTS",{})
         return tuple(Studentlist['user_name']), Studentlist 
     
+    def get_submission_manuel_scoring(self, uid):
+        df = self.DBMS.read("GET_SUBMISSION_FOR_SCORING",{"_EDUCATOR_ID_": uid})
+        formatted_list = [
+            f"SMID:{row['smid']} - battle_id: {row['battle_id']} - group_name: {row['group_name']} - automatic score: {row['submission_score']}"
+            for _, row in df.iterrows()
+        ]
+        formatted_dict = {
+            f"SMID:{row['smid']} - battle_id: {row['battle_id']} - group_name: {row['group_name']} - automatic score: {row['submission_score']}": [row['smid'],row['github_repo']]
+            for _, row in df.iterrows()
+        }
+
+        return ["Select a submission"] + formatted_list, formatted_dict
 
 class Authentication_info:
     def __init__(self):
