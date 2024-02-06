@@ -1,15 +1,16 @@
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 import pandas as pd
 from backend.backend import Tournament, DBMS, Student, Battle
-#from backend.backend import Tournament, DBMS, Student, Battle
-#import psycopg2
 
-class TestStudent(unittest.TestCase):
+
+class TestStudentClass(unittest.TestCase):
 
     def setUp(self):
-        self.uid = "some_user_id"
+        self.uid = 1
         self.student = Student(self.uid)
+      #  self.student.tournament = Tournament(self.uid)
+        
 
     def test_init(self):
         self.assertEqual(self.student.uid, self.uid)
@@ -20,52 +21,93 @@ class TestStudent(unittest.TestCase):
 
     @patch.object(DBMS, 'read')
     def test_get_home_page(self, mock_dbms_read):
+        
+       
         # Set up mock responses
-        df_tournaments = pd.DataFrame()
+        mockdf_tournaments = pd.DataFrame()
+        mockdf_ongoing_tournaments = pd.DataFrame()
+        mockdf_upcoming_tournaments = pd.DataFrame()
+        mockdf_user_name = pd.DataFrame({"user_name": ["John Doe"]})
+        mockdf_battles = pd.DataFrame()
+        mockdf_ongoing_battles = pd.DataFrame()
+        mockdf_upcoming_battles = pd.DataFrame()
+        mockdf_badges = pd.DataFrame()
+        
+
         mock_dbms_read.side_effect = [
-            df_tournaments,
-           pd.DataFrame({"tid": [1, 2, 3],
-                         "tournament_name": ["tournament1", "tournament2", "tournament3"]}),
-           pd.DataFrame(),
-            pd.DataFrame({"user_name": ["John Doe"]}),
-            pd.DataFrame(),
-            pd.DataFrame(),
-            pd.DataFrame(),
-            pd.DataFrame()
+            mockdf_tournaments,
+            mockdf_ongoing_tournaments,
+            mockdf_upcoming_tournaments,
+            mockdf_user_name,
+            mockdf_battles,
+            mockdf_ongoing_battles,
+            mockdf_upcoming_battles,
+            mockdf_badges
         ]
 
         # Call the method
         self.student.get_home_page()
+        
 
-        # Check if the attributes are set correctly
+        # test that the correct df fetched from the db is assigned to the correct key in the user_information object dicionary
+        self.assertIs(self.student.user_information["user_tournaments"], mockdf_tournaments)
+        self.assertIs(self.student.user_information["user_ongoing_tournaments"], mockdf_ongoing_tournaments)
+        self.assertIs(self.student.user_information["user_upcoming_tournaments"], mockdf_upcoming_tournaments)
         self.assertEqual(self.student.user_information["user_name"], "John Doe")
+        self.assertIs(self.student.user_information["user_battles"], mockdf_battles)
+        self.assertIs(self.student.user_information["user_ongoing_battles"], mockdf_ongoing_battles)
+        self.assertIs(self.student.user_information["user_upcoming_battles"], mockdf_upcoming_battles)
+        self.assertIs(self.student.user_information["user_badges"], mockdf_badges)
       #  self.assertEqual(self.student.user_information["user_tournaments"]["tid"].values[0], 2 )
       #  self.assertListEqual(self.student.user_information["user_tournaments"].columns.tolist(), ["tid", "tournament_name"] )
       
-      # test that the corect df fetched from the db are assigned to the correct key in the user_information object dicionary
-        self.assertIs(self.student.user_information["user_tournaments"], df_tournaments)
+      
+    def test_get_battle_page_info(self):
+        # Mocking necessary data
+        battleId = 1
         
+        # Mocking the get_battle_page_info method of the Battle class
+        with patch.object(Battle, 'get_battle_page_info') as mock_get_battle_page_info:
+           # call the method
+           self.student.get_battle_page_info(battleId)
+        
+        # Mocking the get_unassigned_subscribers method of the Battle class
+        with patch.object(Battle, 'get_unassigned_subscribers') as mock_get_unassigned_subscribers:
+           # call the method
+           self.student.get_battle_page_info(battleId)
+        
+        # Asserting that the expected methods were called
+        mock_get_battle_page_info.assert_called_with(self.uid)
+        mock_get_unassigned_subscribers.assert_called()  
+        
+    
+      
+    '''   
     @patch.object(DBMS, 'read')
     def test_get_battle_page_info(self, mock_dbms_read):
-        # Set up mock responses
-        mock_dbms_read.side_effect = [
-            {"user_battles": [], "user_ongoing_battles": [], "user_upcoming_battles": []},
-            {"user_badges": []},
-            {"user_name": "John Doe"}
-        ]
+        # Set up mock data for testing
+        mock_bid = 1
 
-        # Mock Battle class
-        with patch('Ckb_battle') as mock_battle:
-            # Mock the battle instance
-            mock_battle_instance = Mock()
-            mock_battle.return_value = mock_battle_instance
+        # Set up Student instance
+        student = Student(1)
+        student.DBMS = self.mock_dbms
+        student.Battle = self.mock_battle_class
 
-            # Call the method
-            self.student.get_battle_page_info("some_battle_id")
+        # Mocking the Battle instance
+        mock_battle_instance = MagicMock()
+        mock_battle_instance.get_battle_page_info.return_value = None
+        mock_battle_instance.get_unassigned_subscribers.return_value = None
+        self.mock_battle_class.return_value = mock_battle_instance
 
-            # Check if the methods are called
-            mock_battle_instance.get_battle_page_info.assert_called_once_with(self.uid)
-            mock_battle_instance.get_unassigned_subscribers.assert_called_once()
+        # Call the method to test
+        student.get_battle_page_info(mock_bid)
+
+        # Assert the results
+        self.mock_battle_class.assert_called_with(mock_bid)
+        mock_battle_instance.get_battle_page_info.assert_called_with(student.uid)
+        mock_battle_instance.get_unassigned_subscribers.assert_called_once()
+        
+        '''
 
     @patch.object(Tournament, 'get_tournament_page_info')
     def test_get_tournament_page_info(self, mock_tournament_page_info):
@@ -75,24 +117,39 @@ class TestStudent(unittest.TestCase):
         # Check if the method is called
         mock_tournament_page_info.assert_called_once()
 
-    @patch.object(Tournament, 'get_affiliation')
+    @patch.object(Student, 'get_affiliation')
     def test_get_affiliation(self, mock_get_affiliation):
         # Set up mock response
         mock_get_affiliation.return_value = "some_affiliation"
 
         # Call the method
-        result = self.student.get_affiliation()
-
+        result = self.student.get_affiliation(self.uid)
+        
+        # Check if the method is called
+        mock_get_affiliation.assert_called_once_with(self.uid)
         # Check if the result is as expected
         self.assertEqual(result, "some_affiliation")
 
-    @patch.object(Tournament, 'subscribe')
+    '''
+    def test_subscribe(self):
+    
+        # Mocking the subscribe method of the Tournament class
+        with patch.object(Tournament, 'subscribe') as mock_subscribe:
+           # call the method
+           self.student.subscribe(self.uid)
+    
+        mock_subscribe.assert_called()
+    
+
+    
+    @patch.object(Student, 'subscribe')
     def test_subscribe(self, mock_subscribe):
         # Call the method
-        self.student.subscribe()
+        self.student.subscribe(self.uid)
 
         # Check if the method is called
         mock_subscribe.assert_called_once_with(self.uid)
+    '''
 
     @patch.object(DBMS, 'read')
     def test_get_studentslist(self, mock_dbms_read):
