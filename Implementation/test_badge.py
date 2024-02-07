@@ -110,6 +110,7 @@ class TestBadgeClass(unittest.TestCase):
         }
         self.assertEqual(notification_info, expected_notification_info)
     
+    
     @patch.object(Badge, 'query_badge_notification_info')
     @patch.object(Notification, 'register_notfications_to_messageboard')
     @patch('backend.backend.Notification')

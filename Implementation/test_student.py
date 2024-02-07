@@ -80,34 +80,6 @@ class TestStudentClass(unittest.TestCase):
         mock_get_battle_page_info.assert_called_with(self.uid)
         mock_get_unassigned_subscribers.assert_called()  
         
-    
-      
-    '''   
-    @patch.object(DBMS, 'read')
-    def test_get_battle_page_info(self, mock_dbms_read):
-        # Set up mock data for testing
-        mock_bid = 1
-
-        # Set up Student instance
-        student = Student(1)
-        student.DBMS = self.mock_dbms
-        student.Battle = self.mock_battle_class
-
-        # Mocking the Battle instance
-        mock_battle_instance = MagicMock()
-        mock_battle_instance.get_battle_page_info.return_value = None
-        mock_battle_instance.get_unassigned_subscribers.return_value = None
-        self.mock_battle_class.return_value = mock_battle_instance
-
-        # Call the method to test
-        student.get_battle_page_info(mock_bid)
-
-        # Assert the results
-        self.mock_battle_class.assert_called_with(mock_bid)
-        mock_battle_instance.get_battle_page_info.assert_called_with(student.uid)
-        mock_battle_instance.get_unassigned_subscribers.assert_called_once()
-        
-        '''
 
     @patch.object(Tournament, 'get_tournament_page_info')
     def test_get_tournament_page_info(self, mock_tournament_page_info):
@@ -131,25 +103,30 @@ class TestStudentClass(unittest.TestCase):
         self.assertEqual(result, "some_affiliation")
 
     '''
-    def test_subscribe(self):
-    
-        # Mocking the subscribe method of the Tournament class
-        with patch.object(Tournament, 'subscribe') as mock_subscribe:
-           # call the method
-           self.student.subscribe(self.uid)
-    
-        mock_subscribe.assert_called()
-    
+    @patch('backend.backend.Tournament')
+    @patch('backend.backend.DBMS.read')
+    def test_subscribe(self, mock_dbms_read, mock_tournament):
+        # Create an instance of Student
+        student = Student(uid=123)
+        
+        # Mock the DBMS.read method
+        mock_dbms_read.return_value = {'user_name': 'John Doe'}
+        
+        # Mock the Tournament instance
+        mock_tournament_instance = mock_tournament.return_value
+        
+        # Call the method to be tested
+        student.subscribe()
+        
+        # Assert that DBMS.read was called with the correct arguments
+        mock_dbms_read.assert_called_once_with('GET_STUDENTS', {})
+        
+        # Assert that Tournament instance was created and subscribe method was called
+        mock_tournament.assert_called_once_with(student.tid)
+        mock_tournament_instance.subscribe.assert_called_once_with(student.uid)
 
-    
-    @patch.object(Student, 'subscribe')
-    def test_subscribe(self, mock_subscribe):
-        # Call the method
-        self.student.subscribe(self.uid)
-
-        # Check if the method is called
-        mock_subscribe.assert_called_once_with(self.uid)
     '''
+    
 
     @patch.object(DBMS, 'read')
     def test_get_studentslist(self, mock_dbms_read):

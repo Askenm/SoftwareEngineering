@@ -17,25 +17,40 @@ class TestTournamentClass(unittest.TestCase):
         self.assertEqual(self.tournament.tid, self.tid)
         self.assertIsInstance(self.tournament.DBMS, DBMS)
         self.assertEqual(self.tournament_data, {})
+    
+    
+    @patch('backend.backend.DBMS.read')
+    @patch('backend.backend.DBMS.write')
+    def test_create_tournament(self, mock_dbms_write, mock_dbms_read):
+        # Initialize a test tournament data
+        tournament_data = pd.DataFrame({
+            '_TOURNAMENT_NAME_': ['Test Tournament'],
+            '_CREATOR_': ['test_user_id'],
+            '_DESCRIPTION_': ['lorem ipsum'],
+            '_SUBSCRIPTION_DEADLINE__': ['yyyy-mm-dd']
+        })
+        
+        # Mock the DBMS.write method to return the tournament ID
+        mock_dbms_write.return_value.fetchone.return_value = (1,)
+        
+        # Mock the DBMS.read method to return 0 for tournament name not taken
+        mock_dbms_read.return_value = pd.DataFrame({'count': [0]})
+        
+        # Call the method to be tested
+        self.tournament.create_tournament(tournament_data)
+        
+        # Assert that DBMS.read was called with the correct arguments
+        mock_dbms_read.assert_called_once_with("TOURNAMENT_NAME_VACANT", tournament_data)
+        
+        # Assert that DBMS.write was called with the correct arguments
+        expected_write_args = ("CREATE_TOURNAMENT", tournament_data)
+        mock_dbms_write.assert_called_once_with(*expected_write_args)
+        
+        # Assert that the tournament ID was set correctly
+        self.assertEqual(self.tid, 1)
+        self.assertEqual(self.tournament.tournament_data.get("_TOURNAMENT_ID_").item(), 1)
 
-        '''
-    @patch.object(DBMS, 'write')
-    def test_create_tournament(self, mock_dbms_write):
-        # Mocking necessary data    
-        some_tournament_data = {
-            '_TOURNAMENT_ID_': 1,
-            '_TOURNAMENT_CREATOR_': 'example_creator_id',
-        }
-        someTournamentId = 1
-        
-        mock_dbms_write.side_effects = [
-                ("CREATE_TOURNAMENT", some_tournament_data)
-        ]
-        
-        self.tournament.create_tournament(some_tournament_data)
-        
-        assert
-        '''        
+      
     @patch.object(DBMS, 'read')
     def test_get_tournament_page_info(self, mock_dbms_read):
             
@@ -72,6 +87,31 @@ class TestTournamentClass(unittest.TestCase):
         self.assertIs(self.tournament.tournament_data["tournament_rankings"], mockdf_tournament_rankings)
         self.assertIs(self.tournament.tournament_data["badges"], mockdf_badges)
     
+    '''
+    @patch('backend.backend.DBMS')
+    def test_end_tournament(self, mock_DBMS):
+        # Create a mock object for the DBMS
+        
+       # return_value.fetchone.return_value = None
+       
+        mock_dbms_instance = mock_DBMS.return_value
+        mock_dbms_instance.write = lambda *args, **kwargs: None
+        mock_dbms_instance.write.return_value = None
+
+        # Set the tournament ID
+      #  self.tournament.tid = 1
+
+        # Call the end_tournament method
+        self.tournament.end_tournament()
+
+        # Assert that the tournament ID is set correctly
+        self.assertEqual(self.tournament.tid, 1)
+
+        # Assert that the correct parameters were passed to the DBMS write method
+        mock_dbms_instance.write.assert_called_once_with("END_TOURNAMENT", {"_TOURNAMENT_ID_": 1})
+'''
+    
+    
         
     def test_create_badge(self):
         # set up mock data for testing
@@ -81,8 +121,33 @@ class TestTournamentClass(unittest.TestCase):
                 self.tournament.create_badge(some_badge_logic)
         
         mock_create_badge.assert_called_with(some_badge_logic)
+    
+    '''
+    @patch('backend.backend.DBMS')
+    def test_create_battle(self, mock_dbms):
+        # Mock data
+        tournament_data = pd.DataFrame({'educator_id': [2],'_TOURNAMENT_ID_': [], '_TOURNAMENT_NAME_': ['Test Tournament']})
+        battle_data = pd.DataFrame ({'_BATTLE_CREATOR_':[], 'educator': [],'_BATTLE_NAME': ['test']})  
+
+        # Mock DBMS methods
+        mock_dbms_instance = mock_dbms.return_value
+        mock_dbms_instance.write.return_value.fetchone.return_value = (123,)  # Mock battle ID
         
-        '''   
+        # Create a tournament instance
+        tournament = Tournament(tournament_data['_TOURNAMENT_ID_'])
+
+        # Call the create_battle method
+        with patch.object(Battle, 'create_battle') as mock_create_battle:
+            tournament.create_battle(battle_data)
+
+        # Assert that the DBMS write method was called with the correct arguments
+        expected_write_args = {'_TOURNAMENT_ID_': tournament_data['_TOURNAMENT_ID_'], '_BATTLE_NAME_': 'Test Battle', '_CREATOR_': 1}
+        mock_dbms_instance.write.assert_called_once_with('CREATE_BATTLE', expected_write_args)
+
+        # Assert that Battle.create_battle was called with the correct arguments
+        mock_create_battle.assert_called_once_with(battle_data)
+        
+           
     def test_create_battle(self):
         # Mocking necessary data
         self.tournament_data = {'educator_id': 1}
