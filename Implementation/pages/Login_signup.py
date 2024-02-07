@@ -2,6 +2,7 @@
 from Implementation.backend.backend import Authentication_info
 import streamlit as st
 from pages.Authenticator_role.streamlit_authenticator.authenticate import Authenticate
+from menu import menu
 
 def login_setup():
     Authentication = Authentication_info()
@@ -47,7 +48,6 @@ if st.session_state['show_login']:
     st.session_state['login_status'] = authentication_status
     if authentication_status == False:
         st.error("Username/password is incorrect")
-
     elif authentication_status == None:
         st.warning("Please enter your username and password")
     elif authentication_status == True:

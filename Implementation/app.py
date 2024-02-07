@@ -20,7 +20,6 @@ def login_setup():
 
 Authentication,credentials,authenticator = login_setup()
 
-st.title("Login/Sign up")
 def init_variables():
     # Toggle buttons for login and register
     if 'show_login' not in st.session_state:
@@ -46,7 +45,9 @@ def init_variables():
     return None,None
 
 
+st.title("Login/Sign up")
 username, name = init_variables()
+roles ={"Student": Student, "Educator": Educator}
 
 # Display login widget
 if st.session_state['show_login']:
@@ -68,7 +69,7 @@ if st.session_state['show_register']:
 
 st.session_state['username'] = username
 st.session_state['role']  = credentials['usernames'].get(username, {}).get('role', None)
-roles ={"Student": Student, "Educator": Educator}
+
 if isinstance(st.session_state['role'],str):
     st.session_state['user_id'] = Authentication.get_uid(st.session_state['username'])
     st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])

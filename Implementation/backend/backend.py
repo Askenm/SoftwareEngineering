@@ -713,7 +713,6 @@ class Educator:
         self.DBMS.write("ASSIGN_MANUAL_SCORE",score_info)
 
         # send a notification       
-
         ScoredSubmission = Submission(score_info["sid"])
 
         notification_info = ScoredSubmission.get_notification_info()
@@ -734,7 +733,6 @@ class Educator:
     
 
     def get_battle_page_info(self,bid):
-
         self.battle = Battle(bid)
 
         self.battle.get_battle_page_info(self.uid)
@@ -743,7 +741,6 @@ class Educator:
 
 
     def get_tournament_page_info(self,tid):
-
         self.tid = tid
 
         self.tournament = Tournament(tid)
@@ -788,20 +785,17 @@ class Authentication_info:
     
     def get_credentials(self):
         df = self.DBMS.read("GET_CREDENTIALS",{})
-        # Transform the DataFrame to the desired dictionary format
         user_dict = {}
         for _, row in df.iterrows():
             username = row['user_name']
             user_dict[username] = {
                 'email': row['user_email'],
                 'id': row['uid'],
-                'logged_in': False,  # Assuming default value as False
+                'logged_in': False,  
                 'name': username,
                 'password': row['password'],
                 'role': 'Educator' if row['is_educator'] else 'Student'
             }
-
-        # The final dictionary
         formatted_dict = {'usernames': user_dict}
         
         return formatted_dict

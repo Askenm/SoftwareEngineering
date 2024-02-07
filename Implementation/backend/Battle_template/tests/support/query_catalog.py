@@ -588,30 +588,28 @@ query_catalog = {
                      WHERE is_educator is FALSE
                      """,
        "GET_SUBMISSION_FOR_SCORING": """
-                                   WITH RankedSubmissions AS (
                                    SELECT 
-                                          s.*, g.group_name, b.battle_name, b.creator, b.github_repo,
-                                          RANK() OVER (PARTITION BY s.battle_id, s.gid ORDER BY s.submission_score DESC) as rank
+                                   s.gid,
+                                   s.battle_id,
+                                   s.submission_datetime,
+                                   s.submission_score,
+                                   g.group_name,
+                                   b.battle_name,
+                                   b.creator,
+	                            s.smid,
+                                   b.github_repo
+                                   
                                    FROM 
-                                          ckb.submissions s
+                                   ckb.submissions s
                                    INNER JOIN 
-                                          ckb.groups g ON s.gid = g.gid
+                                   ckb.groups g ON s.gid = g.gid
                                    INNER JOIN 
-                                          ckb.battles b ON s.battle_id = b.bid
+                                   ckb.battles b ON s.battle_id = b.bid
                                    INNER JOIN 
-                                          ckb.users u ON b.creator = u.uid
+                                   ckb.users u ON b.creator = u.uid
                                    WHERE 
-                                          u.uid = _EDUCATOR_ID_
-                                          AND b.end_date < NOW()::DATE
-                                   )
-                                   SELECT 
-                                   gid, battle_id, submission_datetime, submission_score, 
-                                   group_name, battle_name, creator, smid, github_repo
-                                   FROM 
-                                   RankedSubmissions
-                                   WHERE 
-                                   rank = 1;
-
+                                   u.uid = _EDUCATOR_ID_
+                                   AND b.end_date < NOW()::DATE;
                                    """
 
     },
