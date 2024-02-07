@@ -14,8 +14,6 @@ class TestEducatorClass(unittest.TestCase):
         self.assertIsInstance(self.educator.DBMS, DBMS)
 
     @patch.object(DBMS, 'read')
-    @patch.object(DBMS, 'write')
-    
     def test_get_home_page(self, mock_dbms_read):
         
         # Set up mock data for testing
@@ -33,11 +31,10 @@ class TestEducatorClass(unittest.TestCase):
             mockdf_tournaments,
             mockdf_ongoing_tournaments,
             mockdf_upcoming_tournaments,
-            mockdf_user_name,
             mockdf_battles,
             mockdf_ongoing_battles,
-            mockdf_upcoming_battles
-            
+            mockdf_upcoming_battles,
+            mockdf_user_name,
         ]
 
 
@@ -92,16 +89,20 @@ class TestEducatorClass(unittest.TestCase):
     #    self.assertEqual(self.educator.tournament_page_info, some_tournament_page_info)
     #    self.assertEqual(result,some_tournament_page_info)
         mock_create_tournament.assert_called_with(tournament_data)
-    '''     
-    def test_assign_manual_score(self):
+     
+      
+    @patch.object(DBMS, 'write') 
+    def test_assign_manual_score(self, mock_dbms_write):
         # Mocking necessary data
-        score_info = 'manual_score'
+        score_info = {'sid':1}
+        
         
         # call method
         self.educator.assign_manual_score(score_info)
         
         self.educator.DBMS.write.assert_called_with('ASSIGN_MANUAL_SCORE', score_info)
-    '''         
+     
+             
     def test_end_tournament(self):
         # Mocking necessary data
         someTournamentId = 1
@@ -177,17 +178,17 @@ class TestEducatorClass(unittest.TestCase):
     
         
     '''
-    def test_get_affiliation(self):
-        
-        role = 'Educator'
-        
-        # Mocking the get_affiliation method of the Tournament class
-        with patch.object(Tournament, 'get_affiliation') as mock_get_affiliation:
-           # call the method
-           self.educator.get_affiliation(self.uid, role)
-        
-        # Asserting that the expected methods were called
-        mock_get_affiliation.assert_called()
+    
+    def test_get_tournaments
+    
+    def test_get_submission
+
+    def test_score_submission
+    
+    def test_get_studentslist
+    
+    def test_get_submission_manuel_scoring
+    
     
     
     
@@ -227,56 +228,6 @@ class TestEducatorClass(unittest.TestCase):
   
         
   
-
-
-
-
-    def test_assign_manual_score(self):
-        # Set up mock data for testing
-        mock_score_info = {"_BATTLE_ID_": 1, "_GROUP_ID_": 1, "_SCORE_": 90}
-
-        # Set up Educator instance
-        educator = Educator(1)
-        educator.DBMS = self.mock_dbms
-
-        # Mocking the Submission and Notification classes
-        mock_submission_instance = MagicMock()
-        mock_submission_instance.get_notification_info.return_value = {'sid': 456}
-        educator.Submission = MagicMock(return_value=mock_submission_instance)
-        educator.Notification = MagicMock()
-
-        # Call the method to test
-        educator.assign_manual_score(mock_score_info)
-
-        # Assert the results
-        self.mock_dbms.write.assert_called_with("ASSIGN_MANUAL_SCORE", mock_score_info)
-        mock_submission_instance.get_notification_info.assert_called_once()
-        educator.Notification.assert_called_with('SUBMISSION_SCORED')
-
-    
-
-
-
-
-    
-
-    def test_get_affiliation(self):
-        # Set up mock data for testing
-        mock_uid = 1
-        mock_tid = 789
-
-        # Set up Educator instance
-        educator = Educator(mock_uid)
-        educator.Tournament = MagicMock()
-
-        # Call the method to test
-        result = educator.get_affiliation()
-
-        # Assert the results
-        educator.Tournament.assert_called_with(mock_tid)
-        educator.Tournament.return_value.get_affiliation.assert_called_with(mock_uid, role='Educator')
-        self.assertEqual(result, educator.Tournament.return_value.get_affiliation.return_value)
-
     def test_get_tournaments(self):
         # Set up mock data for testing
         mock_uid = 1
