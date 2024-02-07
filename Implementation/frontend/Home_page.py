@@ -4,7 +4,18 @@ import streamlit as st
 from backend.backend import Tournament, Student
 
 def show():
+<<<<<<< HEAD
+    # TODO : Maybe changes here? (Leonie)
+
+    st.markdown(f"# ⛩️ Welcome back, {st.session_state.to_dict()['username']}")
+    st.write('#')
+
+    col1, col2 = st.columns(2)
+    c3 = st.columns(1)
+
+=======
     
+>>>>>>> 68940ebcb2c07a25099e0111ff7309cbabf7397d
     st.session_state['user_object'].get_home_page()
    
     st.markdown(f"# ⛩️ Welcome back, {st.session_state['user_object'].user_information['user_name']}")
