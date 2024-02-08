@@ -14,8 +14,6 @@ class TestEducatorClass(unittest.TestCase):
         self.assertIsInstance(self.educator.DBMS, DBMS)
 
     @patch.object(DBMS, 'read')
-    @patch.object(DBMS, 'write')
-    
     def test_get_home_page(self, mock_dbms_read):
         
         # Set up mock data for testing
@@ -33,11 +31,10 @@ class TestEducatorClass(unittest.TestCase):
             mockdf_tournaments,
             mockdf_ongoing_tournaments,
             mockdf_upcoming_tournaments,
-            mockdf_user_name,
             mockdf_battles,
             mockdf_ongoing_battles,
-            mockdf_upcoming_battles
-            
+            mockdf_upcoming_battles,
+            mockdf_user_name,
         ]
 
 
@@ -92,16 +89,39 @@ class TestEducatorClass(unittest.TestCase):
     #    self.assertEqual(self.educator.tournament_page_info, some_tournament_page_info)
     #    self.assertEqual(result,some_tournament_page_info)
         mock_create_tournament.assert_called_with(tournament_data)
-    '''     
-    def test_assign_manual_score(self):
-        # Mocking necessary data
-        score_info = 'manual_score'
+    
+    
+    @patch('backend.backend.Submission')
+    @patch('backend.backend.Notification')
+    @patch('backend.backend.DBMS.write')
+    def test_assign_manual_score(self, mock_dbms_write, mock_notification, mock_submission):
+        # Create an instance of Educator
+        educator = Educator(uid=123)
         
-        # call method
-        self.educator.assign_manual_score(score_info)
+        # Define mock data
+        score_info = {'_SCORE_': 90, 'sid': 1}
         
-        self.educator.DBMS.write.assert_called_with('ASSIGN_MANUAL_SCORE', score_info)
-    '''         
+        # Mock the methods of Submission and Notification
+        mock_submission_instance = mock_submission.return_value
+        mock_submission_instance.get_notification_info.return_value = {'notification_info': 'mock_data'}
+        
+        mock_notification_instance = mock_notification.return_value
+        mock_notification_instance.register_notfications_to_messageboard.return_value = None
+        
+        # Call the method to be tested
+        educator.assign_manual_score(score_info)
+        
+        # Assert that DBMS.write was called with the correct arguments
+        mock_dbms_write.assert_called_once_with('ASSIGN_MANUAL_SCORE', score_info)
+        
+        # Assert that Submission and Notification instances were created and methods were called
+        mock_submission.assert_called_once_with(1)
+        mock_notification.assert_called_once_with('SUBMISSION_SCORED')
+        mock_submission_instance.get_notification_info.assert_called_once()
+        mock_notification_instance.register_notfications_to_messageboard.assert_called_once_with({'notification_info': 'mock_data'})
+    
+
+             
     def test_end_tournament(self):
         # Mocking necessary data
         someTournamentId = 1
@@ -176,180 +196,112 @@ class TestEducatorClass(unittest.TestCase):
         self.assertEqual(result, "some_affiliation")
     
         
-    '''
-    def test_get_affiliation(self):
-        
-        role = 'Educator'
-        
-        # Mocking the get_affiliation method of the Tournament class
-        with patch.object(Tournament, 'get_affiliation') as mock_get_affiliation:
-           # call the method
-           self.educator.get_affiliation(self.uid, role)
-        
-        # Asserting that the expected methods were called
-        mock_get_affiliation.assert_called()
     
     
-    
-    def test_get_tournaments(self, mock_dbms_read):
-        # Set up mock data for testing
-        mockdf_tournaments = pd.DataFrame()
+    @patch('backend.backend.DBMS.read')
+    def test_get_tournaments(self, mock_read):
+        # Set up mock behavior for DBMS.read method
+        mock_tournaments_data = [{'tournament_id': 1, 'tournament_name': 'Tournament 1'}, {'tournament_id': 2, 'tournament_name': 'Tournament 2'}]
+        mock_read.return_value = mock_tournaments_data
         
-        mock_dbms_read.side_effect = [
-            mockdf_tournaments,
+        # Call the method to be tested
+        tournaments = self.educator.get_tournaments()
+        
+        # Assert that DBMS.read was called with the correct arguments
+        mock_read.assert_called_once_with("GET_EDUCATOR_TOURNAMENTS", 1)
+        
+        
+     
+    @patch('backend.backend.DBMS.read')
+    def test_get_submission(self, mock_read):
+        # Set up mock behavior for DBMS.read method
+        mock_submission_data = [{'smid': 1, 'submission_name': 'Submission 1'}, {'smid': 2, 'submission_name': 'Submission 2'}]
+        mock_read.return_value = mock_submission_data
+        
+        # Call the method to be tested
+        smid = 1
+        submission = self.educator.get_submission(smid)
+        
+        # Assert that DBMS.read was called with the correct arguments
+        mock_read.assert_called_once_with("GET_SUBMISSIONS", {'_CONDITIONAL_': f"smid = {str(smid)}"})
+        
+        # Assert the return value matches the expected value
+        expected_submission = mock_submission_data
+        self.assertEqual(submission, expected_submission)   
+    
+    #
+    @patch('backend.backend.DBMS.write')
+    def test_score_submission(self, mock_write):
+        # Set up mock behavior for DBMS.write method
+        mock_write.return_value = None
+        
+        # Define test data
+        score_info = {'_SCORE_': 85, '_SUBMISSION_ID_': 1}
+        
+        # Call the method to be tested
+        self.educator.score_submission(score_info['_SCORE_'], score_info['_SUBMISSION_ID_'])
+        
+        # Assert that DBMS.write was called with the correct arguments
+        mock_write.assert_called_once_with('ASSIGN_MANUAL_SCORE', score_info)
+    
+    
+    @patch('backend.backend.DBMS.read')
+    def test_get_studentslist(self, mock_read):
+        # Create an instance of Educator
+        educator = Educator(uid=123)
+        
+        # Define mock data for DBMS.read method
+        mock_data = pd.DataFrame({'user_name': ['Alice', 'Bob', 'Charlie']})
+        mock_read.return_value = mock_data
+        
+        # Call the method to be tested
+        students_list, _ = educator.get_studentslist()
+        
+        # Assert that DBMS.read was called with the correct arguments
+        mock_read.assert_called_once_with("GET_STUDENTS", {})
+        
+        # Assert that the returned list of student names matches the mock data
+        expected_students = ('Alice', 'Bob', 'Charlie')
+        self.assertEqual(students_list, expected_students)
+    
+    
+    @patch('backend.backend.DBMS.read')
+    def test_get_submission_manuel_scoring(self, mock_read):
+        # Create an instance of Educator
+        educator = Educator(uid=123)
+        
+        # Define mock data for DBMS.read method
+        mock_data = pd.DataFrame({
+            'smid': [1, 2, 3],
+            'battle_id': [101, 102, 103],
+            'group_name': ['Group A', 'Group B', 'Group C'],
+            'submission_score': [80, 85, 90],
+            'github_repo': ['repo1', 'repo2', 'repo3']
+        })
+        mock_read.return_value = mock_data
+        
+        # Call the method to be tested
+        formatted_list, formatted_dict = educator.get_submission_manuel_scoring(uid=123)
+        
+        # Assert that DBMS.read was called with the correct arguments
+        mock_read.assert_called_once_with("GET_SUBMISSION_FOR_SCORING", {"_EDUCATOR_ID_": 123})
+        
+        # Assert the formatted list of submissions
+        expected_formatted_list = [
+            "SMID:1 - battle_id: 101 - group_name: Group A - automatic score: 80",
+            "SMID:2 - battle_id: 102 - group_name: Group B - automatic score: 85",
+            "SMID:3 - battle_id: 103 - group_name: Group C - automatic score: 90"
         ]
+        self.assertEqual(formatted_list, ["Select a submission"] + expected_formatted_list)
         
-        self.educator.get_tournaments()
-        
-        # Asserting that the expected methods were called
-        self.assertIs(self.educator.get_tournaments, mockdf_tournaments)
-        
-    
-    
-    #def test_get_submission(self):
-    
-    
-    def test_score_submission(self):
-        # Mocking necessary data
-        score = 1
-        submissionId = 1
-        
-        self.educator.score_submission(score, submissionId)
-        
-        
-        self.educator.DBMS.write.assert_called_with('ASSIGN_MANUAL_SCORE', {"_SCORE_": score,
-                                                                            '_SUBMISSION_ID_':submissionId})
-        
-    
-   
-    def test_get_studentlist(self):
-    
-  
-        
-  
+        # Assert the formatted dictionary of submissions
+        expected_formatted_dict = {
+            "SMID:1 - battle_id: 101 - group_name: Group A - automatic score: 80": [1, 'repo1'],
+            "SMID:2 - battle_id: 102 - group_name: Group B - automatic score: 85": [2, 'repo2'],
+            "SMID:3 - battle_id: 103 - group_name: Group C - automatic score: 90": [3, 'repo3']
+        }
+        self.assertEqual(formatted_dict, expected_formatted_dict)
 
-
-
-
-    def test_assign_manual_score(self):
-        # Set up mock data for testing
-        mock_score_info = {"_BATTLE_ID_": 1, "_GROUP_ID_": 1, "_SCORE_": 90}
-
-        # Set up Educator instance
-        educator = Educator(1)
-        educator.DBMS = self.mock_dbms
-
-        # Mocking the Submission and Notification classes
-        mock_submission_instance = MagicMock()
-        mock_submission_instance.get_notification_info.return_value = {'sid': 456}
-        educator.Submission = MagicMock(return_value=mock_submission_instance)
-        educator.Notification = MagicMock()
-
-        # Call the method to test
-        educator.assign_manual_score(mock_score_info)
-
-        # Assert the results
-        self.mock_dbms.write.assert_called_with("ASSIGN_MANUAL_SCORE", mock_score_info)
-        mock_submission_instance.get_notification_info.assert_called_once()
-        educator.Notification.assert_called_with('SUBMISSION_SCORED')
-
-    
-
-
-
-
-    
-
-    def test_get_affiliation(self):
-        # Set up mock data for testing
-        mock_uid = 1
-        mock_tid = 789
-
-        # Set up Educator instance
-        educator = Educator(mock_uid)
-        educator.Tournament = MagicMock()
-
-        # Call the method to test
-        result = educator.get_affiliation()
-
-        # Assert the results
-        educator.Tournament.assert_called_with(mock_tid)
-        educator.Tournament.return_value.get_affiliation.assert_called_with(mock_uid, role='Educator')
-        self.assertEqual(result, educator.Tournament.return_value.get_affiliation.return_value)
-
-    def test_get_tournaments(self):
-        # Set up mock data for testing
-        mock_uid = 1
-        mock_tournaments_data = [{'tournament_id': 1, 'tournament_name': 'Tournament 1'},
-                                 {'tournament_id': 2, 'tournament_name': 'Tournament 2'}]
-
-        # Set up Educator instance
-        educator = Educator(mock_uid)
-        educator.DBMS = self.mock_dbms
-
-        # Mocking the DBMS read method
-        self.mock_dbms.read.return_value = mock_tournaments_data
-
-        # Call the method to test
-        result = educator.get_tournaments()
-
-        # Assert the results
-        self.mock_dbms.read.assert_called_with("GET_EDUCATOR_TOURNAMENTS", mock_uid)
-        self.assertEqual(result, mock_tournaments_data)
-
-    def test_get_submission(self):
-        # Set up mock data for testing
-        mock_smid = 123
-        mock_submission_data = {'submission_id': mock_smid, 'score': 95}
-
-        # Set up Educator instance
-        educator = Educator(1)
-        educator.DBMS = self.mock_dbms
-
-        # Mocking the DBMS read method
-        self.mock_dbms.read.return_value = mock_submission_data
-
-        # Call the method to test
-        result = educator.get_submission(mock_smid)
-
-        # Assert the results
-        self.mock_dbms.read.assert_called_with('GET_SUBMISSIONS', {'_CONDITIONAL_': f"smid = {str(mock_smid)}"})
-        self.assertEqual(result, mock_submission_data)
-
-    def test_score_submission(self):
-        # Set up mock data for testing
-        mock_score = 90
-        mock_smid = 456
-
-        # Set up Educator instance
-        educator = Educator(1)
-        educator.DBMS = self.mock_dbms
-
-        # Call the method to test
-        educator.score_submission(mock_score, mock_smid)
-
-        # Assert the results
-        self.mock_dbms.write.assert_called_with('ASSIGN_MANUAL_SCORE', {'_SCORE_': mock_score, '_SUBMISSION_ID_': mock_smid})
-
-    def test_get_studentslist(self):
-        # Set up mock data for testing
-        mock_students_data = {'user_name': ['Student1', 'Student2']}
-
-        # Set up Educator instance
-        educator = Educator(1)
-        educator.DBMS = self.mock_dbms
-
-        # Mocking the DBMS read method
-        self.mock_dbms.read.return_value = mock_students_data
-
-        # Call the method to test
-        result = educator.get_studentslist()
-
-        # Assert the results
-        self.mock_dbms.read.assert_called_with("GET_STUDENTS", {})
-        self.assertEqual(result, ('Student1', 'Student2', mock_students_data))
-    
-'''
 
 if __name__ == '__main__':
     unittest.main()
