@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from backend.backend import DBMS, Badge, datetime, Notification
+from Implementation.backend.backend import DBMS, Badge, datetime, Notification
 import pandas as pd
 
 class TestBadgeClass(unittest.TestCase):
@@ -51,7 +51,7 @@ class TestBadgeClass(unittest.TestCase):
         mock_dbms_write.assert_called_once_with("AWARD_BADGE", {"_USER_ID_": mock_uid, "_BADGE_ID_": mock_bid})
  
 
-    @patch('backend.backend.datetime')
+    @patch('Implementation.backend.backend.datetime')
     def test_get_current_date(self, mock_datetime):
         # Mock the current date
         mock_now = datetime(2024, 2, 6)  # Example current date
@@ -113,7 +113,7 @@ class TestBadgeClass(unittest.TestCase):
     
     @patch.object(Badge, 'query_badge_notification_info')
     @patch.object(Notification, 'register_notfications_to_messageboard')
-    @patch('backend.backend.Notification')
+    @patch('Implementation.backend.backend.Notification')
     def test_badge_awarded_notification(self, mock_notification, mock_register, mock_query):
         # Mocking necessary data
         mock_uid = 123  # Example user ID

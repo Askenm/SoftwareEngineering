@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 import pandas as pd
-from backend.backend import Tournament, DBMS, Student, Battle
+from Implementation.backend.backend import Tournament, DBMS, Student, Battle
 
 
 class TestStudentClass(unittest.TestCase):
@@ -103,8 +103,8 @@ class TestStudentClass(unittest.TestCase):
         self.assertEqual(result, "some_affiliation")
 
     '''
-    @patch('backend.backend.Tournament')
-    @patch('backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.Tournament')
+    @patch('Implementation.backend.backend.DBMS.read')
     def test_subscribe(self, mock_dbms_read, mock_tournament):
         # Create an instance of Student
         student = Student(uid=123)

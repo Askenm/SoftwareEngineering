@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from backend.backend import Educator, DBMS, Tournament, Battle, Badge
+from Implementation.backend.backend import Educator, DBMS, Tournament, Battle, Badge
 import pandas as pd
 
 
@@ -17,8 +17,8 @@ class TestTournamentClass(unittest.TestCase):
         self.assertEqual(self.tournament_data, {})
     
     
-    @patch('backend.backend.DBMS.read')
-    @patch('backend.backend.DBMS.write')
+    @patch('Implementation.backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.DBMS.write')
     def test_create_tournament(self, mock_dbms_write, mock_dbms_read):
         # Initialize a test tournament data
         tournament_data = pd.DataFrame({
@@ -86,7 +86,7 @@ class TestTournamentClass(unittest.TestCase):
         self.assertIs(self.tournament.tournament_data["badges"], mockdf_badges)
     
     '''
-    @patch('backend.backend.DBMS')
+    @patch('Implementation.backend.backend.DBMS')
     def test_end_tournament(self, mock_DBMS):
         # Create a mock object for the DBMS
         
@@ -121,7 +121,7 @@ class TestTournamentClass(unittest.TestCase):
         mock_create_badge.assert_called_with(some_badge_logic)
     
     '''
-    @patch('backend.backend.DBMS')
+    @patch('Implementation.backend.backend.DBMS')
     def test_create_battle(self, mock_dbms):
         # Mock data
         tournament_data = pd.DataFrame({'educator_id': [2],'_TOURNAMENT_ID_': [], '_TOURNAMENT_NAME_': ['Test Tournament']})

@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, call
-from backend.backend import Educator, DBMS, Tournament, Battle, Badge
+from Implementation.backend.backend import Educator, DBMS, Tournament, Battle, Badge
 import pandas as pd
 import pandas.testing as pd_testing
 
@@ -32,8 +32,8 @@ class TestBattleClass(unittest.TestCase):
         
     
     
-    @patch('backend.backend.DBMS.read')
-    @patch('backend.backend.DBMS.write')
+    @patch('Implementation.backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.DBMS.write')
     def test_create_battle(self, mock_write, mock_read):
         # Mock necessary data
         mock_battle_data = {
@@ -66,7 +66,7 @@ class TestBattleClass(unittest.TestCase):
     
     
     
-    @patch('backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.DBMS.read')
     def test_get_group_submissions(self, mock_read):
         # Mock necessary data
         mock_user_aff_educator = {
@@ -123,7 +123,7 @@ class TestBattleClass(unittest.TestCase):
         self.assertEqual(result['is_educator'], 'true')  
     
     
-    @patch('backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.DBMS.read')
     def test_get_participants(self, mock_read):
         # Mock necessary data
         
@@ -148,8 +148,8 @@ class TestBattleClass(unittest.TestCase):
             self.assertIn(expected_participant, participants)
 
     
-    @patch('backend.backend.Battle.get_user_affiliations')
-    @patch('backend.backend.DBMS')
+    @patch('Implementation.backend.backend.Battle.get_user_affiliations')
+    @patch('Implementation.backend.backend.DBMS')
     def test_get_battle_page_info(self, mock_dbms, mock_get_user_affiliations):
         # Mock necessary data
         mock_bid = 123  # Example battle ID

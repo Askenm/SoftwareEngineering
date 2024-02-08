@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from backend.backend import Educator, DBMS, Tournament, Battle
+from Implementation.backend.backend import Educator, DBMS, Tournament, Battle
 import pandas as pd
 
 class TestEducatorClass(unittest.TestCase):
@@ -91,9 +91,9 @@ class TestEducatorClass(unittest.TestCase):
         mock_create_tournament.assert_called_with(tournament_data)
     
     
-    @patch('backend.backend.Submission')
-    @patch('backend.backend.Notification')
-    @patch('backend.backend.DBMS.write')
+    @patch('Implementation.backend.backend.Submission')
+    @patch('Implementation.backend.backend.Notification')
+    @patch('Implementation.backend.backend.DBMS.write')
     def test_assign_manual_score(self, mock_dbms_write, mock_notification, mock_submission):
         # Create an instance of Educator
         educator = Educator(uid=123)
@@ -198,7 +198,7 @@ class TestEducatorClass(unittest.TestCase):
         
     
     
-    @patch('backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.DBMS.read')
     def test_get_tournaments(self, mock_read):
         # Set up mock behavior for DBMS.read method
         mock_tournaments_data = [{'tournament_id': 1, 'tournament_name': 'Tournament 1'}, {'tournament_id': 2, 'tournament_name': 'Tournament 2'}]
@@ -212,7 +212,7 @@ class TestEducatorClass(unittest.TestCase):
         
         
      
-    @patch('backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.DBMS.read')
     def test_get_submission(self, mock_read):
         # Set up mock behavior for DBMS.read method
         mock_submission_data = [{'smid': 1, 'submission_name': 'Submission 1'}, {'smid': 2, 'submission_name': 'Submission 2'}]
@@ -230,7 +230,7 @@ class TestEducatorClass(unittest.TestCase):
         self.assertEqual(submission, expected_submission)   
     
     #
-    @patch('backend.backend.DBMS.write')
+    @patch('Implementation.backend.backend.DBMS.write')
     def test_score_submission(self, mock_write):
         # Set up mock behavior for DBMS.write method
         mock_write.return_value = None
@@ -245,7 +245,7 @@ class TestEducatorClass(unittest.TestCase):
         mock_write.assert_called_once_with('ASSIGN_MANUAL_SCORE', score_info)
     
     
-    @patch('backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.DBMS.read')
     def test_get_studentslist(self, mock_read):
         # Create an instance of Educator
         educator = Educator(uid=123)
@@ -265,7 +265,7 @@ class TestEducatorClass(unittest.TestCase):
         self.assertEqual(students_list, expected_students)
     
     
-    @patch('backend.backend.DBMS.read')
+    @patch('Implementation.backend.backend.DBMS.read')
     def test_get_submission_manuel_scoring(self, mock_read):
         # Create an instance of Educator
         educator = Educator(uid=123)
