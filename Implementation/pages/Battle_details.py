@@ -59,7 +59,10 @@ if not st.session_state.show_form:
         st.dataframe(battle_user_data['battle_rankings'])
 
      #   st.write('##')
-        st.markdown("### 🗈 Battle Submissions")
+        if st.session_state['role'] == 'Student':
+            st.markdown("### 🗈 My Battle Submissions")
+        else: 
+            st.markdown("### 🗈 Battle Submissions")
         if type(battle_user_data['submissions']) == str:
             st.write(battle_user_data['submissions'])
         else:

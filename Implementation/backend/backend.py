@@ -160,7 +160,7 @@ class Battle:
     
     def join(self,user_ids,group_name):
         user_ids = list(set(user_ids))
-        
+
         if not self.battle_data:
             self.get_battle_page_info(user_ids[0])
 
@@ -779,6 +779,10 @@ class Educator:
         }
 
         return ["Select a submission"] + formatted_list, formatted_dict
+
+    def get_tournaments(self, uid):
+        return self.DBMS.read("GET_SUBMISSION_FOR_SCORING",{"_EDUCATOR_ID_": uid})
+
 
 class Authentication_info:
     def __init__(self):

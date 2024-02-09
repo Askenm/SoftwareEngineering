@@ -307,6 +307,11 @@ query_catalog = {
                                    AND subscription_deadline >= NOW()::DATE
                                    AND end_date IS NULL
                                    """,
+       "GET_TOURNMANETS":   """
+                            SELECT tid, tournament_name, description, end_date, subscription_deadline
+                            FROM ckb.tournaments
+                            WHERE creator = _EDUCATOR_ID_;
+                            """,
        
         "GET_USER_BATTLES": """
                                    select battle_name,group_name,b.end_date 

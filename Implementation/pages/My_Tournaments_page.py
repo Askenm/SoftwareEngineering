@@ -15,21 +15,35 @@ col1 = st.columns(1)
 col2 = st.columns(1)
 
 
-with col1[0]:
+if st.session_state['role'] == 'Educator':
+    with col1[0]:
+        st.subheader ("🏆 My Tournmanents")
+        educator_tournaments = st.session_state['user_object'].get_tournaments(st.session_state['user_object'].uid)
+        selection = dataframe_with_selections(educator_tournaments)
+        # Conditional on role: educators all tournament it has created, whose subscription deadline is in the past
 
-    st.subheader ("🏆 My ongoing Tournmanents")
-    
-    selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_ongoing_tournaments'])
+        if selection['selected_rows_indices'] != []:
+            st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
+            st.page_link("pages/Tournament_details.py", label = "Tournament details")
 
-    if selection['selected_rows_indices'] != []:
-        st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
-        st.page_link("pages/Tournament_details.py", label = "Tournament details")
 
-with col2[0]:
-    st.subheader ("🏆 My upcoming Tournaments")
-    
-    selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_upcoming_tournaments'])
+else:
+    with col1[0]:
 
-    if selection['selected_rows_indices'] != []:
-        st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
-        st.switch_page("pages/Tournament_details.py")
+        st.subheader ("🏆 My ongoing Tournmanents")
+        selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_ongoing_tournaments'])
+        # Conditional on role: educators all tournament it has created, whose subscription deadline is in the past
+
+        if selection['selected_rows_indices'] != []:
+            st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
+            st.page_link("pages/Tournament_details.py", label = "Tournament details")
+
+    with col2[0]:
+        st.subheader ("🏆 My upcoming Tournaments")
+        
+        selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_upcoming_tournaments'])
+        # Conditional on role: educators all tournament it has created, whose subscription deadline is in the future 
+
+        if selection['selected_rows_indices'] != []:
+            st.session_state['current_tournament_id'] = selection['selected_rows']['tid'].iloc[0]
+            st.switch_page("pages/Tournament_details.py")
