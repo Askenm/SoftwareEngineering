@@ -217,12 +217,12 @@ query_catalog = {
                             """,
         "GET_SUBMISSIONS": """
                             SELECT DISTINCT
-                            smid,
-                            s.gid,
                             group_name,
                             submission_datetime,
                             submission_score,
-                            group_repository
+                            group_repository,
+                            s.gid,
+                            smid
                             FROM
                             ckb.submissions s
                             INNER JOIN ckb.groups g

@@ -52,16 +52,18 @@ if not st.session_state.show_form:
 
     with c5[0]:
 
-
-        st.markdown("### Battle Rankings")
+        st.write('##')
+        st.markdown("### 🚀Battle Rankings")
         st.dataframe(battle_user_data['battle_rankings'])
 
-        st.markdown("### Battle Submissions")
-        print(f"{battle_user_data['submissions']=}")
+     #   st.write('##')
+        st.markdown("### 🗈 Battle Submissions")
+      #  print(f"{battle_user_data['submissions']=}")
+        st.dataframe(battle_user_data['submissions'])
 
 
-        st.write('##')
-        st.subheader ("𖠌 Battling Groups")
+     #   st.write('##')
+        st.markdown ("### 𖠌 Battling Groups")
         st.dataframe(st.session_state['current_battle'].groups)
 
 else:
