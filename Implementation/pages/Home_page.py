@@ -48,7 +48,7 @@ with c1[0]:
 if st.session_state['role']=='Student':
     c4 = st.columns(1)
     with c4[0]:
-        st.subheader ("🏆 My Badges")
+        st.subheader ("🏅 My Badges")
 
 
         selection = dataframe_with_selections(st.session_state['user_object'].user_information['user_badges'])

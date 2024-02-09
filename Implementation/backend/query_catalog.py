@@ -217,12 +217,12 @@ query_catalog = {
                             """,
         "GET_SUBMISSIONS": """
                             SELECT DISTINCT
-                            smid,
-                            s.gid,
                             group_name,
                             submission_datetime,
                             submission_score,
-                            group_repository
+                            group_repository,
+                            s.gid,
+                            smid
                             FROM
                             ckb.submissions s
                             INNER JOIN ckb.groups g
@@ -262,7 +262,7 @@ query_catalog = {
                                    top_finishes
                                    FROM TopUsers tu
                                    JOIN ckb.users u ON tu.uid = u.uid
-                                   WHERE top_finishes > _NUM_BATTLES_;
+                                   WHERE top_finishes >= _NUM_BATTLES_;
                                    """,
         "GET_BADGE_LOGIC": """
                                    SELECT tournament_id, rank, num_battles 
@@ -295,7 +295,7 @@ query_catalog = {
       
        "GET_USER_UPCOMING_TOURNAMENTS": """
                                    SELECT 
-                                   t.tid
+                                   t.tid,
                                    tournament_name,
                                    subscription_deadline ,
                                    description
@@ -333,7 +333,7 @@ query_catalog = {
                                    ON b.bid = g.bid 
                                    WHERE g.uid = _USER_ID_
                                    AND b.registration_deadline >= NOW()::DATE
-                                   AND b.end_date IS NULL
+                                   AND b.end_date >= NOW()::DATE
                                    """,                              
                                    
         "GET_USER_BADGES": """
