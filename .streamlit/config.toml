@@ -1,0 +1,6 @@
+[client]
+# The base path for the URL where Streamlit should be served from.
+
+# Default: ""
+# baseUrlPath = ""
+showSidebarNavigation = false

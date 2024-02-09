@@ -159,7 +159,8 @@ class Battle:
 
     
     def join(self,user_ids,group_name):
-
+        user_ids = list(set(user_ids))
+        
         if not self.battle_data:
             self.get_battle_page_info(user_ids[0])
 

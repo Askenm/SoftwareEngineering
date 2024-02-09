@@ -284,6 +284,7 @@ class Authenticate:
         """
         self.cookie_manager.delete(self.cookie_name)
         try: 
+            st.session_state['login_status'] = False
             self.credentials['usernames'][st.session_state['username']]['logged_in'] = False
         except KeyError:
             st.sidebar.warning("Not currently logged in")

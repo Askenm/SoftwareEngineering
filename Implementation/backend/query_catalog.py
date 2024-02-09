@@ -317,7 +317,7 @@ query_catalog = {
                                    """,
         
         "GET_USER_ONGOING_BATTLES": """
-                                   select b.bid, battle_name, group_name, b.end_date 
+                                   select b.bid, battle_name, group_name, b.end_date, b.github_repo
                                    FROM ckb.groups g
                                    INNER JOIN ckb.battles b 
                                    ON b.bid = g.bid 
@@ -327,7 +327,7 @@ query_catalog = {
                                    """,  
                                                              
         "GET_USER_UPCOMING_BATTLES": """
-                                   select b.bid, battle_name, registration_deadline, group_name,b.end_date 
+                                   select b.bid, battle_name, registration_deadline, group_name, b.end_date
                                    FROM ckb.groups g
                                    INNER JOIN ckb.battles b 
                                    ON b.bid = g.bid 

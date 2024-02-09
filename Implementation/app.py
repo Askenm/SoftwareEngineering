@@ -45,7 +45,7 @@ def init_variables():
     return None,None
 
 
-st.title("Login/Sign up")
+st.title("Login & Sign up")
 username, name = init_variables()
 roles ={"Student": Student, "Educator": Educator}
 
@@ -73,7 +73,9 @@ st.session_state['role']  = credentials['usernames'].get(username, {}).get('role
 if isinstance(st.session_state['role'],str):
     st.session_state['user_id'] = Authentication.get_uid(st.session_state['username'])
     st.session_state['user_object'] = roles[st.session_state['role']](st.session_state['user_id'])
+    st.session_state['authenticator'] = authenticator
+
     st.switch_page("pages/Home_page.py")
 
-menu() # Render the dynamic menu!
+menu(app_page=True) # Render the dynamic menu!
 

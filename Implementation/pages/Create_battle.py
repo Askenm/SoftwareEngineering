@@ -1,4 +1,4 @@
-import datetime
+import datetime 
 import streamlit as st
 from menu import authenticated_menu
 
@@ -6,6 +6,10 @@ authenticated_menu()
 
 with st.form(key='battle_form'):
     st.markdown("# Create New Battle")
+    with st.expander("First time creating a battle? Check the repository template here!"):
+        st.write("To create a battle, follow the instruction in the README in the Battle Template Repository.")
+        st.link_button("Battle Template Link", "https://github.com/Askenm/battle_template") 
+
 
     st.session_state['user_object'].get_home_page()
     st.session_state['your_tournaments'] = st.session_state['user_object'].user_information['user_tournaments']
