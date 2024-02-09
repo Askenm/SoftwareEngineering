@@ -1,8 +1,8 @@
 import datetime 
 import streamlit as st
-from menu import authenticated_menu
+from menu import menu
 
-authenticated_menu()
+menu()
 
 with st.form(key='battle_form'):
     st.markdown("# Create New Battle")

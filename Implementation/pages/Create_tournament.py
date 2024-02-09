@@ -1,8 +1,8 @@
 import streamlit as st
 import datetime
-from menu import authenticated_menu
+from menu import menu
 
-authenticated_menu()
+menu()
 
 
 with st.form(key='tournament_form'):

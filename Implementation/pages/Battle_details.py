@@ -1,8 +1,10 @@
 import streamlit as st
 from datetime import datetime
-from menu import authenticated_menu
+from menu import menu
 
-authenticated_menu()
+
+menu()
+
 
 if 'show_form' not in st.session_state:
     st.session_state.show_form = False
@@ -58,8 +60,10 @@ if not st.session_state.show_form:
 
      #   st.write('##')
         st.markdown("### 🗈 Battle Submissions")
-      #  print(f"{battle_user_data['submissions']=}")
-        st.dataframe(battle_user_data['submissions'])
+        if type(battle_user_data['submissions']) == str:
+            st.write(battle_user_data['submissions'])
+        else:
+            st.dataframe(battle_user_data['submissions'])
 
 
      #   st.write('##')

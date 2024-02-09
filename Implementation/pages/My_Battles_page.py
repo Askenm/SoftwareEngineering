@@ -1,8 +1,8 @@
 from pages.util import dataframe_with_selections
 import streamlit as st
-from menu import authenticated_menu
+from menu import menu
 
-authenticated_menu()
+menu()
 st.markdown("# ⚔️ My Battles")
 st.write('#')
 

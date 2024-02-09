@@ -1,6 +1,7 @@
 import streamlit as st
-from menu import authenticated_menu
-authenticated_menu()
+from menu import menu
+
+menu()
 
 with st.form(key='badge_form'):
     

@@ -31,7 +31,7 @@ query_catalog = {
 
                                             """,
         "CREATE_TOURNAMENT": """
-                                                 INSERT INTO ckb.tournaments (tournament_name, creator,description,subscription_deadline)
+                                                 INSERT INTO ckb.tournaments (tournament_name, creator, description ,subscription_deadline)
                                                  VALUES ('_TOURNAMENT_NAME_', '_CREATOR_','_DESCRIPTION_','_SUBSCRIPTION_DEADLINE_')
                                                  RETURNING tid;
                                                  """,

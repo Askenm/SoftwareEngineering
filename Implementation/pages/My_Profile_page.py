@@ -1,10 +1,10 @@
 from pages.util import dataframe_with_selections
 import streamlit as st
 from backend.backend import Student
-from menu import authenticated_menu
+from menu import menu
 
 
-authenticated_menu() 
+menu() 
 
 st.session_state['display_other_profile'] = st.session_state.to_dict().get('display_other_profile', False)
 if st.session_state['display_other_profile']:

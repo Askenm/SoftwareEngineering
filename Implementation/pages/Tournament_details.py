@@ -1,9 +1,11 @@
 from pages.util import dataframe_with_selections
 import streamlit as st
 import time
-from menu import menu_with_redirect
+from menu import menu
+from datetime import date
 
-menu_with_redirect()
+
+menu()
 
 
 print(f"{st.session_state['current_tournament_id']=}")
@@ -13,6 +15,7 @@ st.session_state['current_tournament'] = st.session_state['user_object'].tournam
 #   print(f"{st.session_state['user_object'].tournament.tournament_data_df=}")
 
 st.session_state["affiliation"] = st.session_state['user_object'].get_affiliation()
+print(f'{st.session_state["affiliation"]=}')
 
 st.markdown(f"# 🏆 {st.session_state['current_tournament'].tournament_data_df['tournament_name'].iloc[0]}")
 st.write('#')
@@ -30,10 +33,10 @@ with c1:
 with c2:
     st.caption("Subscription deadline")
     container = st.container(border=True)
-    container.write(f"{st.session_state['current_tournament'].tournament_data_df['subscription_deadline'].iloc[0]}")
+    subscription_deadline = st.session_state['current_tournament'].tournament_data_df['subscription_deadline'].iloc[0]
+    container.write(f"{subscription_deadline}")
 
-
-if st.session_state["affiliation"] == "Not Subscribed":
+if st.session_state["affiliation"] == "Not Subscribed" and date.today() < subscription_deadline:
     with c1:
         toggle = st.button("💥 SUBSCRIBE")
         if toggle:
@@ -41,8 +44,8 @@ if st.session_state["affiliation"] == "Not Subscribed":
             st.session_state['user_object'].subscribe()
             st.balloons()
             time.sleep(2)
-
             st.rerun()
+
         # SUBSCRIBE FUNCTIONALITY
 
 elif st.session_state["affiliation"] == 'Owner':
@@ -51,9 +54,8 @@ elif st.session_state["affiliation"] == 'Owner':
             st.session_state['current_tournament'].end_tournament()
             st.balloons()
             time.sleep(2)
+            st.rerun()
 
-            #st.rerun()
-            
         # CANCEL FUNCTIONALITY
 
 with c4: 
