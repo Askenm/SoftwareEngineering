@@ -790,8 +790,8 @@ class Educator:
 
         return ["Select a submission"] + formatted_list, formatted_dict
 
-    def get_tournaments(self, uid):
-        return self.DBMS.read("GET_SUBMISSION_FOR_SCORING",{"_EDUCATOR_ID_": uid})
+    #def get_submissions(self, uid):
+    #    return self.DBMS.read("GET_SUBMISSION_FOR_SCORING",{"_EDUCATOR_ID_": uid})
 
 
 class Authentication_info:
