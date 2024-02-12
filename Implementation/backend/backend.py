@@ -292,9 +292,19 @@ class Tournament:
         )
 
         # Compile final tournament information
+
+        if self.tournament_data_df.shape[0]>0:
+            tname = self.tournament_data_df["tournament_name"].values[0]
+            eid = self.tournament_data_df["creator"].values[0]
+
+        else:
+            tname = None
+            eid = None
+
+
         self.tournament_data = {
-            "tournament_name": self.tournament_data_df["tournament_name"].values[0],
-            "educator_id":self.tournament_data_df["creator"].values[0],
+            "tournament_name":tname,
+            "educator_id":eid,
             "related_ongoing_battles": self.related_battles_ongoing,
             "related_upcoming_battles": self.related_battles_upcoming,
             "tournament_rankings": self.tournament_rankings,
