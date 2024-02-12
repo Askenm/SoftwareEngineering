@@ -52,7 +52,7 @@ def show():
 
         # Form submit button
         submit_button = st.form_submit_button(label='Create Battle')
-        st.write(manual_scoring)
+        #st.write(manual_scoring)
 
         if submit_button:
 

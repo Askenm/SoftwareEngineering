@@ -5,22 +5,10 @@ from backend.backend import Tournament
 import time
 
 def show():
-<<<<<<< HEAD
-    # TODO : Again, mainly an ID forwarding issue
-    """
-    print(st.session_state.to_dict()['Tournament_Id'])
-    TournamentId = st.session_state.to_dict()['Tournament_Id']
-    print(st.session_state.to_dict()['Tournament_Id'])
-    ThisTournament = Tournament(TournamentId)
-    ThisTournament.get_tournament_page_info()
-    """
-    
-=======
     print("\nTournament details\n")
     st.session_state['switch_pages_button'] = True
     print(st.session_state['switch_pages_button'])
   #  print(f"{st.session_state['current_tournament_id']=}")
->>>>>>> 68940ebcb2c07a25099e0111ff7309cbabf7397d
     st.session_state['user_object'].get_tournament_page_info(st.session_state['current_tournament_id'])
     
     st.session_state['current_tournament'] = st.session_state['user_object'].tournament

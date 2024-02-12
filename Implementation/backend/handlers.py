@@ -7,6 +7,7 @@ from datetime import datetime
 from .DataPersitenceService import DBMS
 from .backend import Notification
 
+from tqdm import tqdm
 
 class NotificationHandler:
     def __init__(self):
@@ -98,7 +99,7 @@ class BadgeHandler:
 
     def check_for_badges(self):
         all_badges = self.DBMS.read("GET_ALL_BADGES",{})
-        for bid in all_badges['bid'].values:
+        for bid in tqdm(all_badges['bid'].values):
             self.check_badge_achievers(bid)
 
 
@@ -217,7 +218,7 @@ class SubmissionHandler:
         users = self.DBMS.read('GET_USERS_FROM_GID',{'_GROUP_ID_':gid})
 
         for rix, row in users.iterrows():
-            #print(row)
+
             notification_info = self.structure_badge_notification_info(row)
 
             SubmissionNotification = Notification('NEW_SUBMISSION')
