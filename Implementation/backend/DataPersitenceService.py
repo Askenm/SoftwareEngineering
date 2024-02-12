@@ -37,6 +37,7 @@ class DBMS:
 
     def read(self, query_name, query_processing_info):
         query = query_catalog["read"][query_name]
+        print(query_processing_info)
         for placeholder, value in query_processing_info.items():
             query = query.replace(placeholder, str(value))
 

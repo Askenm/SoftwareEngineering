@@ -763,7 +763,8 @@ class Educator:
         return self.tournament.get_affiliation(self.uid,role = 'Educator')
     
 
-    def get_tournaments(self):
+    def get_tournaments(self,uid=None):
+
         self.DBMS.read("GET_EDUCATOR_TOURNAMENTS",self.uid)
 
     def get_submission(self,smid):
@@ -790,8 +791,8 @@ class Educator:
 
         return ["Select a submission"] + formatted_list, formatted_dict
 
-    #def get_submissions(self, uid):
-    #    return self.DBMS.read("GET_SUBMISSION_FOR_SCORING",{"_EDUCATOR_ID_": uid})
+    def get_tournaments(self, uid):
+        return self.DBMS.read("GET_EDUCATOR_TOURNAMENTS",{"_USER_ID_": uid})
 
 
 class Authentication_info:
